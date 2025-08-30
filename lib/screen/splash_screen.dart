@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:zoom_clone/wrapper.dart';
 
 // Splash Screen with Animation
 class SplashScreen extends StatefulWidget {
@@ -22,18 +24,22 @@ class _SplashScreenState extends State<SplashScreen>
       vsync: this,
     );
 
-    _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.elasticOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
-    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
 
     _controller.forward();
 
     Future.delayed(Duration(milliseconds: 3000), () {
-      Navigator.pushReplacementNamed(context, '/home');
+      Get.offAll(() => Wrapper(), transition: Transition.fadeIn);
+      // //   // Alternatively, you can use Get.to() if you want to keep the splash screen in the navigation stack
+      // //   // Get.to(() => HomeScreen(), transition: Transition.fadeIn, duration: Duration(milliseconds: 500));
     });
   }
 
@@ -45,11 +51,7 @@ class _SplashScreenState extends State<SplashScreen>
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF667eea),
-              Color(0xFF764ba2),
-              Color(0xFFf093fb),
-            ],
+            colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
           ),
         ),
         child: Center(

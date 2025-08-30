@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "467631095706",
+    "project_id": "meetspacepro",
+    "storage_bucket": "meetspacepro.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:467631095706:android:e4c222d2468556c9938423",
+        "android_client_info": {
+          "package_name": "com.example.zoom_clone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "467631095706-c5gcpfc1n6b1mnrqqjvpd0ti4i1kkmdd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.zoom_clone",
+            "certificate_hash": "f5b3bc71892fcf4f7a8e2a8b38085de16510a780"
+          }
+        },
+        {
+          "client_id": "467631095706-t865dsh3fvutck6jj4507j1ks2nrubrn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCufZ9vD7ezl4f-QJEodUDvEAdW4FyvfpI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "467631095706-t865dsh3fvutck6jj4507j1ks2nrubrn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

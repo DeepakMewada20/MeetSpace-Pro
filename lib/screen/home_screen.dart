@@ -36,9 +36,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF1e3c72),
-              Color(0xFF2a5298),
-              Color(0xFF667eea),
+              Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)
             ],
           ),
         ),
@@ -160,27 +158,37 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 icon: Icons.add_circle_outline,
                                 title: 'Start New Meeting',
                                 subtitle: 'Begin an instant meeting',
-                                gradient: [Color(0xFF667eea), Color(0xFF764ba2)],
+                                gradient: [
+                                  Color(0xFF667eea),
+                                  Color(0xFF764ba2),
+                                ],
                                 onTap: () => _startNewMeeting(context),
                               ),
-                              
+
                               SizedBox(height: 20),
-                              
+
                               _buildActionCard(
                                 icon: Icons.meeting_room,
                                 title: 'Join Meeting',
                                 subtitle: 'Enter meeting ID to join',
-                                gradient: [Color(0xFFf093fb), Color(0xFFf5576c)],
-                                onTap: () => Navigator.pushNamed(context, '/join'),
+                                gradient: [
+                                  Color(0xFFf093fb),
+                                  Color(0xFFf5576c),
+                                ],
+                                onTap: () =>
+                                    Navigator.pushNamed(context, '/join'),
                               ),
-                              
+
                               SizedBox(height: 20),
-                              
+
                               _buildActionCard(
                                 icon: Icons.schedule,
                                 title: 'Schedule Meeting',
                                 subtitle: 'Plan for later',
-                                gradient: [Color(0xFF4facfe), Color(0xFF00f2fe)],
+                                gradient: [
+                                  Color(0xFF4facfe),
+                                  Color(0xFF00f2fe),
+                                ],
                                 onTap: () => _showScheduleDialog(),
                               ),
                             ],
@@ -207,8 +215,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 ),
                               ),
                               Spacer(),
-                              Icon(Icons.arrow_forward_ios, 
-                                  color: Colors.white70, size: 16),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.white70,
+                                size: 16,
+                              ),
                             ],
                           ),
                         ),
@@ -274,10 +285,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 14,
-                    ),
+                    style: TextStyle(color: Colors.white70, fontSize: 14),
                   ),
                 ],
               ),
@@ -298,10 +306,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   void _startNewMeeting(BuildContext context) {
     String meetingId = _generateMeetingId();
-    Navigator.pushNamed(context, '/call', arguments: {
-      'meetingId': meetingId,
-      'isHost': true,
-    });
+    Navigator.pushNamed(
+      context,
+      '/call',
+      arguments: {'meetingId': meetingId, 'isHost': true},
+    );
   }
 
   String _generateMeetingId() {
