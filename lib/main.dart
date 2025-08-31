@@ -7,6 +7,7 @@ import 'package:zoom_clone/screen/join_meeting_screen.dart';
 import 'package:zoom_clone/screen/home_screen.dart';
 import 'package:zoom_clone/screen/splash_screen.dart';
 import 'package:zoom_clone/screen/video_call_screen.dart';
+import 'firebase_options.dart';
 
 final ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
@@ -42,7 +43,7 @@ final ThemeData darkTheme = ThemeData(
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   Get.put(GoogleSingInControler()); // Initialize the Google Sign-In controller
   Get.put(PhoneNumberLoginController());
   runApp(VideoCallApp());
