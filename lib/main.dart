@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:zoom_clone/login_functinality/controlers/google_sing_in_controler.dart';
 import 'package:zoom_clone/login_functinality/controlers/phone_number_login_controller.dart';
 import 'package:zoom_clone/screen/join_meeting_screen.dart';
-import 'package:zoom_clone/screen/home_screen.dart';
+import 'package:zoom_clone/screen/home%20screen/home_screen.dart';
 import 'package:zoom_clone/screen/splash_screen.dart';
 import 'package:zoom_clone/screen/video_call_screen.dart';
 import 'firebase_options.dart';
