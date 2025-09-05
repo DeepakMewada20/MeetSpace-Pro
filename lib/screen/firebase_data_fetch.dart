@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +13,10 @@ class _FirebaseDataFetchState extends State<FirebaseDataFetch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Firebase Data Fetch")),
+      appBar: AppBar(
+        title: Text("Firebase Data Fetch"),
+        backgroundColor: ThemeData().primaryColor,
+      ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection("users").snapshots(),
         builder: (context, snapshot) {
