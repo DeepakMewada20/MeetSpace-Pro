@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:zoom_clone/login_functinality/pages/singup_page.dart';
+import 'package:zoom_clone/login_functinality/singup_page.dart';
 import 'package:zoom_clone/wrapper.dart';
 
 class EmailVerificationPage extends StatefulWidget {

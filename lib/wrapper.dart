@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:zoom_clone/login_functinality/pages/email_verification_page.dart';
-import 'package:zoom_clone/login_functinality/pages/login_page.dart';
-import 'package:zoom_clone/screen/profile_page/profile_page.dart';
+import 'package:zoom_clone/login_functinality/email_verification_page.dart';
+import 'package:zoom_clone/login_functinality/login_page.dart';
+import 'package:zoom_clone/screen/home%20screen/home_screen.dart';
 
 class Wrapper extends StatefulWidget {
   const Wrapper({super.key});
@@ -24,10 +24,10 @@ class _WrapperState extends State<Wrapper> {
               if (user.providerData.any(
                 (provider) => provider.providerId == 'phone',
               )) {
-                return ProfilePage(); // Navigate to Home Page if phone authentication is used
+                return HomeScreen(); // Navigate to Home Page if phone authentication is used
               } else {
                 if (user.emailVerified) {
-                  return ProfilePage(); // Navigate to Home Page if email is verified
+                  return HomeScreen(); // Navigate to Home Page if email is verified
                 } else {
                   // Navigate to Email Verification Page if email is not verified
                   return EmailVerificationPage();

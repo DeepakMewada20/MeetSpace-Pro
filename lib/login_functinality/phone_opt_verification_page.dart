@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:zoom_clone/login_functinality/controlers/phone_number_login_controller.dart';
+import 'package:zoom_clone/controlers/phone_number_login_controller.dart';
 
 // Phone OTP Verification Page
 class PhoneOTPPage extends StatefulWidget {

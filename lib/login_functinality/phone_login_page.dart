@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:zoom_clone/login_functinality/controlers/phone_number_login_controller.dart';
+import 'package:zoom_clone/controlers/phone_number_login_controller.dart';
 
 class PhoneLoginPage extends StatefulWidget {
   const PhoneLoginPage({super.key});

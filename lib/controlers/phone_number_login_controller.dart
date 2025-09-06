@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:zoom_clone/login_functinality/pages/phone_opt_verification_page.dart';
+import 'package:zoom_clone/login_functinality/phone_opt_verification_page.dart';
 import 'package:zoom_clone/wrapper.dart';
 
 class PhoneNumberLoginController extends GetxController {

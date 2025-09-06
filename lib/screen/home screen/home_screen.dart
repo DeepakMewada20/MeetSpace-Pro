@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 // Enhanced Home Screen
@@ -27,17 +28,112 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     _animationController.forward();
   }
 
+   Widget _buildBottomBarItem(IconData icon, String label, bool isActive) {
+    return GestureDetector(
+      onTap: () {
+        print('Tapped $label');
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isActive ? Colors.white.withAlpha((255*0.2).toInt()) : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: isActive ? Colors.white : Colors.white60,
+              size: 24,
+            ),
+            SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                color: isActive ? Colors.white : Colors.white60,
+                fontSize: 12,
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 80,
+        leadingWidth: 8,
+        leading: SizedBox(),
+        title: Row(
+          children: [
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Icon(Icons.video_call, color: Colors.white, size: 24),
+            ),
+            SizedBox(width: 15),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'MeetSpace Pro',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Premium Video Meetings',
+                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                ),
+              ],
+            ),
+          ],
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 25),
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(Icons.settings, color: Colors.white, size: 20),
+            ),
+          ),
+        ],
+        backgroundColor: Color(0xFF0F2027),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        height: 80,
+        
+        color: Color(0xFF0F2027),
+        // notchMargin: 20,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [_buildBottomBarItem(Icons.home_filled, "home",true)],
+        ),
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)
-            ],
+            colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
           ),
         ),
         child: SafeArea(
@@ -49,109 +145,54 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 child: Opacity(
                   opacity: _animationController.value,
                   child: Padding(
-                    padding: EdgeInsets.all(24),
-                    child: Column(
-                      children: [
-                        // Header
-                        Row(
-                          children: [
-                            Container(
-                              width: 50,
-                              height: 50,
-                              decoration: BoxDecoration(
+                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    child: SingleChildScrollView(
+                      physics: ClampingScrollPhysics(),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 30),
+                          // Welcome Message
+                          Container(
+                            padding: EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
                                 color: Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Icon(
-                                Icons.video_call,
-                                color: Colors.white,
-                                size: 24,
+                                width: 1,
                               ),
                             ),
-                            SizedBox(width: 15),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            child: Column(
                               children: [
+                                Icon(
+                                  Icons.wb_sunny,
+                                  color: Colors.yellowAccent,
+                                  size: 40,
+                                ),
+                                SizedBox(height: 16),
                                 Text(
-                                  'MeetSpace Pro',
+                                  'Good ${_getTimeOfDay()}!',
                                   style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 22,
+                                    fontSize: 24,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                SizedBox(height: 8),
                                 Text(
-                                  'Premium Video Meetings',
+                                  'Ready to connect with your team?',
                                   style: TextStyle(
                                     color: Colors.white70,
-                                    fontSize: 14,
+                                    fontSize: 16,
                                   ),
                                 ),
                               ],
                             ),
-                            Spacer(),
-                            Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Icon(
-                                Icons.settings,
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: 60),
-
-                        // Welcome Message
-                        Container(
-                          padding: EdgeInsets.all(24),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: Colors.white.withOpacity(0.2),
-                              width: 1,
-                            ),
                           ),
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.wb_sunny,
-                                color: Colors.yellowAccent,
-                                size: 40,
-                              ),
-                              SizedBox(height: 16),
-                              Text(
-                                'Good ${_getTimeOfDay()}!',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                'Ready to connect with your team?',
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                          SizedBox(height: 40),
 
-                        SizedBox(height: 40),
-
-                        // Action Buttons
-                        Expanded(
-                          child: Column(
+                          // Action Buttons
+                          Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               _buildActionCard(
@@ -193,37 +234,38 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               ),
                             ],
                           ),
-                        ),
-
-                        // Recent Meetings
-                        Container(
-                          padding: EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(Icons.history, color: Colors.white70),
-                              SizedBox(width: 12),
-                              Text(
-                                'Recent Meetings',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
+                          SizedBox(height: 20),
+                          // Recent Meetings
+                          Container(
+                            padding: EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.history, color: Colors.white70),
+                                SizedBox(width: 12),
+                                Text(
+                                  'Recent Meetings',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                              ),
-                              Spacer(),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                color: Colors.white70,
-                                size: 16,
-                              ),
-                            ],
+                                Spacer(),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.white70,
+                                  size: 16,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                          SizedBox(height: 20),
+                        ],
+                      ),
                     ),
                   ),
                 ),

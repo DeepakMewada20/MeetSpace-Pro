@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -140,8 +141,8 @@ class _EditProfilePageState extends State<EditProfilePage>
                               child: Stack(
                                 children: [
                                   Container(
-                                    width: 100,
-                                    height: 100,
+                                    width: 130,
+                                    height: 130,
                                     decoration: BoxDecoration(
                                       gradient: LinearGradient(
                                         colors: [
@@ -152,19 +153,19 @@ class _EditProfilePageState extends State<EditProfilePage>
                                       shape: BoxShape.circle,
                                       border: Border.all(
                                         color: Colors.white,
-                                        width: 3,
+                                        width: 2,
                                       ),
                                     ),
                                     child: Center(
                                       child: _pickedImage != null
                                           ? CircleAvatar(
-                                              radius: 50,
+                                              radius: 63,
                                               backgroundImage: FileImage(
                                                 File(_pickedImage!),
                                               ),
                                             )
                                           : CircleAvatar(
-                                              radius: 50,
+                                              radius: 63,
                                               backgroundColor:
                                                   Colors.transparent,
                                               child: Icon(
@@ -184,11 +185,11 @@ class _EditProfilePageState extends State<EditProfilePage>
                                     ),
                                   ),
                                   Positioned(
-                                    bottom: 0,
+                                    bottom: 10,
                                     right: 0,
                                     child: Container(
-                                      width: 32,
-                                      height: 32,
+                                      width: 35,
+                                      height: 35,
                                       decoration: BoxDecoration(
                                         color: Color(0xFF667eea),
                                         shape: BoxShape.circle,
@@ -457,7 +458,10 @@ class _EditProfilePageState extends State<EditProfilePage>
                 child: Icon(Icons.photo_camera, color: Colors.white),
               ),
               title: Text('Take Photo', style: TextStyle(color: Colors.white)),
-              onTap: () => _peckImage(ImageSource.camera),
+              onTap: () {
+                _peckImage(ImageSource.camera);
+                // Navigator.pop(context);
+              },
             ),
             ListTile(
               leading: Container(
@@ -472,7 +476,10 @@ class _EditProfilePageState extends State<EditProfilePage>
                 'Choose from Gallery',
                 style: TextStyle(color: Colors.white),
               ),
-              onTap: () => _peckImage(ImageSource.gallery),
+              onTap: () {
+                _peckImage(ImageSource.gallery);
+                // Navigator.pop(context);
+              },
             ),
             ListTile(
               leading: Container(
@@ -496,6 +503,11 @@ class _EditProfilePageState extends State<EditProfilePage>
   void _saveProfile() {
     if (_formKey.currentState!.validate()) {
       // Save profile logic here
+      Get.put(UserProfiledataSaveController());
+      UserProfiledataSaveController instence = Get.find();
+      if (_pickedImage != null) {
+        instence.uploadUserProfilePhoto(File(_pickedImage!));
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Profile updated successfully!'),
@@ -512,16 +524,27 @@ class _EditProfilePageState extends State<EditProfilePage>
 
   void _peckImage(ImageSource imageSource) async {
     try {
-      final pickedFile = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
-      );
+      final pickedFile = await ImagePicker().pickImage(source: imageSource);
       if (pickedFile == null) {
         return;
       }
       final croppedFile = await ImageCropper().cropImage(
         sourcePath: pickedFile.path,
+        uiSettings: [
+          AndroidUiSettings(
+            toolbarTitle: 'Crop Image',
+            toolbarColor: Color(0xFF667eea),
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: true,
+            cropStyle: CropStyle.circle,
+            statusBarColor: Colors.black45,
+          ),
+          IOSUiSettings(title: 'Crop Image', aspectRatioLockEnabled: true),
+        ],
       );
       setState(() {
+        Navigator.pop(context);
         if (croppedFile == null) {
           return;
         }

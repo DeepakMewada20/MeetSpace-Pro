@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:zoom_clone/login_functinality/controlers/google_sing_in_controler.dart';
-import 'package:zoom_clone/login_functinality/pages/phone_login_page.dart';
-import 'package:zoom_clone/login_functinality/pages/singup_page.dart';
+import 'package:zoom_clone/controlers/google_sing_in_controler.dart';
+import 'package:zoom_clone/login_functinality/phone_login_page.dart';
+import 'package:zoom_clone/login_functinality/singup_page.dart';
 
 // Login Page
 class LoginPage extends StatefulWidget {

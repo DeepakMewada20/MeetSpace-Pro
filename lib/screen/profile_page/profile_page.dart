@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zoom_clone/cloude_code/main.dart';
-import 'package:zoom_clone/login_functinality/controlers/google_sing_in_controler.dart';
+import 'package:zoom_clone/controlers/google_sing_in_controler.dart';
 import 'package:zoom_clone/screen/profile_page/edit_profile_page.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -392,7 +392,7 @@ class _ProfilePageState extends State<ProfilePage>
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color.fromARGB(240, 44, 83, 100),
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
@@ -428,7 +428,7 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   void _editProfile() {
-    Get.to(()=> EditProfilePage());
+    Get.to(() => EditProfilePage());
   }
 
   void _openPrivacySettings() {
