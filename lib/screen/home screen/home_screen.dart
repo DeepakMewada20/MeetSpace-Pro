@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 // Enhanced Home Screen
@@ -26,41 +25,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
 
     _animationController.forward();
-  }
-
-   Widget _buildBottomBarItem(IconData icon, String label, bool isActive) {
-    return GestureDetector(
-      onTap: () {
-        print('Tapped $label');
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: isActive ? Colors.white.withAlpha((255*0.2).toInt()) : Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              color: isActive ? Colors.white : Colors.white60,
-              size: 24,
-            ),
-            SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                color: isActive ? Colors.white : Colors.white60,
-                fontSize: 12,
-                fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   @override
@@ -118,16 +82,22 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ],
         backgroundColor: Color(0xFF0F2027),
       ),
-      bottomNavigationBar: BottomAppBar(
-        height: 80,
-        
-        color: Color(0xFF0F2027),
-        // notchMargin: 20,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [_buildBottomBarItem(Icons.home_filled, "home",true)],
-        ),
-      ),
+      // bottomNavigationBar: BottomAppBar(
+      //   height: 80,
+      //   color: Color(0xFF0F2027),
+      //   // notchMargin: 20,
+      //   child: SafeArea(
+      //     child: Row(
+      //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      //       children: [
+      //         _buildBottomBarItem(Icons.home_filled, "home", true),
+      //         _buildBottomBarItem(Icons.chat_bubble_outline, 'Chat', false),
+      //         _buildBottomBarItem(Icons.settings_outlined, 'Settings', false),
+      //         _buildBottomBarItem(Icons.person_outline, 'Profile', false),
+      //       ],
+      //     ),
+      //   ),
+      // ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:zoom_clone/login_functinality/email_verification_page.dart';
 import 'package:zoom_clone/login_functinality/login_page.dart';
 import 'package:zoom_clone/screen/home%20screen/home_screen.dart';
+import 'package:zoom_clone/widgets/bottom_nevigation_bar_widget.dart';
 
 class Wrapper extends StatefulWidget {
   const Wrapper({super.key});
@@ -24,10 +25,10 @@ class _WrapperState extends State<Wrapper> {
               if (user.providerData.any(
                 (provider) => provider.providerId == 'phone',
               )) {
-                return HomeScreen(); // Navigate to Home Page if phone authentication is used
+                return BottomNevigationBarWidget(); // Navigate to Home Page if phone authentication is used
               } else {
                 if (user.emailVerified) {
-                  return HomeScreen(); // Navigate to Home Page if email is verified
+                  return BottomNevigationBarWidget(); // Navigate to Home Page if email is verified
                 } else {
                   // Navigate to Email Verification Page if email is not verified
                   return EmailVerificationPage();
