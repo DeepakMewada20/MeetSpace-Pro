@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:zoom_clone/login_functinality/email_verification_page.dart';
 import 'package:zoom_clone/login_functinality/login_page.dart';
-import 'package:zoom_clone/screen/home%20screen/home_screen.dart';
 import 'package:zoom_clone/widgets/bottom_nevigation_bar_widget.dart';
 
 class Wrapper extends StatefulWidget {

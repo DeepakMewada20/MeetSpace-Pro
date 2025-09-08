@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:zoom_clone/screen/home%20screen/home_screen.dart';
 import 'package:zoom_clone/screen/profile_page/profile_page.dart';
+import 'package:zoom_clone/screen/settings_screen/settings_page.dart';
 
 class BottomNevigationBarWidget extends StatefulWidget {
   const BottomNevigationBarWidget({super.key});
@@ -15,7 +15,7 @@ class _BottomNevigationBarWidgetState extends State<BottomNevigationBarWidget> {
   int _selectedIndex = 0;
   final List<Widget> _pages = [
     HomeScreen(),
-    ProfilePage(),
+    SettingsPage(),
     HomeScreen(),
     ProfilePage(),
   ];

@@ -57,7 +57,7 @@ class _JoinMeetingScreenState extends State<JoinMeetingScreen>
                           width: 44,
                           height: 44,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha:  0.2),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(Icons.arrow_back_ios_new, 
@@ -151,7 +151,7 @@ class _JoinMeetingScreenState extends State<JoinMeetingScreen>
                               borderRadius: BorderRadius.circular(16),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Color(0xFF667eea).withOpacity(0.3),
+                                  color: Color(0xFF667eea).withValues(alpha:  0.3),
                                   blurRadius: 20,
                                   offset: Offset(0, 10),
                                 ),

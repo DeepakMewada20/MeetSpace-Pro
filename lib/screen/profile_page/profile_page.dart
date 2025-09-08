@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:zoom_clone/cloude_code/main.dart';
 import 'package:zoom_clone/controlers/google_sing_in_controler.dart';
+import 'package:zoom_clone/screen/home%20screen/home_screen.dart';
 import 'package:zoom_clone/screen/profile_page/edit_profile_page.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -30,6 +30,68 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 80,
+        leadingWidth: 8,
+        leading: SizedBox(),
+        title: Row(
+          children: [
+            GestureDetector(
+              onTap: () => Get.offAll(() => HomeScreen()),
+              child: Container(
+                width: 45,
+                height: 45,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Icon(
+                  Icons.arrow_back_ios_new,
+                  color: Colors.white,
+                  size: 24,
+                ),
+              ),
+            ),
+            SizedBox(width: 15),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Profile',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                // Text(
+                //   'Premium Video Meetings',
+                //   style: TextStyle(color: Colors.white70, fontSize: 14),
+                // ),
+              ],
+            ),
+          ],
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 25),
+            child: InkWell(
+              onTap: _editProfile,
+              child: Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(Icons.edit, color: Colors.white, size: 20),
+              ),
+            ),
+          ),
+        ],
+        backgroundColor: Color(0xFF0F2027),
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -51,63 +113,62 @@ class _ProfilePageState extends State<ProfilePage>
               child: Column(
                 children: [
                   // Header
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () => Navigator.pop(context),
-                        child: Container(
-                          width: 44,
-                          height: 44,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Icon(
-                            Icons.arrow_back_ios_new,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      Text(
-                        'Profile',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Spacer(),
-                      GestureDetector(
-                        onTap: _editProfile,
-                        child: Container(
-                          width: 44,
-                          height: 44,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Icon(
-                            Icons.edit,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
+                  // Row(
+                  //   children: [
+                  //     GestureDetector(
+                  //       onTap: () => Navigator.pop(context),
+                  //       child: Container(
+                  //         width: 44,
+                  //         height: 44,
+                  //         decoration: BoxDecoration(
+                  //           color: Colors.white.withValues(alpha:  0.2),
+                  //           borderRadius: BorderRadius.circular(12),
+                  //         ),
+                  //         child: Icon(
+                  //           Icons.arrow_back_ios_new,
+                  //           color: Colors.white,
+                  //           size: 20,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     SizedBox(width: 16),
+                  //     Text(
+                  //       'Profile',
+                  //       style: TextStyle(
+                  //         color: Colors.white,
+                  //         fontSize: 24,
+                  //         fontWeight: FontWeight.bold,
+                  //       ),
+                  //     ),
+                  //     Spacer(),
+                  //     GestureDetector(
+                  //       onTap: _editProfile,
+                  //       child: Container(
+                  //         width: 44,
+                  //         height: 44,
+                  //         decoration: BoxDecoration(
+                  //           color: Colors.white.withValues(alpha:  0.2),
+                  //           borderRadius: BorderRadius.circular(12),
+                  //         ),
+                  //         child: Icon(
+                  //           Icons.edit,
+                  //           color: Colors.white,
+                  //           size: 20,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                   SizedBox(height: 40),
 
                   // Profile Section
                   Container(
                     padding: EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.15),
+                      color: Colors.white.withValues(alpha:  0.15),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha:  0.2),
                         width: 1,
                       ),
                     ),
@@ -196,7 +257,7 @@ class _ProfilePageState extends State<ProfilePage>
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha:  0.2),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Row(
@@ -274,10 +335,10 @@ class _ProfilePageState extends State<ProfilePage>
                           child: Container(
                             padding: EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: Colors.red.withOpacity(0.1),
+                              color: Colors.red.withValues(alpha:  0.1),
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: Colors.red.withOpacity(0.3),
+                                color: Colors.red.withValues(alpha:  0.3),
                                 width: 1,
                               ),
                             ),
@@ -287,7 +348,7 @@ class _ProfilePageState extends State<ProfilePage>
                                   width: 40,
                                   height: 40,
                                   decoration: BoxDecoration(
-                                    color: Colors.red.withOpacity(0.2),
+                                    color: Colors.red.withValues(alpha:  0.2),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Icon(
@@ -313,7 +374,7 @@ class _ProfilePageState extends State<ProfilePage>
                                       Text(
                                         'Sign out of your account',
                                         style: TextStyle(
-                                          color: Colors.red.withOpacity(0.7),
+                                          color: Colors.red.withValues(alpha:  0.7),
                                           fontSize: 14,
                                         ),
                                       ),
@@ -322,7 +383,7 @@ class _ProfilePageState extends State<ProfilePage>
                                 ),
                                 Icon(
                                   Icons.arrow_forward_ios,
-                                  color: Colors.red.withOpacity(0.7),
+                                  color: Colors.red.withValues(alpha:  0.7),
                                   size: 16,
                                 ),
                               ],
@@ -350,16 +411,16 @@ class _ProfilePageState extends State<ProfilePage>
     return Container(
       margin: EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha:  0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.1), width: 1),
+        border: Border.all(color: Colors.white.withValues(alpha:  0.1), width: 1),
       ),
       child: ListTile(
         leading: Container(
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha:  0.1),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Icon(icon, color: Colors.white, size: 20),

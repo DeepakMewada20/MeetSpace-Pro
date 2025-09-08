@@ -345,7 +345,7 @@ class _VideoCallScreenState extends State<VideoCallScreen>
           end: Alignment.bottomRight,
           colors: participant.isSelf 
               ? [Color(0xFF667eea), Color(0xFF764ba2)]
-              : [participant.avatarColor.withOpacity(0.8), participant.avatarColor],
+              : [participant.avatarColor.withValues(alpha:  0.8), participant.avatarColor],
         ),
         boxShadow: [
           BoxShadow(
@@ -393,7 +393,7 @@ class _VideoCallScreenState extends State<VideoCallScreen>
                 width: isMainView ? 120 : 80,
                 height: isMainView ? 120 : 80,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha:  0.2),
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 3),
                 ),
@@ -478,31 +478,31 @@ class _VideoCallScreenState extends State<VideoCallScreen>
         children: [
           _buildControlButton(
             icon: _isMuted ? Icons.mic_off : Icons.mic,
-            color: _isMuted ? Colors.red : Colors.white.withOpacity(0.2),
+            color: _isMuted ? Colors.red : Colors.white.withValues(alpha:  0.2),
             onPressed: _toggleMute,
             label: _isMuted ? 'Unmute' : 'Mute',
           ),
           _buildControlButton(
             icon: _isVideoOff ? Icons.videocam_off : Icons.videocam,
-            color: _isVideoOff ? Colors.red : Colors.white.withOpacity(0.2),
+            color: _isVideoOff ? Colors.red : Colors.white.withValues(alpha:  0.2),
             onPressed: _toggleVideo,
             label: _isVideoOff ? 'Start Video' : 'Stop Video',
           ),
           _buildControlButton(
             icon: _isScreenSharing ? Icons.stop_screen_share : Icons.screen_share,
-            color: _isScreenSharing ? Colors.green : Colors.white.withOpacity(0.2),
+            color: _isScreenSharing ? Colors.green : Colors.white.withValues(alpha:  0.2),
             onPressed: _toggleScreenShare,
             label: _isScreenSharing ? 'Stop Share' : 'Share',
           ),
           _buildControlButton(
             icon: _isRecording ? Icons.stop : Icons.fiber_manual_record,
-            color: _isRecording ? Colors.red : Colors.white.withOpacity(0.2),
+            color: _isRecording ? Colors.red : Colors.white.withValues(alpha:  0.2),
             onPressed: _toggleRecording,
             label: _isRecording ? 'Stop Rec' : 'Record',
           ),
           _buildControlButton(
             icon: Icons.more_horiz,
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withValues(alpha:  0.2),
             onPressed: _showMoreOptions,
             label: 'More',
           ),
@@ -530,7 +530,7 @@ class _VideoCallScreenState extends State<VideoCallScreen>
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: color == Colors.red ? Colors.red.withOpacity(0.3) : Colors.black26,
+                  color: color == Colors.red ? Colors.red.withValues(alpha:  0.3) : Colors.black26,
                   blurRadius: 10,
                   offset: Offset(0, 5),
                 ),

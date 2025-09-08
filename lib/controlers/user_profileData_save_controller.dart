@@ -5,7 +5,19 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 
 class UserProfiledataSaveController extends GetxController {
-  User? user = FirebaseAuth.instance.currentUser;
+  User? user;
+  String? photoUrl;
+  String? displayName;
+  @override
+  onInit() {
+    super.onInit();
+    user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      photoUrl = user!.photoURL ?? "";
+      displayName = user!.displayName ?? "";
+    }
+  }
+
   Future uploadUserProfilePhoto(File file) async {
     if (user == null) {
       print("User is not logged in.");
