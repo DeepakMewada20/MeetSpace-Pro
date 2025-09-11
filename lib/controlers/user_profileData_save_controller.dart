@@ -28,7 +28,9 @@ class UserProfiledataSaveController extends GetxController {
       final storageRefrence = FirebaseStorage.instance
           .ref()
           .child("user_profile_photos")
-          .child("${user!.uid}.jpg");
+          .child(user!.uid)
+          .child("profilePhoto.jpg");
+      print("Uploading to: ${storageRefrence.fullPath}");
       // 2 This starts the upload:
       UploadTask uploadTask = storageRefrence.putFile(file);
 

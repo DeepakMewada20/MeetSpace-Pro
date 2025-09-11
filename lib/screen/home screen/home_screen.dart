@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
+import 'package:zoom_clone/screen/profile_page/profile_page.dart';
+import 'package:zoom_clone/them_data/dart_them.dart';
 import 'package:zoom_clone/widgets/header.dart';
 
 // Enhanced Home Screen
@@ -35,7 +37,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _profileImage() {
-    return Image.network(userProfileInsteance.photoUrl!, fit: BoxFit.cover);
+    return GestureDetector(
+      onTap: () => Get.to(() => ProfilePage()),
+      child: userProfileInsteance.user == null
+          ? Icon(Icons.person)
+          : Image.network(userProfileInsteance.photoUrl!, fit: BoxFit.cover),
+    );
   }
 
   @override
@@ -43,11 +50,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
-          ),
+          gradient: DarkGradients.backgroundGradient,
+          // gradient: LinearGradient(
+          //   begin: Alignment.topCenter,
+          //   end: Alignment.bottomCenter,
+          //   colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
+          // ),
         ),
         child: SafeArea(
           child: FadeTransition(

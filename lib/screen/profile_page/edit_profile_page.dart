@@ -80,7 +80,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                           width: 44,
                           height: 44,
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha:  0.2),
+                            color: Colors.white.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(
@@ -284,10 +284,10 @@ class _EditProfilePageState extends State<EditProfilePage>
                           Container(
                             padding: EdgeInsets.all(20),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha:  0.1),
+                              color: Colors.white.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: Colors.white.withValues(alpha:  0.2),
+                                color: Colors.white.withValues(alpha: 0.2),
                                 width: 1,
                               ),
                             ),
@@ -351,9 +351,12 @@ class _EditProfilePageState extends State<EditProfilePage>
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha:  0.1),
+        color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha:  0.2), width: 1),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.2),
+          width: 1,
+        ),
       ),
       child: TextFormField(
         controller: controller,
@@ -369,7 +372,7 @@ class _EditProfilePageState extends State<EditProfilePage>
             margin: EdgeInsets.all(12),
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha:  0.1),
+              color: Colors.white.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: Colors.white, size: 20),
@@ -415,9 +418,9 @@ class _EditProfilePageState extends State<EditProfilePage>
             value: value,
             onChanged: onChanged,
             activeThumbColor: Color(0xFF667eea),
-            activeTrackColor: Color(0xFF667eea).withValues(alpha:  0.3),
+            activeTrackColor: Color(0xFF667eea).withValues(alpha: 0.3),
             inactiveThumbColor: Colors.white60,
-            inactiveTrackColor: Colors.white.withValues(alpha:  0.1),
+            inactiveTrackColor: Colors.white.withValues(alpha: 0.1),
           ),
         ],
       ),
@@ -444,7 +447,7 @@ class _EditProfilePageState extends State<EditProfilePage>
               height: 4,
               margin: EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha:  0.3),
+                color: Colors.white.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -452,7 +455,7 @@ class _EditProfilePageState extends State<EditProfilePage>
               leading: Container(
                 padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha:  0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(Icons.photo_camera, color: Colors.white),
@@ -467,7 +470,7 @@ class _EditProfilePageState extends State<EditProfilePage>
               leading: Container(
                 padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha:  0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(Icons.photo_library, color: Colors.white),
@@ -485,7 +488,7 @@ class _EditProfilePageState extends State<EditProfilePage>
               leading: Container(
                 padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.red.withValues(alpha:  0.1),
+                  color: Colors.red.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(Icons.delete, color: Colors.red),
@@ -549,6 +552,7 @@ class _EditProfilePageState extends State<EditProfilePage>
           return;
         }
         _pickedImage = croppedFile.path;
+        
       });
     } catch (e) {
       Get.snackbar("Error", e.toString(), snackPosition: SnackPosition.BOTTOM);

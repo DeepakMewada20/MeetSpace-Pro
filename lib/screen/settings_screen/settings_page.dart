@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zoom_clone/widgets/header.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -55,54 +56,15 @@ class _SettingsPageState extends State<SettingsPage>
             child: Column(
               children: [
                 // Header
-                Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () => Navigator.pop(context),
-                        child: Container(
-                          width: 44,
-                          height: 44,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Icon(
-                            Icons.arrow_back_ios_new,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      Text(
-                        'Settings',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Spacer(),
-                      GestureDetector(
-                        onTap: _resetToDefaults,
-                        child: Container(
-                          width: 44,
-                          height: 44,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Icon(
-                            Icons.refresh,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                        ),
-                      ),
-                    ],
+                HeaderWidget(
+                  title: "Settings",
+                  leddingIcon: Icons.settings,
+                  actionIcon: Icon(
+                    Icons.refresh,
+                    color: Colors.white,
+                    size: 20,
                   ),
+                  actionsFunction: _resetToDefaults,
                 ),
 
                 // Settings Content
@@ -432,10 +394,7 @@ class _SettingsPageState extends State<SettingsPage>
                 ),
                 Text(
                   subtitle,
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 14,
-                  ),
+                  style: TextStyle(color: Colors.white70, fontSize: 14),
                 ),
               ],
             ),
@@ -478,7 +437,7 @@ class _SettingsPageState extends State<SettingsPage>
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha:  0.1),
+              color: Colors.white.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: Colors.white, size: 18),
@@ -498,10 +457,7 @@ class _SettingsPageState extends State<SettingsPage>
                 ),
                 Text(
                   subtitle,
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 14,
-                  ),
+                  style: TextStyle(color: Colors.white70, fontSize: 14),
                 ),
               ],
             ),
@@ -509,7 +465,7 @@ class _SettingsPageState extends State<SettingsPage>
           Container(
             padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha:  0.1),
+              color: Colors.white.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: DropdownButton<String>(
@@ -519,10 +475,7 @@ class _SettingsPageState extends State<SettingsPage>
               dropdownColor: Color.fromARGB(240, 44, 83, 100),
               style: TextStyle(color: Colors.white, fontSize: 14),
               items: items.map((String item) {
-                return DropdownMenuItem<String>(
-                  value: item,
-                  child: Text(item),
-                );
+                return DropdownMenuItem<String>(value: item, child: Text(item));
               }).toList(),
             ),
           ),
@@ -544,7 +497,7 @@ class _SettingsPageState extends State<SettingsPage>
           width: 36,
           height: 36,
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha:  0.1),
+            color: Colors.white.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, color: Colors.white, size: 18),
@@ -567,9 +520,7 @@ class _SettingsPageState extends State<SettingsPage>
           size: 16,
         ),
         onTap: onTap,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         tileColor: Colors.white.withValues(alpha: 0.05),
       ),
     );
@@ -621,63 +572,63 @@ class _SettingsPageState extends State<SettingsPage>
   }
 
   void _showDataUsage() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Data Usage feature coming soon')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Data Usage feature coming soon')));
   }
 
   void _runNetworkTest() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Running network test...')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Running network test...')));
   }
 
   void _changePassword() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Change Password functionality')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Change Password functionality')));
   }
 
   void _setup2FA() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Two-Factor Authentication setup')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Two-Factor Authentication setup')));
   }
 
   void _showPrivacyPolicy() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Privacy Policy')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Privacy Policy')));
   }
 
   void _showTerms() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Terms of Service')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Terms of Service')));
   }
 
   void _openHelpCenter() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Help Center')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Help Center')));
   }
 
   void _contactSupport() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Contact Support')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Contact Support')));
   }
 
   void _reportBug() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Bug Report')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Bug Report')));
   }
 
   void _rateApp() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Rate App')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Rate App')));
   }
 
   void _showAppInfo() {
@@ -695,7 +646,10 @@ class _SettingsPageState extends State<SettingsPage>
             SizedBox(height: 8),
             Text('Build: 2024.09.04', style: TextStyle(color: Colors.white70)),
             SizedBox(height: 8),
-            Text('© 2024 MeetSpace Pro', style: TextStyle(color: Colors.white70)),
+            Text(
+              '© 2024 MeetSpace Pro',
+              style: TextStyle(color: Colors.white70),
+            ),
           ],
         ),
         actions: [

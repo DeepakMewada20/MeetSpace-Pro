@@ -51,15 +51,18 @@ class HeaderWidget extends StatelessWidget {
             ],
           ),
           Spacer(),
-          Container(
-            width: 47,
-            height: 47,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(12),
+          GestureDetector(
+            onTap: actionsFunction,
+            child: Container(
+              width: 47,
+              height: 47,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: actionIcon,
             ),
-            clipBehavior: Clip.antiAlias,
-            child: actionIcon,
           ),
         ],
       ),
