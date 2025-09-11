@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
 import 'package:zoom_clone/screen/profile_page/profile_page.dart';
-import 'package:zoom_clone/them_data/dart_them.dart';
-import 'package:zoom_clone/widgets/header.dart';
 
-// Enhanced Home Screen
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -14,211 +11,328 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-  UserProfiledataSaveController userProfileInsteance = Get.put(
+  UserProfiledataSaveController userProfileInstance = Get.put(
     UserProfiledataSaveController(),
   );
+
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
+
     _animationController = AnimationController(
-      duration: Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 800),
       vsync: this,
     );
 
     _fadeAnimation = CurvedAnimation(
       parent: _animationController,
-      curve: Curves.easeIn,
+      curve: Curves.easeInOut,
     );
 
     _animationController.forward();
   }
 
-  Widget _profileImage() {
-    return GestureDetector(
-      onTap: () => Get.to(() => ProfilePage()),
-      child: userProfileInsteance.user == null
-          ? Icon(Icons.person)
-          : Image.network(userProfileInsteance.photoUrl!, fit: BoxFit.cover),
-    );
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: DarkGradients.backgroundGradient,
-          // gradient: LinearGradient(
-          //   begin: Alignment.topCenter,
-          //   end: Alignment.bottomCenter,
-          //   colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
-          // ),
-        ),
-        child: SafeArea(
-          child: FadeTransition(
-            opacity: _fadeAnimation,
-            child: Column(
-              children: [
-                // Header
-                HeaderWidget(
-                  title: 'MeetSpace Pro',
-                  subtitle: 'Premium Video Meetings',
-                  leddingIcon: Icons.video_call,
-                  actionIcon: _profileImage(),
-                ),
-                SizedBox(height: 20),
-                // Welcome Message
-                Container(
-                  padding: EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      width: 1,
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      Icon(
-                        Icons.wb_sunny,
-                        color: Colors.yellowAccent,
-                        size: 40,
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        'Good ${_getTimeOfDay()}!',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Ready to connect with your team?',
-                        style: TextStyle(color: Colors.white70, fontSize: 16),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 40),
+      backgroundColor: colorScheme.surface,
+      body: SafeArea(
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: Column(
+            children: [
+              // Simple Header
+              _buildHeader(context, colorScheme),
 
-                // Action Buttons
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildActionCard(
-                          icon: Icons.add_circle_outline,
-                          title: 'Start New Meeting',
-                          subtitle: 'Begin an instant meeting',
-                          gradient: [Color(0xFF667eea), Color(0xFF764ba2)],
-                          onTap: () => _startNewMeeting(context),
-                        ),
+              // Welcome Message
+              _buildWelcomeSection(context, colorScheme),
 
-                        SizedBox(height: 20),
+              // Main Actions
+              Expanded(child: _buildMainActions(context, colorScheme)),
 
-                        _buildActionCard(
-                          icon: Icons.meeting_room,
-                          title: 'Join Meeting',
-                          subtitle: 'Enter meeting ID to join',
-                          gradient: [Color(0xFFf093fb), Color(0xFFf5576c)],
-                          onTap: () => Navigator.pushNamed(context, '/join'),
-                        ),
-
-                        SizedBox(height: 20),
-
-                        _buildActionCard(
-                          icon: Icons.schedule,
-                          title: 'Schedule Meeting',
-                          subtitle: 'Plan for later',
-                          gradient: [Color(0xFF4facfe), Color(0xFF00f2fe)],
-                          onTap: () => _showScheduleDialog(),
-                        ),
-
-                        SizedBox(height: 20),
-                        // Recent Meetings
-                        Container(
-                          padding: EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(Icons.history, color: Colors.white70),
-                              SizedBox(width: 12),
-                              Text(
-                                'Recent Meetings',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              Spacer(),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                color: Colors.white70,
-                                size: 16,
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              // Simple Bottom Info
+              _buildBottomInfo(context, colorScheme),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildActionCard({
+  Widget _buildStatColumn(
+    BuildContext context,
+    ColorScheme colorScheme, {
+    required String value,
+    required String label,
+    required IconData icon,
+  }) {
+    return Column(
+      children: [
+        Icon(icon, color: colorScheme.primary, size: 18),
+        const SizedBox(height: 8),
+        Text(
+          value,
+          style: TextStyle(
+            color: colorScheme.onSurface,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          label,
+          style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 12),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHeader(BuildContext context, ColorScheme colorScheme) {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Row(
+        children: [
+          Icon(Icons.video_call, color: colorScheme.primary, size: 32),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'MeetSpace Pro',
+                  style: TextStyle(
+                    color: colorScheme.onSurface,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Video Meetings',
+                  style: TextStyle(
+                    color: colorScheme.onSurfaceVariant,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          GestureDetector(
+            onTap: () => Get.to(() => ProfilePage()),
+            child: Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainer,
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: colorScheme.outline.withOpacity(0.2),
+                  width: 1,
+                ),
+              ),
+              child: ClipOval(
+                child: userProfileInstance.user == null
+                    ? Icon(
+                        Icons.person,
+                        color: colorScheme.onSurfaceVariant,
+                        size: 24,
+                      )
+                    : Image.network(
+                        userProfileInstance.photoUrl!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(
+                            Icons.person,
+                            color: colorScheme.onSurfaceVariant,
+                            size: 24,
+                          );
+                        },
+                      ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWelcomeSection(BuildContext context, ColorScheme colorScheme) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainer,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          Icon(_getTimeIcon(), color: colorScheme.primary, size: 28),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Good ${_getTimeOfDay()}!',
+                  style: TextStyle(
+                    color: colorScheme.onSurface,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Ready to connect with your team?',
+                  style: TextStyle(
+                    color: colorScheme.onSurfaceVariant,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMainActions(BuildContext context, ColorScheme colorScheme) {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        children: [
+          const SizedBox(height: 40),
+
+          // Primary Action - Start Meeting
+          _buildPrimaryActionCard(
+            context,
+            colorScheme,
+            icon: Icons.add_circle_outline,
+            title: 'Start New Meeting',
+            subtitle: 'Begin an instant meeting',
+            onTap: () => _startNewMeeting(context),
+          ),
+
+          const SizedBox(height: 20),
+
+          // Secondary Actions
+          Row(
+            children: [
+              Expanded(
+                child: _buildSecondaryActionCard(
+                  context,
+                  colorScheme,
+                  icon: Icons.meeting_room,
+                  title: 'Join Meeting',
+                  onTap: () => Navigator.pushNamed(context, '/join'),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _buildSecondaryActionCard(
+                  context,
+                  colorScheme,
+                  icon: Icons.schedule,
+                  title: 'Schedule',
+                  onTap: () => _showScheduleDialog(),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 32),
+
+          // Recent Meetings
+          GestureDetector(
+            onTap: () {
+              // Handle recent meetings tap
+            },
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainer,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: colorScheme.outline.withOpacity(0.1),
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.history,
+                    color: colorScheme.onSurfaceVariant,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'Recent Meetings',
+                    style: TextStyle(
+                      color: colorScheme.onSurface,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const Spacer(),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: colorScheme.onSurfaceVariant,
+                    size: 16,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPrimaryActionCard(
+    BuildContext context,
+    ColorScheme colorScheme, {
     required IconData icon,
     required String title,
     required String subtitle,
-    required List<Color> gradient,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.all(24),
+        padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          gradient: LinearGradient(colors: gradient),
-          borderRadius: BorderRadius.circular(20),
+          color: colorScheme.primary,
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: gradient.first.withValues(alpha: 0.3),
-              blurRadius: 20,
-              offset: Offset(0, 10),
+              color: colorScheme.primary.withOpacity(0.2),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
             ),
           ],
         ),
         child: Row(
           children: [
             Container(
-              width: 60,
-              height: 60,
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(16),
+                color: colorScheme.onPrimary.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: Colors.white, size: 28),
+              child: Icon(icon, color: colorScheme.onPrimary, size: 28),
             ),
-            SizedBox(width: 20),
+            const SizedBox(width: 20),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -226,22 +340,88 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   Text(
                     title,
                     style: TextStyle(
-                      color: Colors.white,
+                      color: colorScheme.onPrimary,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: TextStyle(color: Colors.white70, fontSize: 14),
+                    style: TextStyle(
+                      color: colorScheme.onPrimary.withOpacity(0.8),
+                      fontSize: 14,
+                    ),
                   ),
                 ],
               ),
             ),
-            Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20),
+            Icon(
+              Icons.arrow_forward_ios,
+              color: colorScheme.onPrimary,
+              size: 18,
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildSecondaryActionCard(
+    BuildContext context,
+    ColorScheme colorScheme, {
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainer,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: colorScheme.outline.withOpacity(0.1),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: colorScheme.primary, size: 32),
+            const SizedBox(height: 12),
+            Text(
+              title,
+              style: TextStyle(
+                color: colorScheme.onSurface,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBottomInfo(BuildContext context, ColorScheme colorScheme) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.shield_outlined,
+            color: colorScheme.onSurfaceVariant,
+            size: 16,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            'End-to-end encrypted meetings',
+            style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 12),
+          ),
+        ],
       ),
     );
   }
@@ -251,6 +431,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     if (hour < 12) return 'Morning';
     if (hour < 17) return 'Afternoon';
     return 'Evening';
+  }
+
+  IconData _getTimeIcon() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return Icons.wb_sunny;
+    if (hour < 17) return Icons.wb_sunny;
+    return Icons.nights_stay;
   }
 
   void _startNewMeeting(BuildContext context) {
@@ -267,25 +454,28 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   void _showScheduleDialog() {
+    final colorScheme = Theme.of(context).colorScheme;
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text('Schedule Meeting'),
-        content: Text('This feature will be available soon!'),
+        backgroundColor: colorScheme.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          'Schedule Meeting',
+          style: TextStyle(color: colorScheme.onSurface),
+        ),
+        content: Text(
+          'This feature will be available soon!',
+          style: TextStyle(color: colorScheme.onSurfaceVariant),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('OK'),
+            child: const Text('OK'),
           ),
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
   }
 }

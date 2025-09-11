@@ -27,34 +27,43 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: colorScheme.surface,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(24.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(height: 60),
+              const SizedBox(height: 60),
               // Logo or Title
-              Icon(Icons.lock_outline, size: 80, color: Colors.blue),
-              SizedBox(height: 20),
+              Icon(
+                Icons.lock_outline, 
+                size: 80, 
+                color: colorScheme.primary,
+              ),
+              const SizedBox(height: 20),
               Text(
                 'Welcome Back',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: colorScheme.onSurface,
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 'Sign in to continue',
-                style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                style: TextStyle(
+                  fontSize: 16, 
+                  color: colorScheme.onSurfaceVariant,
+                ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 50),
+              const SizedBox(height: 50),
               Form(
                 key: _formKey,
                 child: Column(
@@ -63,12 +72,33 @@ class _LoginPageState extends State<LoginPage> {
                     TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
+                      style: TextStyle(color: colorScheme.onSurface),
                       decoration: InputDecoration(
                         labelText: 'Email',
                         hintText: 'Enter your email',
-                        prefixIcon: Icon(Icons.email_outlined),
+                        prefixIcon: Icon(
+                          Icons.email_outlined,
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                        labelStyle: TextStyle(color: colorScheme.onSurfaceVariant),
+                        hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withOpacity(0.7)),
+                        filled: true,
+                        fillColor: colorScheme.surfaceContainer,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: colorScheme.outline),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: colorScheme.outline),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: colorScheme.primary, width: 2),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: colorScheme.error),
                         ),
                       ),
                       validator: (value) {
@@ -78,20 +108,25 @@ class _LoginPageState extends State<LoginPage> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     // Password Field
                     TextFormField(
                       controller: _passwordController,
                       obscureText: _isPasswordHidden,
+                      style: TextStyle(color: colorScheme.onSurface),
                       decoration: InputDecoration(
                         labelText: 'Password',
                         hintText: 'Enter your password',
-                        prefixIcon: Icon(Icons.lock_outline),
+                        prefixIcon: Icon(
+                          Icons.lock_outline,
+                          color: colorScheme.onSurfaceVariant,
+                        ),
                         suffixIcon: IconButton(
                           icon: Icon(
                             _isPasswordHidden
                                 ? Icons.visibility_off
                                 : Icons.visibility,
+                            color: colorScheme.onSurfaceVariant,
                           ),
                           onPressed: () {
                             setState(() {
@@ -99,8 +134,25 @@ class _LoginPageState extends State<LoginPage> {
                             });
                           },
                         ),
+                        labelStyle: TextStyle(color: colorScheme.onSurfaceVariant),
+                        hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withOpacity(0.7)),
+                        filled: true,
+                        fillColor: colorScheme.surfaceContainer,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: colorScheme.outline),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: colorScheme.outline),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: colorScheme.primary, width: 2),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: colorScheme.error),
                         ),
                       ),
                       validator: (value) {
@@ -110,7 +162,7 @@ class _LoginPageState extends State<LoginPage> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
                     // Forgot Password Link
                     Align(
                       alignment: Alignment.centerRight,
@@ -120,99 +172,110 @@ class _LoginPageState extends State<LoginPage> {
                         },
                         child: Text(
                           'Forgot Password?',
-                          style: TextStyle(color: Colors.blue),
+                          style: TextStyle(color: colorScheme.primary),
                         ),
                       ),
                     ),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                     // Login Button
                     SizedBox(
                       width: 130,
                       height: 54,
-                      child:
-                          //Obx(() =>
-                          ElevatedButton(
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                GoogleSingInControler.instence.login(
-                                  _emailController.text,
-                                  _passwordController.text,
-                                );
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue,
-                              foregroundColor: Colors.white,
-                              padding: EdgeInsets.symmetric(
-                                vertical: 16,
-                                horizontal: 30,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: Obx(
-                              () =>
-                                  GoogleSingInControler.instence.isLoading.value
-                                  ? SizedBox(
-                                      height: 25,
-                                      width: 25,
-                                      child: CircularProgressIndicator(
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                  : Text(
-                                      'Login',
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                            ),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            GoogleSingInControler.instence.login(
+                              _emailController.text,
+                              _passwordController.text,
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: colorScheme.primary,
+                          foregroundColor: colorScheme.onPrimary,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 16,
+                            horizontal: 30,
                           ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 2,
+                          shadowColor: colorScheme.shadow.withOpacity(0.2),
+                        ),
+                        child: Obx(
+                          () => GoogleSingInControler.instence.isLoading.value
+                              ? SizedBox(
+                                  height: 25,
+                                  width: 25,
+                                  child: CircularProgressIndicator(
+                                    color: colorScheme.onPrimary,
+                                    strokeWidth: 2.5,
+                                  ),
+                                )
+                              : Text(
+                                  'Login',
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
+                                    color: colorScheme.onPrimary,
+                                  ),
+                                ),
+                        ),
+                      ),
                     ),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                     // OR Divider
                     Row(
                       children: [
-                        Expanded(child: Divider(thickness: 1)),
+                        Expanded(
+                          child: Divider(
+                            thickness: 1,
+                            color: colorScheme.outline,
+                          ),
+                        ),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
                             'OR',
                             style: TextStyle(
-                              color: Colors.grey[600],
+                              color: colorScheme.onSurfaceVariant,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),
-                        Expanded(child: Divider(thickness: 1)),
+                        Expanded(
+                          child: Divider(
+                            thickness: 1,
+                            color: colorScheme.outline,
+                          ),
+                        ),
                       ],
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     // Google Sign In Button
                     OutlinedButton(
                       onPressed: GoogleSingInControler.instence.googleSignIn,
                       style: OutlinedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 16),
+                        backgroundColor: colorScheme.surface,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        side: BorderSide(color: Colors.grey[300]!),
+                        side: BorderSide(color: colorScheme.outline),
                       ),
                       child: Obx(
-                        () =>
-                            GoogleSingInControler.instence.isGoogleLoading.value
+                        () => GoogleSingInControler.instence.isGoogleLoading.value
                             ? Shimmer.fromColors(
-                                baseColor: Colors.grey[300]!,
-                                highlightColor: Colors.white,
+                                baseColor: colorScheme.surfaceContainer,
+                                highlightColor: colorScheme.surface,
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Container(
                                       width: 20,
                                       height: 20,
-                                      decoration: BoxDecoration(
+                                      decoration: const BoxDecoration(
                                         image: DecorationImage(
                                           image: NetworkImage(
                                             'https://developers.google.com/identity/images/g-logo.png',
@@ -221,13 +284,13 @@ class _LoginPageState extends State<LoginPage> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: 12),
+                                    const SizedBox(width: 12),
                                     Text(
                                       'Signing in...',
                                       style: TextStyle(
                                         fontSize: 17,
                                         fontWeight: FontWeight.w500,
-                                        color: Colors.black87,
+                                        color: colorScheme.onSurface,
                                       ),
                                     ),
                                   ],
@@ -236,11 +299,11 @@ class _LoginPageState extends State<LoginPage> {
                             : Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  // Google Logo (SVG alternative using Container with decoration)
+                                  // Google Logo
                                   Container(
                                     width: 20,
                                     height: 20,
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       image: DecorationImage(
                                         image: NetworkImage(
                                           'https://developers.google.com/identity/images/g-logo.png',
@@ -249,29 +312,30 @@ class _LoginPageState extends State<LoginPage> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: 12),
+                                  const SizedBox(width: 12),
                                   Text(
                                     'Continue with Google',
                                     style: TextStyle(
                                       fontSize: 17,
                                       fontWeight: FontWeight.w500,
-                                      color: Colors.black87,
+                                      color: colorScheme.onSurface,
                                     ),
                                   ),
                                 ],
                               ),
                       ),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     // Phone Login Button
                     OutlinedButton(
                       onPressed: () => Get.to(() => PhoneLoginPage()),
                       style: OutlinedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 16),
+                        backgroundColor: colorScheme.surface,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        side: BorderSide(color: Colors.grey[300]!),
+                        side: BorderSide(color: colorScheme.outline),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -279,28 +343,28 @@ class _LoginPageState extends State<LoginPage> {
                           Icon(
                             Icons.phone_android,
                             size: 20,
-                            color: Colors.black87,
+                            color: colorScheme.onSurface,
                           ),
-                          SizedBox(width: 12),
+                          const SizedBox(width: 12),
                           Text(
                             'Continue with Phone',
                             style: TextStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.w500,
-                              color: Colors.black87,
+                              color: colorScheme.onSurface,
                             ),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                     // Sign Up Link
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           "Don't have an account? ",
-                          style: TextStyle(color: Colors.grey[600]),
+                          style: TextStyle(color: colorScheme.onSurfaceVariant),
                         ),
                         TextButton(
                           onPressed: () {
@@ -309,7 +373,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: Text(
                             'Sign Up',
                             style: TextStyle(
-                              color: Colors.blue,
+                              color: colorScheme.primary,
                               fontWeight: FontWeight.bold,
                             ),
                           ),

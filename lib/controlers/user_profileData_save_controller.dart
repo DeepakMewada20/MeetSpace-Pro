@@ -8,6 +8,7 @@ class UserProfiledataSaveController extends GetxController {
   User? user;
   String? photoUrl;
   String? displayName;
+  String? email;
   @override
   onInit() {
     super.onInit();
@@ -15,6 +16,7 @@ class UserProfiledataSaveController extends GetxController {
     if (user != null) {
       photoUrl = user!.photoURL ?? "";
       displayName = user!.displayName ?? "";
+      email = user!.email ?? "";
     }
   }
 
