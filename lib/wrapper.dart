@@ -37,8 +37,7 @@ class _WrapperState extends State<Wrapper> {
               // If user is null, navigate to Login Page
               return LoginPage();
             }
-          }
-          else {
+          } else {
             return Center(
               child: CircularProgressIndicator(),
             ); // Show loading indicator

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zoom_clone/controlers/google_sing_in_controler.dart';
 import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
-import 'package:zoom_clone/screen/home%20screen/home_screen.dart';
 import 'package:zoom_clone/screen/profile_page/edit_profile_page.dart';
+import 'package:zoom_clone/wrapper.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -189,7 +189,9 @@ class _ProfilePageState extends State<ProfilePage>
                     ),
                   ),
                   child: ClipOval(
-                    child: userProfileInstance.user == null
+                    child:
+                        userProfileInstance.user == null ||
+                            userProfileInstance.photoUrl == null
                         ? Container(
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
@@ -669,23 +671,26 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  void _logout() async {
+  void _logout()async {
     try {
-      await GoogleSingInControler.instence.googleSingOut();
-      Get.offAll(() => const HomeScreen());
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Successfully signed out'),
-          backgroundColor: Theme.of(context).colorScheme.primary,
-        ),
-      );
+      await GoogleSingInControler.instence.googleSingOut().then((_) {
+        if (mounted) {
+          Get.snackbar(
+            "Successfully",
+            "signed out",
+            backgroundColor: Theme.of(context).colorScheme.primary,
+          );
+        }
+        Get.offAll(() => const Wrapper());
+      });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error signing out: $e'),
+      if (mounted) {
+        Get.snackbar(
+          'Sign-Out Error',
+          'Failed to sign out: ${e.toString()}',
           backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
+        );
+      }
     }
   }
 }

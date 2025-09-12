@@ -33,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
 
     _animationController.forward();
+    Get.find<UserProfiledataSaveController>();
   }
 
   @override
@@ -140,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
               ),
               child: ClipOval(
-                child: userProfileInstance.user == null
+                child: userProfileInstance.user == null || userProfileInstance.photoUrl == null
                     ? Icon(
                         Icons.person,
                         color: colorScheme.onSurfaceVariant,

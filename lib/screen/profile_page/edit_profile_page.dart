@@ -706,32 +706,33 @@ class _EditProfilePageState extends State<EditProfilePage>
   void _pickImage(ImageSource imageSource) async {
     try {
       final pickedFile = await ImagePicker().pickImage(source: imageSource);
-      if (pickedFile == null) {
+      if (pickedFile == null && mounted) {
         Navigator.pop(context);
         return;
       }
 
-      final croppedFile = await ImageCropper().cropImage(
-        sourcePath: pickedFile.path,
-        uiSettings: [
-          AndroidUiSettings(
-            toolbarTitle: 'Crop Image',
-            toolbarColor: Theme.of(context).colorScheme.primary,
-            toolbarWidgetColor: Theme.of(context).colorScheme.onPrimary,
-            initAspectRatio: CropAspectRatioPreset.square,
-            lockAspectRatio: true,
-            cropStyle: CropStyle.circle,
-            statusBarColor: Theme.of(context).colorScheme.surface,
-          ),
-          IOSUiSettings(title: 'Crop Image', aspectRatioLockEnabled: true),
-        ],
-      );
+      // final croppedFile = await ImageCropper().cropImage(
+      //   sourcePath: pickedFile!.path,
+      //   uiSettings: [
+      //     if (mounted)
+      //       AndroidUiSettings(
+      //         toolbarTitle: 'Crop Image',
+      //         // toolbarColor: Theme.of(context).colorScheme.primary,
+      //         // toolbarWidgetColor: Theme.of(context).colorScheme.onPrimary,
+      //         initAspectRatio: CropAspectRatioPreset.square,
+      //         lockAspectRatio: true,
+      //         cropStyle: CropStyle.circle,
+      //         statusBarColor: Theme.of(context).colorScheme.surface,
+      //       ),
+      //       IOSUiSettings(title: 'Crop Image', aspectRatioLockEnabled: true),
+      //   ],
+      // );
 
       Navigator.pop(context);
 
-      if (croppedFile != null) {
+      if (pickedFile != null) {
         setState(() {
-          _pickedImage = croppedFile.path;
+          _pickedImage = pickedFile.path;
         });
       }
     } catch (e) {
@@ -751,7 +752,15 @@ class _EditProfilePageState extends State<EditProfilePage>
         UserProfiledataSaveController instance = Get.find();
 
         if (_pickedImage != null) {
-          instance.uploadUserProfilePhoto(File(_pickedImage!));
+          instance.uploadUserProfileData(
+            profileImage: File(_pickedImage!),
+            displayName: _nameController.text,
+            bio: _bioController.text,
+            phoneNumber: _phoneController.text,
+            jobTital: _jobTitleController.text,
+            companyName: _companyController.text,
+            email: _emailController.text,
+          );
         }
 
         ScaffoldMessenger.of(context).showSnackBar(

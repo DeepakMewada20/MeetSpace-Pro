@@ -75,7 +75,9 @@ class GoogleSingInControler extends GetxController {
     try {
       // Sign out from Google
       await FirebaseAuth.instance.signOut();
-      await googleSingIn.disconnect();
+      await googleSingIn.disconnect().then((_) {
+        Get.snackbar("Loge Out", "sacesfull");
+      });
     } catch (e) {
       _errorSnackbar(
         'Sign-Out Error',
@@ -91,7 +93,7 @@ class GoogleSingInControler extends GetxController {
         email: email,
         password: password,
       );
-      //Get.offAll(() => Wrapper()); // Navigate to Wrapper
+      Get.offAll(() => Wrapper()); // Navigate to Wrapper
     } on FirebaseAuthException catch (e) {
       _errorSnackbar('Login failed', _getErrormassage(e.code));
     } catch (e) {
