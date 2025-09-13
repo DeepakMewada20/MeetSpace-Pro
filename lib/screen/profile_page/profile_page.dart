@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:zoom_clone/controlers/google_sing_in_controler.dart';
 import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
 import 'package:zoom_clone/screen/profile_page/edit_profile_page.dart';
-import 'package:zoom_clone/wrapper.dart';
+import 'package:zoom_clone/widgets/show_dilog.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -38,7 +38,13 @@ class _ProfilePageState extends State<ProfilePage>
     _animationController.dispose();
     super.dispose();
   }
+   void _deleteAccount() async {
+    await userProfileInstance.deleteUserProfileData();
+  }
 
+  void _logout() async {
+    await GoogleSingInControler.instence.googleSingOut();
+  }
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -72,7 +78,27 @@ class _ProfilePageState extends State<ProfilePage>
                       const SizedBox(height: 24),
 
                       // Logout Section
-                      _buildLogoutSection(context, colorScheme),
+                      _buildLogoutAndDeletAccoundSection(
+                        context,
+                        colorScheme,
+                        tital: 'Sign Out',
+                        subTital: 'Sign out of your account',
+                        warningMassage: 'Are you sure you want to sign out',
+                        icon: Icons.logout,
+                        function: _logout,
+                      ),
+                      const SizedBox(height: 16),
+                      // Delete Account Section
+                      _buildLogoutAndDeletAccoundSection(
+                        context,
+                        colorScheme,
+                        tital: 'Delete Account',
+                        subTital: 'Permanently delete your account',
+                        warningMassage:
+                            'This action cannot be undone. Are you sure you want to delete your account',
+                        icon: Icons.delete_outline,
+                        function: _deleteAccount,
+                      ),
 
                       const SizedBox(height: 40),
                     ],
@@ -443,9 +469,25 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget _buildLogoutSection(BuildContext context, ColorScheme colorScheme) {
+  Widget _buildLogoutAndDeletAccoundSection(
+    BuildContext context,
+    ColorScheme colorScheme, {
+    required String tital,
+    required String subTital,
+    required String warningMassage,
+    required IconData icon,
+    required void Function() function,
+  }) {
     return GestureDetector(
-      onTap: _showLogoutDialog,
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return ShowDilogWidget(tital, warningMassage, function);
+          },
+        );
+      },
+      // ShowDilog.dialog(tital, warningMassage, function),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(20),
@@ -466,11 +508,7 @@ class _ProfilePageState extends State<ProfilePage>
                 color: colorScheme.errorContainer,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(
-                Icons.logout,
-                color: colorScheme.onErrorContainer,
-                size: 20,
-              ),
+              child: Icon(icon, color: colorScheme.onErrorContainer, size: 20),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -478,7 +516,7 @@ class _ProfilePageState extends State<ProfilePage>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Sign Out',
+                    tital,
                     style: TextStyle(
                       color: colorScheme.error,
                       fontSize: 18,
@@ -487,7 +525,7 @@ class _ProfilePageState extends State<ProfilePage>
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Sign out of your account',
+                    subTital,
                     style: TextStyle(
                       color: colorScheme.error.withOpacity(0.8),
                       fontSize: 14,
@@ -632,67 +670,6 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  void _showLogoutDialog() {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: colorScheme.surface,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
-          children: [
-            Icon(Icons.warning_outlined, color: colorScheme.error),
-            const SizedBox(width: 10),
-            Text('Sign Out?', style: TextStyle(color: colorScheme.onSurface)),
-          ],
-        ),
-        content: Text(
-          'Are you sure you want to sign out of your account?',
-          style: TextStyle(color: colorScheme.onSurfaceVariant),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Cancel',
-              style: TextStyle(color: colorScheme.onSurfaceVariant),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _logout();
-            },
-            child: Text('Sign Out', style: TextStyle(color: colorScheme.error)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _logout()async {
-    try {
-      await GoogleSingInControler.instence.googleSingOut().then((_) {
-        if (mounted) {
-          Get.snackbar(
-            "Successfully",
-            "signed out",
-            backgroundColor: Theme.of(context).colorScheme.primary,
-          );
-        }
-        Get.offAll(() => const Wrapper());
-      });
-    } catch (e) {
-      if (mounted) {
-        Get.snackbar(
-          'Sign-Out Error',
-          'Failed to sign out: ${e.toString()}',
-          backgroundColor: Theme.of(context).colorScheme.error,
-        );
-      }
-    }
-  }
 }
 
 class Participant {

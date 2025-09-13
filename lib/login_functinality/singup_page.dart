@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
 import 'package:zoom_clone/login_functinality/login_page.dart';
 import 'package:zoom_clone/wrapper.dart';
 
@@ -17,6 +18,9 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+
+  UserProfiledataSaveController userProfiledataSaveController =
+      Get.put(UserProfiledataSaveController());
   
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -63,6 +67,15 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
             );
         
         if (currentUser.user != null) {
+          userProfiledataSaveController.uploadUserProfileData(
+            profileImage: null,
+            email: _emailController.text,
+            displayName: _nameController.text,
+            bio: null,
+            phoneNumber: null,
+            jobTital: null,
+            companyName: null,
+          );
           _showSuccessSnackbar("Welcome ${_nameController.text}!");
           Get.offAll(() => Wrapper());
         }

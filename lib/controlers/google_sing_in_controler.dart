@@ -1,16 +1,27 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
+import 'package:zoom_clone/widgets/snackbar_and_toast_widget.dart';
 import 'package:zoom_clone/wrapper.dart';
 
 class GoogleSingInControler extends GetxController {
   static GoogleSingInControler instence = Get.find();
   RxBool isLoading = false.obs;
   RxBool isGoogleLoading = false.obs;
+  RxBool isSingOut = false.obs;
   //Rx<User?> _currentUser = Rx<User?>(FirebaseAuth.instance.currentUser);
   GoogleSignIn googleSingIn = GoogleSignIn.instance;
+  late UserProfiledataSaveController userProfiledataSaveController;
+
+  @override
+  void onInit() {
+    super.onInit();
+    userProfiledataSaveController = Get.put(UserProfiledataSaveController());
+  }
 
   // Method to handle Google Sign-In
   Future<void> googleSignIn() async {
@@ -28,7 +39,8 @@ class GoogleSingInControler extends GetxController {
       // 3. Try lightweight auth (may show UI on some platforms)
       user = await googleSingIn.attemptLightweightAuthentication();
       user ??= await googleSingIn.authenticate();
-      _googleSingInHepplerFunction(user);
+      await _googleSingInHepplerFunction(user);
+      SnackbarAndToastWidget.tostMessage("google SingIn scsesfull");
     } on FirebaseAuthException catch (e) {
       _errorSnackbar(
         'Error',
@@ -41,7 +53,7 @@ class GoogleSingInControler extends GetxController {
         try {
           await googleSingIn.signOut();
           final fresUser = await googleSingIn.authenticate();
-          _googleSingInHepplerFunction(fresUser);
+          await _googleSingInHepplerFunction(fresUser);
         } catch (e) {
           _errorSnackbar(
             'Error',
@@ -58,7 +70,7 @@ class GoogleSingInControler extends GetxController {
       } else {
         _errorSnackbar(
           'Google Sign-In',
-          desc.isNotEmpty ? desc : 'Unknown error. Check logs.',
+          desc.isNotEmpty ? desc : 'Unknown error',
         );
       }
     } catch (e) {
@@ -72,17 +84,25 @@ class GoogleSingInControler extends GetxController {
   }
 
   Future<void> googleSingOut() async {
+    isSingOut.value = true;
     try {
       // Sign out from Google
       await FirebaseAuth.instance.signOut();
-      await googleSingIn.disconnect().then((_) {
-        Get.snackbar("Loge Out", "sacesfull");
-      });
+      await googleSingIn.disconnect();
+      // SnackbarWidget.successSnackbar('Successfully', 'signed out');
+      Fluttertoast.showToast(
+        msg: "Successfully signed out",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+      );
+      Get.off(() => Wrapper());
     } catch (e) {
       _errorSnackbar(
         'Sign-Out Error',
         'Failed to sign out from : ${e.toString()}',
       );
+    } finally {
+      isSingOut.value = false;
     }
   }
 
@@ -104,6 +124,41 @@ class GoogleSingInControler extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  Future<void> _googleSingInHepplerFunction(GoogleSignInAccount user) async {
+    final GoogleSignInAuthentication googleAuth = user.authentication;
+
+    // Create a new credential using the Google authentication token
+    final OAuthCredential credential = GoogleAuthProvider.credential(
+      idToken: googleAuth.idToken,
+    );
+
+    // Sign in to Firebase with the Google credentials
+    await FirebaseAuth.instance.signInWithCredential(credential).then((
+      UserCredential userCredential,
+    ) {
+      // Handle successful sign-in
+      if (userCredential.user != null) {
+        // Save user profile data
+        userProfiledataSaveController.uploadUserProfileData(
+          profileImage: null,
+          email: userCredential.user?.email,
+          displayName: userCredential.user?.displayName,
+          bio: null,
+          phoneNumber: userCredential.user?.phoneNumber,
+          jobTital: null,
+          companyName: null,
+        );
+        // Get the current user
+        // _currentUser.value = userCredential.user;
+        // Navigate to Wrapper or any other page
+        Get.offAll(() => Wrapper());
+        return;
+      } else {
+        _errorSnackbar('Sign-In Error', 'User is null after sign-in.');
+      }
+    });
   }
 }
 
@@ -141,29 +196,4 @@ String _getErrormassage(String errorCode) {
     default:
       return 'An unknown error occurred. Please try again later.';
   }
-}
-
-void _googleSingInHepplerFunction(GoogleSignInAccount user) async {
-  final GoogleSignInAuthentication googleAuth = user.authentication;
-
-  // Create a new credential using the Google authentication token
-  final OAuthCredential credential = GoogleAuthProvider.credential(
-    idToken: googleAuth.idToken,
-  );
-
-  // Sign in to Firebase with the Google credentials
-  await FirebaseAuth.instance.signInWithCredential(credential).then((
-    UserCredential userCredential,
-  ) {
-    // Handle successful sign-in
-    if (userCredential.user != null) {
-      // Get the current user
-      // _currentUser.value = userCredential.user;
-      // Navigate to Wrapper or any other page
-      Get.offAll(() => Wrapper());
-      return;
-    } else {
-      _errorSnackbar('Sign-In Error', 'User is null after sign-in.');
-    }
-  });
 }

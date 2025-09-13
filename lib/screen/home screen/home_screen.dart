@@ -141,7 +141,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
               ),
               child: ClipOval(
-                child: userProfileInstance.user == null || userProfileInstance.photoUrl == null
+                child:
+                    userProfileInstance.user == null ||
+                        userProfileInstance.photoUrl == null
                     ? Icon(
                         Icons.person,
                         color: colorScheme.onSurfaceVariant,
@@ -294,6 +296,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
             ),
           ),
+          // SizedBox(height: 20),
+          // FloatingActionButton(
+          //   backgroundColor: colorScheme.primary,
+          //   child: Icon(Icons.abc, color: colorScheme.onPrimary),
+          //   onPressed: () {
+          //     Fluttertoast.showToast(
+          //       msg: "Successfully signed out",
+          //       toastLength: Toast.LENGTH_SHORT,
+          //       gravity: ToastGravity.BOTTOM,
+          //       backgroundColor: Colors.grey[800],
+          //       textColor: Colors.white,
+          //       fontSize: 16.0,
+          //     );
+          //   },
+          // ),
         ],
       ),
     );

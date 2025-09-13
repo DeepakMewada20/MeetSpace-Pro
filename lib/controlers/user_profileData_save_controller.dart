@@ -6,6 +6,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 
 class UserProfiledataSaveController extends GetxController {
+  RxBool accoundDelitting = false.obs;
+  RxBool requiresRecentLogin = false.obs;
   User? user;
   String? photoUrl;
   String? displayName;
@@ -26,21 +28,25 @@ class UserProfiledataSaveController extends GetxController {
   }
 
   Future uploadUserProfileData({
-    required File profileImage,
-    required String email,
-    required String displayName,
-    required String bio,
-    required String phoneNumber,
-    required String jobTital,
-    required String companyName,
+    required File? profileImage,
+    required String? email,
+    required String? displayName,
+    required String? bio,
+    required String? phoneNumber,
+    required String? jobTital,
+    required String? companyName,
   }) async {
-    String? photoStoragePath;
+    String? profilePhotoUrl;
     if (user == null) {
-      print("User is not logged in.");
+      Get.snackbar(
+        "Data not saved!!",
+        "please login first",
+        snackPosition: SnackPosition.BOTTOM,
+      );
       return;
     }
-    if (profileImage.path.isNotEmpty) {
-      photoStoragePath = await uploadeUserProfilePhoto(
+    if (profileImage != null && profileImage.path.isNotEmpty) {
+      profilePhotoUrl = await uploadeUserProfilePhoto(
         profileImage: profileImage,
       );
     }
@@ -53,16 +59,16 @@ class UserProfiledataSaveController extends GetxController {
         "phoneNumber": phoneNumber,
         "jobTital": jobTital,
         "companyName": companyName,
-        "Photopath": photoStoragePath,
+        "PhotoUrl": profilePhotoUrl,
         "createdAt": FieldValue.serverTimestamp(),
-      });
+      }, SetOptions(merge: true));
     } catch (e) {
       print("Error uploading profile data: ${e.toString()}");
     }
   }
 
   Future<String?> uploadeUserProfilePhoto({required File profileImage}) async {
-    String? photoStoragePath;
+    String? profilePhotoUrl;
     try {
       // 1 Create a reference to the location you want to upload to in Firebase Storage
       final storageRefrence = FirebaseStorage.instance
@@ -74,10 +80,73 @@ class UserProfiledataSaveController extends GetxController {
       UploadTask uploadTask = storageRefrence.putFile(profileImage);
       // 3 Waits till the file is uploaded then stores the download url
       TaskSnapshot snapshot = await uploadTask;
-      photoStoragePath = snapshot.ref.fullPath;
+      profilePhotoUrl = await snapshot.ref.getDownloadURL();
     } catch (e) {
-      print("###########################################################Error uploading profile photo: ${e.toString()}");
+      print(
+        "###########################################################Error uploading profile photo: ${e.toString()}",
+      );
     }
-    return photoStoragePath;
+    return profilePhotoUrl;
+  }
+
+  Future<void> deleteUserProfileData() async {
+    if (user == null) {
+      Get.snackbar(
+        "Data not deleted!!",
+        "please login first",
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+    accoundDelitting.value = true;
+    try {
+      // Optionally, you can also delete the user's profile photo from Firebase Storage
+      await FirebaseStorage.instance
+          .ref()
+          .child("user_profile_details")
+          .child(user!.uid)
+          .delete();
+
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(user!.uid)
+          .delete();
+
+      await FirebaseAuth.instance.currentUser?.delete();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == "requires-recent-login") {}
+    } on FirebaseException catch (e) {
+      print(e.code);
+    } catch (e) {
+      print("Error deleting profile data: ${e.toString()}");
+    } finally {
+      accoundDelitting.value = false;
+    }
+  }
+}
+
+void _getErrormassage(String errorCode) {
+  switch (errorCode) {
+    case "network-request-failed":
+      {}
+    case "requires-recent-login":
+      {}
+    case "user-not-found":
+      {}
+    case "internal-error":
+      {}
+    case "network-request-failed":
+      {}
+    case "network-request-failed":
+      {}
+    case "network-request-failed":
+      {}
+    case "network-request-failed":
+      {}
+    case "network-request-failed":
+      {}
+
+      break;
+    default:
   }
 }
