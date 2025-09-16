@@ -101,20 +101,38 @@ class UserProfiledataSaveController extends GetxController {
     accoundDelitting.value = true;
     try {
       // Optionally, you can also delete the user's profile photo from Firebase Storage
-      await FirebaseStorage.instance
-          .ref()
-          .child("user_profile_details")
-          .child(user!.uid)
-          .delete();
-
-      await FirebaseFirestore.instance
-          .collection("users")
-          .doc(user!.uid)
-          .delete();
+      try {
+        await FirebaseStorage.instance
+            .ref()
+            .child("user_profile_details")
+            .child(user!.uid)
+            .child("profilePhoto.jpg")
+            .delete();
+      } on FirebaseException catch (e) {
+        if (e.code == "object-not-found") {
+          print("profile photo not aplloded ##############################");
+        } else {
+          rethrow;
+        }
+      }
+      try {
+        await FirebaseFirestore.instance
+            .collection("users")
+            .doc(user!.uid)
+            .delete();
+      } on FirebaseException catch(e)  {
+        if (e.code == "object-not-found") {
+          print("profile photo not aplloded ##############################");
+        } else {
+          rethrow;
+        }
+      }
 
       await FirebaseAuth.instance.currentUser?.delete();
     } on FirebaseAuthException catch (e) {
-      if (e.code == "requires-recent-login") {}
+      if (e.code == "requires-recent-login") {
+        requiresRecentLogin.value = true;
+      } else {}
     } on FirebaseException catch (e) {
       print(e.code);
     } catch (e) {
