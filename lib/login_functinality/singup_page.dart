@@ -19,12 +19,13 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-  UserProfiledataSaveController userProfiledataSaveController =
-      Get.put(UserProfiledataSaveController());
-  
+  UserProfiledataSaveController userProfiledataSaveController = Get.put(
+    UserProfiledataSaveController(),
+  );
+
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-  
+
   bool _isPasswordHidden = true;
   bool _isConfirmPasswordHidden = true;
   bool _isLoading = false;
@@ -58,14 +59,14 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
       setState(() {
         _isLoading = true;
       });
-      
+
       try {
         UserCredential currentUser = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
               email: _emailController.text,
               password: _passwordController.text,
             );
-        
+
         if (currentUser.user != null) {
           userProfiledataSaveController.uploadUserProfileData(
             profileImage: null,
@@ -73,7 +74,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
             displayName: _nameController.text,
             bio: null,
             phoneNumber: null,
-            jobTital: null,
+            jobTitle: null,
             companyName: null,
           );
           _showSuccessSnackbar("Welcome ${_nameController.text}!");
@@ -102,7 +103,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
             children: [
               // Header
               _buildHeader(context, colorScheme),
-              
+
               // Main Content
               Expanded(
                 child: SingleChildScrollView(
@@ -111,14 +112,14 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
                     children: [
                       // Welcome Section
                       _buildWelcomeSection(context, colorScheme),
-                      
+
                       const SizedBox(height: 32),
-                      
+
                       // Form
                       _buildSignupForm(context, colorScheme),
-                      
+
                       const SizedBox(height: 24),
-                      
+
                       // Login Link
                       _buildLoginLink(context, colorScheme),
                     ],
@@ -219,10 +220,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
           const SizedBox(height: 8),
           Text(
             'Create your account to start hosting and joining video meetings',
-            style: TextStyle(
-              color: colorScheme.onSurfaceVariant,
-              fontSize: 16,
-            ),
+            style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 16),
             textAlign: TextAlign.center,
           ),
         ],
@@ -245,7 +243,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // Name Field
           _buildTextField(
             controller: _nameController,
@@ -260,9 +258,9 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
               return null;
             },
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Email Field
           _buildTextField(
             controller: _emailController,
@@ -281,9 +279,9 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
               return null;
             },
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           Text(
             'Security',
             style: TextStyle(
@@ -293,7 +291,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // Password Field
           _buildTextField(
             controller: _passwordController,
@@ -318,9 +316,9 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
               return null;
             },
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Confirm Password Field
           _buildTextField(
             controller: _confirmPasswordController,
@@ -345,9 +343,9 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
               return null;
             },
           ),
-          
+
           const SizedBox(height: 32),
-          
+
           // Sign Up Button
           SizedBox(
             width: double.infinity,
@@ -419,10 +417,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
         keyboardType: keyboardType,
         obscureText: isPassword && !isPasswordVisible,
         validator: validator,
-        style: TextStyle(
-          color: colorScheme.onSurface,
-          fontSize: 16,
-        ),
+        style: TextStyle(color: colorScheme.onSurface, fontSize: 16),
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
@@ -439,7 +434,9 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
           border: InputBorder.none,
           contentPadding: const EdgeInsets.all(16),
           labelStyle: TextStyle(color: colorScheme.onSurfaceVariant),
-          hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withOpacity(0.7)),
+          hintStyle: TextStyle(
+            color: colorScheme.onSurfaceVariant.withOpacity(0.7),
+          ),
         ),
       ),
     );
@@ -461,10 +458,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
         children: [
           Text(
             "Already have an account? ",
-            style: TextStyle(
-              color: colorScheme.onSurfaceVariant,
-              fontSize: 16,
-            ),
+            style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 16),
           ),
           GestureDetector(
             onTap: () => Get.offAll(() => LoginPage()),
@@ -484,7 +478,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
 
   void _showSuccessSnackbar(String message) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     Get.snackbar(
       "Success",
       message,
@@ -493,16 +487,13 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
       colorText: colorScheme.onPrimary,
       borderRadius: 12,
       margin: const EdgeInsets.all(16),
-      icon: Icon(
-        Icons.check_circle_outline,
-        color: colorScheme.onPrimary,
-      ),
+      icon: Icon(Icons.check_circle_outline, color: colorScheme.onPrimary),
     );
   }
 
   void _showErrorSnackbar(String message) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     Get.snackbar(
       "Error",
       message,
@@ -511,10 +502,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
       colorText: colorScheme.onError,
       borderRadius: 12,
       margin: const EdgeInsets.all(16),
-      icon: Icon(
-        Icons.error_outline,
-        color: colorScheme.onError,
-      ),
+      icon: Icon(Icons.error_outline, color: colorScheme.onError),
     );
   }
 }

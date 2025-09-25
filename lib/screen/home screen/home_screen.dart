@@ -143,14 +143,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               child: ClipOval(
                 child:
                     userProfileInstance.user == null ||
-                        userProfileInstance.photoUrl == null
+                        userProfileInstance.user!.profileImagePath.isEmpty
                     ? Icon(
                         Icons.person,
                         color: colorScheme.onSurfaceVariant,
                         size: 24,
                       )
                     : Image.network(
-                        userProfileInstance.photoUrl!,
+                        userProfileInstance.user!.profileImageUrl!,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return Icon(

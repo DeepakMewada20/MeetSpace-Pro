@@ -45,13 +45,13 @@ class _EditProfilePageState extends State<EditProfilePage>
     _animationController.forward();
 
     // Pre-fill with existing data
-    _nameController.text = userProfileInstance.displayName ?? 'User Name';
-    _emailController.text = userProfileInstance.email ?? 'user@example.com';
-    _phoneController.text = '+1 (555) 123-4567';
-    _jobTitleController.text = 'MeetSpace User';
-    _companyController.text = 'MeetSpace Pro';
+    _nameController.text = userProfileInstance.user?.displayName ?? 'User Name';
+    _emailController.text = userProfileInstance.user?.email ?? 'user@example.com';
+    _phoneController.text = userProfileInstance.user?.phoneNumber ?? '+1 (555) 123-4567';
+    _jobTitleController.text = userProfileInstance.user?.jobTitle ?? 'MeetSpace User';
+    _companyController.text = userProfileInstance.user?.companyName ?? 'MeetSpace Pro';
     _bioController.text =
-        'Passionate professional using MeetSpace Pro for seamless video meetings and collaboration.';
+        userProfileInstance.user?.bio ?? 'Passionate professional using MeetSpace Pro for seamless video meetings and collaboration.';
   }
 
   @override
@@ -222,9 +222,9 @@ class _EditProfilePageState extends State<EditProfilePage>
               child: ClipOval(
                 child: _pickedImage != null
                     ? Image.file(File(_pickedImage!), fit: BoxFit.cover)
-                    : userProfileInstance.user?.photoURL != null
+                    : userProfileInstance.user?.profileImageUrl != null
                     ? Image.network(
-                        userProfileInstance.user!.photoURL!,
+                        userProfileInstance.user!.profileImageUrl!,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return _buildDefaultAvatar(colorScheme);
@@ -266,8 +266,8 @@ class _EditProfilePageState extends State<EditProfilePage>
       ),
       child: Center(
         child: Text(
-          userProfileInstance.displayName != null
-              ? userProfileInstance.displayName![0].toUpperCase()
+          userProfileInstance.user!.displayName.isNotEmpty
+              ? userProfileInstance.user!.displayName[0].toUpperCase()
               : 'U',
           style: const TextStyle(
             color: Colors.white,
@@ -756,7 +756,7 @@ class _EditProfilePageState extends State<EditProfilePage>
             displayName: _nameController.text,
             bio: _bioController.text,
             phoneNumber: _phoneController.text,
-            jobTital: _jobTitleController.text,
+            jobTitle: _jobTitleController.text,
             companyName: _companyController.text,
             email: _emailController.text,
           );

@@ -147,7 +147,7 @@ class GoogleSingInControler extends GetxController {
           displayName: userCredential.user?.displayName,
           bio: null,
           phoneNumber: userCredential.user?.phoneNumber,
-          jobTital: null,
+          jobTitle: null,
           companyName: null,
         );
         // Get the current user

@@ -217,7 +217,7 @@ class _ProfilePageState extends State<ProfilePage>
                   child: ClipOval(
                     child:
                         userProfileInstance.user == null ||
-                            userProfileInstance.photoUrl == null
+                            userProfileInstance.user!.profileImageUrl == null
                         ? Container(
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
@@ -233,7 +233,7 @@ class _ProfilePageState extends State<ProfilePage>
                             ),
                           )
                         : Image.network(
-                            userProfileInstance.photoUrl!,
+                            userProfileInstance.user!.profileImageUrl!,
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               return Container(
@@ -247,8 +247,8 @@ class _ProfilePageState extends State<ProfilePage>
                                 ),
                                 child: Center(
                                   child: Text(
-                                    userProfileInstance.displayName != null
-                                        ? userProfileInstance.displayName![0]
+                                    userProfileInstance.user!.displayName.isNotEmpty
+                                        ? userProfileInstance.user!.displayName[0]
                                               .toUpperCase()
                                         : 'U',
                                     style: const TextStyle(
@@ -289,7 +289,7 @@ class _ProfilePageState extends State<ProfilePage>
 
           // Name
           Text(
-            userProfileInstance.displayName ?? 'User Name',
+            userProfileInstance.user!.displayName.isNotEmpty ? userProfileInstance.user!.displayName : 'User Name',
             style: TextStyle(
               color: colorScheme.onSurface,
               fontSize: 26,
@@ -301,7 +301,7 @@ class _ProfilePageState extends State<ProfilePage>
 
           // Email
           Text(
-            userProfileInstance.email ?? 'user@example.com',
+            userProfileInstance.user!.email.isNotEmpty ? userProfileInstance.user!.email : 'user@example.com',
             style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 16),
           ),
 
