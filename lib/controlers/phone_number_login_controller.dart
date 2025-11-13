@@ -4,7 +4,7 @@ import 'package:zoom_clone/login_functinality/phone_opt_verification_page.dart';
 import 'package:zoom_clone/wrapper.dart';
 
 class PhoneNumberLoginController extends GetxController {
-  static PhoneNumberLoginController instance = Get.find();
+  static PhoneNumberLoginController instance = Get.find<PhoneNumberLoginController>();
   RxBool isLoading = false.obs;
   String _verificationId = "";
   int? _resendToken;

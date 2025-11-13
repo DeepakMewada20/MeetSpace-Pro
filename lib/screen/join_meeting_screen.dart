@@ -171,7 +171,7 @@ class _JoinMeetingScreenState extends State<JoinMeetingScreen>
                       size: 24,
                     )
                   : Image.network(
-                      userProfileInstance.user!.profileImageUrl!,
+                      userProfileInstance.user!.profileImageUrl,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Icon(

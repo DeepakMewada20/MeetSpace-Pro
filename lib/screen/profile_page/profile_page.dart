@@ -216,8 +216,7 @@ class _ProfilePageState extends State<ProfilePage>
                   ),
                   child: ClipOval(
                     child:
-                        userProfileInstance.user == null ||
-                            userProfileInstance.user!.profileImageUrl == null
+                        userProfileInstance.user == null
                         ? Container(
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
@@ -233,7 +232,7 @@ class _ProfilePageState extends State<ProfilePage>
                             ),
                           )
                         : Image.network(
-                            userProfileInstance.user!.profileImageUrl!,
+                            userProfileInstance.user!.profileImageUrl,
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               return Container(
@@ -289,6 +288,7 @@ class _ProfilePageState extends State<ProfilePage>
 
           // Name
           Text(
+            userProfileInstance.user!=null&&
             userProfileInstance.user!.displayName.isNotEmpty ? userProfileInstance.user!.displayName : 'User Name',
             style: TextStyle(
               color: colorScheme.onSurface,
@@ -301,6 +301,7 @@ class _ProfilePageState extends State<ProfilePage>
 
           // Email
           Text(
+            userProfileInstance.user!=null&&
             userProfileInstance.user!.email.isNotEmpty ? userProfileInstance.user!.email : 'user@example.com',
             style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 16),
           ),

@@ -46,12 +46,17 @@ class _EditProfilePageState extends State<EditProfilePage>
 
     // Pre-fill with existing data
     _nameController.text = userProfileInstance.user?.displayName ?? 'User Name';
-    _emailController.text = userProfileInstance.user?.email ?? 'user@example.com';
-    _phoneController.text = userProfileInstance.user?.phoneNumber ?? '+1 (555) 123-4567';
-    _jobTitleController.text = userProfileInstance.user?.jobTitle ?? 'MeetSpace User';
-    _companyController.text = userProfileInstance.user?.companyName ?? 'MeetSpace Pro';
+    _emailController.text =
+        userProfileInstance.user?.email ?? 'user@example.com';
+    _phoneController.text =
+        userProfileInstance.user?.phoneNumber ?? '+1 (555) 123-4567';
+    _jobTitleController.text =
+        userProfileInstance.user?.jobTitle ?? 'MeetSpace User';
+    _companyController.text =
+        userProfileInstance.user?.companyName ?? 'MeetSpace Pro';
     _bioController.text =
-        userProfileInstance.user?.bio ?? 'Passionate professional using MeetSpace Pro for seamless video meetings and collaboration.';
+        userProfileInstance.user?.bio ??
+        'Passionate professional using MeetSpace Pro for seamless video meetings and collaboration.';
   }
 
   @override
@@ -224,7 +229,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     ? Image.file(File(_pickedImage!), fit: BoxFit.cover)
                     : userProfileInstance.user?.profileImageUrl != null
                     ? Image.network(
-                        userProfileInstance.user!.profileImageUrl!,
+                        userProfileInstance.user!.profileImageUrl,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return _buildDefaultAvatar(colorScheme);
@@ -749,18 +754,15 @@ class _EditProfilePageState extends State<EditProfilePage>
     if (_formKey.currentState!.validate()) {
       try {
         UserProfiledataSaveController instance = Get.find();
-
-        if (_pickedImage != null) {
-          instance.uploadUserProfileData(
-            profileImage: File(_pickedImage!),
-            displayName: _nameController.text,
-            bio: _bioController.text,
-            phoneNumber: _phoneController.text,
-            jobTitle: _jobTitleController.text,
-            companyName: _companyController.text,
-            email: _emailController.text,
-          );
-        }
+        instance.uploadUserProfileData(
+          profileImage: _pickedImage != null ? File(_pickedImage!) : null,
+          displayName: _nameController.text,
+          bio: _bioController.text,
+          phoneNumber: _phoneController.text,
+          jobTitle: _jobTitleController.text,
+          companyName: _companyController.text,
+          email: _emailController.text,
+        );
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:zoom_clone/controlers/google_sing_in_controler.dart';
 import 'package:zoom_clone/controlers/phone_number_login_controller.dart';
+import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
 import 'package:zoom_clone/screen/join_meeting_screen.dart';
 import 'package:zoom_clone/screen/home%20screen/home_screen.dart';
 import 'package:zoom_clone/screen/splash_screen.dart';
@@ -46,8 +48,13 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  Get.put(GoogleSingInControler()); // Initialize the Google Sign-In controller
-  Get.put(PhoneNumberLoginController());
+  Get.lazyPut<GoogleSingInControler>(
+    () => GoogleSingInControler(),
+  ); // Initialize the Google Sign-In controller
+  Get.lazyPut<PhoneNumberLoginController>(() => PhoneNumberLoginController());
+  Get.put<UserProfiledataSaveController>(
+    UserProfiledataSaveController(),
+  );
   runApp(VideoCallApp());
 }
 
@@ -56,23 +63,25 @@ class VideoCallApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'MeetSpace Pro',
-      debugShowCheckedModeBanner: false,
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: ThemeMode.dark,
-      // theme: ThemeData(
-      //   primarySwatch: Colors.blue,
-      //   visualDensity: VisualDensity.adaptivePlatformDensity,
-      //   fontFamily: 'SF Pro Display',
-      // ),
-      home: SplashScreen(),
-      routes: {
-        '/home': (context) => HomeScreen(),
-        '/call': (context) => VideoCallScreen(),
-        '/join': (context) => JoinMeetingScreen(),
-      },
+    return ProviderScope(
+      child: GetMaterialApp(
+        title: 'MeetSpace Pro',
+        debugShowCheckedModeBanner: false,
+        theme: lightTheme,
+        darkTheme: darkTheme,
+        themeMode: ThemeMode.dark,
+        // theme: ThemeData(
+        //   primarySwatch: Colors.blue,
+        //   visualDensity: VisualDensity.adaptivePlatformDensity,
+        //   fontFamily: 'SF Pro Display',
+        // ),
+        home: SplashScreen(),
+        routes: {
+          '/home': (context) => HomeScreen(),
+          '/call': (context) => VideoCallScreen(),
+          '/join': (context) => JoinMeetingScreen(),
+        },
+      ),
     );
   }
 }

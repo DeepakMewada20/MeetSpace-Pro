@@ -4,24 +4,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
 import 'package:zoom_clone/widgets/snackbar_and_toast_widget.dart';
 import 'package:zoom_clone/wrapper.dart';
 
 class GoogleSingInControler extends GetxController {
-  static GoogleSingInControler instence = Get.find();
+  static GoogleSingInControler instence = Get.find<GoogleSingInControler>();
   RxBool isLoading = false.obs;
   RxBool isGoogleLoading = false.obs;
   RxBool isSingOut = false.obs;
   //Rx<User?> _currentUser = Rx<User?>(FirebaseAuth.instance.currentUser);
   GoogleSignIn googleSingIn = GoogleSignIn.instance;
-  late UserProfiledataSaveController userProfiledataSaveController;
-
-  @override
-  void onInit() {
-    super.onInit();
-    userProfiledataSaveController = Get.put(UserProfiledataSaveController());
-  }
 
   // Method to handle Google Sign-In
   Future<void> googleSignIn() async {
@@ -38,7 +30,7 @@ class GoogleSingInControler extends GetxController {
     try {
       // 3. Try lightweight auth (may show UI on some platforms)
       user = await googleSingIn.attemptLightweightAuthentication();
-      user ??= await googleSingIn.authenticate();
+      user == null ? user = await googleSingIn.authenticate() : null;
       await _googleSingInHepplerFunction(user);
       SnackbarAndToastWidget.tostMessage("google SingIn scsesfull");
     } on FirebaseAuthException catch (e) {
@@ -140,19 +132,6 @@ class GoogleSingInControler extends GetxController {
     ) {
       // Handle successful sign-in
       if (userCredential.user != null) {
-        // Save user profile data
-        userProfiledataSaveController.uploadUserProfileData(
-          profileImage: null,
-          email: userCredential.user?.email,
-          displayName: userCredential.user?.displayName,
-          bio: null,
-          phoneNumber: userCredential.user?.phoneNumber,
-          jobTitle: null,
-          companyName: null,
-        );
-        // Get the current user
-        // _currentUser.value = userCredential.user;
-        // Navigate to Wrapper or any other page
         Get.offAll(() => Wrapper());
         return;
       } else {

@@ -3,7 +3,7 @@ import 'dart:io';
 class UserProfileModal {
   final File?
   profileImage; // local file (only for app use, not stored directly in Firestore)
-  final String? profileImageUrl;
+  final String profileImageUrl;
   final String profileImagePath;
   final String uid;
   final String email;
@@ -16,7 +16,7 @@ class UserProfileModal {
 
   UserProfileModal({
     this.profileImage,
-    this.profileImageUrl,
+    required this.profileImageUrl,
     required this.uid,
     required this.email,
     required this.displayName,

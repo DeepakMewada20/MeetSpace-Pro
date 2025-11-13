@@ -11,9 +11,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-  UserProfiledataSaveController userProfileInstance = Get.put(
-    UserProfiledataSaveController(),
-  );
+  late UserProfiledataSaveController userProfileInstance =
+      Get.find<UserProfiledataSaveController>();
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -21,7 +20,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -33,7 +31,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
 
     _animationController.forward();
-    Get.find<UserProfiledataSaveController>();
   }
 
   @override
@@ -141,16 +138,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
               ),
               child: ClipOval(
-                child:
-                    userProfileInstance.user == null ||
-                        userProfileInstance.user!.profileImagePath.isEmpty
-                    ? Icon(
-                        Icons.person,
-                        color: colorScheme.onSurfaceVariant,
-                        size: 24,
-                      )
-                    : Image.network(
-                        userProfileInstance.user!.profileImageUrl!,
+                child: userProfileInstance.user != null
+                    ? Image.network(
+                        userProfileInstance.user!.profileImageUrl,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return Icon(
@@ -159,6 +149,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             size: 24,
                           );
                         },
+                      )
+                    : Icon(
+                        Icons.person,
+                        color: colorScheme.onSurfaceVariant,
+                        size: 24,
                       ),
               ),
             ),

@@ -13,14 +13,36 @@ class UserProfiledataSaveController extends GetxController {
   RxBool accoundDelitting = false.obs;
   RxBool requiresRecentLogin = false.obs;
   UserProfileModal? user;
-  User? flutterUser;
+  User? _flutterUser;
   @override
-  onInit() async {
+  void onInit() async {
     super.onInit();
-    flutterUser = FirebaseAuth.instance.currentUser;
-    if (flutterUser != null) {
-      user = await _getUserData(flutterUser!.uid);
+    _flutterUser = FirebaseAuth.instance.currentUser;
+    if (_flutterUser != null) {
+      user = UserProfileModal(
+        uid: _flutterUser!.uid,
+        email: _flutterUser!.email ?? "",
+        displayName: _flutterUser!.displayName ?? "",
+        profileImagePath: "",
+        bio: '',
+        phoneNumber: _flutterUser!.phoneNumber ?? "",
+        jobTitle: '',
+        companyName: '',
+        profileImageUrl: _flutterUser!.photoURL ?? "",
+      );
+      _dataprint(user!);
+      update();
     }
+  }
+
+  @override
+  void onReady() async {
+    super.onReady();
+    if (user != null) {
+      user = await _getUserData(_flutterUser!.uid);
+    }
+    _dataprint(user!);
+    update();
   }
 
   Future uploadUserProfileData({
@@ -44,13 +66,14 @@ class UserProfiledataSaveController extends GetxController {
     try {
       await _saveProfileLocal(
         UserProfileModal(
-          uid: flutterUser!.uid,
-          email: email ?? '',
-          displayName: displayName ?? '',
+          uid: _flutterUser!.uid,
+          email: email ?? _flutterUser!.email ?? '',
+          displayName: displayName ?? _flutterUser!.displayName ?? '',
+          profileImageUrl: _flutterUser!.photoURL ?? '',
           profileImage: profileImage,
           profileImagePath: profileImage?.path ?? '',
           bio: bio ?? '',
-          phoneNumber: phoneNumber ?? '',
+          phoneNumber: phoneNumber ?? _flutterUser!.phoneNumber ?? '',
           jobTitle: jobTitle ?? '',
           companyName: companyName ?? '',
         ),
@@ -62,16 +85,16 @@ class UserProfiledataSaveController extends GetxController {
       }
       await FirebaseFirestore.instance
           .collection("users")
-          .doc(flutterUser!.uid)
+          .doc(_flutterUser!.uid)
           .set({
-            "uid": flutterUser!.uid,
-            "email": email,
-            "displayName": displayName,
-            "bio": bio,
-            "phoneNumber": phoneNumber,
-            "jobTitle": jobTitle,
-            "companyName": companyName,
-            "profileImageUrl": profilePhotoUrl,
+            "uid": _flutterUser!.uid,
+            "email": email??_flutterUser!.email??'',
+            "displayName": displayName??_flutterUser!.displayName??'',
+            "bio": bio??'',
+            "phoneNumber": phoneNumber??_flutterUser!.phoneNumber??'',
+            "jobTitle": jobTitle??'',
+            "companyName": companyName??'',
+            "profileImageUrl": profilePhotoUrl??_flutterUser!.photoURL??'',
             "createdAt": FieldValue.serverTimestamp(),
           }, SetOptions(merge: true));
     } catch (e) {
@@ -86,7 +109,7 @@ class UserProfiledataSaveController extends GetxController {
       final storageRefrence = FirebaseStorage.instance
           .ref()
           .child("user_profile_details")
-          .child(flutterUser!.uid)
+          .child(_flutterUser!.uid)
           .child("profilePhoto.jpg");
       // 2 This starts the upload:
       UploadTask uploadTask = storageRefrence.putFile(profileImage);
@@ -123,7 +146,7 @@ class UserProfiledataSaveController extends GetxController {
   }
 
   Future<void> deleteUserProfileData() async {
-    if (flutterUser == null) {
+    if (_flutterUser == null) {
       Get.snackbar(
         "Data not deleted!!",
         "please login first",
@@ -138,7 +161,7 @@ class UserProfiledataSaveController extends GetxController {
         await FirebaseStorage.instance
             .ref()
             .child("user_profile_details")
-            .child(flutterUser!.uid)
+            .child(_flutterUser!.uid)
             .child("profilePhoto.jpg")
             .delete();
       } on FirebaseException catch (e) {
@@ -151,11 +174,11 @@ class UserProfiledataSaveController extends GetxController {
       try {
         await FirebaseFirestore.instance
             .collection("users")
-            .doc(flutterUser!.uid)
+            .doc(_flutterUser!.uid)
             .delete();
       } on FirebaseException catch (e) {
-        if (e.code == "object-not-found") {} 
-        else {
+        if (e.code == "object-not-found") {
+        } else {
           rethrow;
         }
       }
@@ -164,11 +187,13 @@ class UserProfiledataSaveController extends GetxController {
     } on FirebaseAuthException catch (e) {
       if (e.code == "requires-recent-login") {
         requiresRecentLogin.value = true;
-      } else {}
+      } else {
+        _getErrormassage(e.code);
+      }
     } on FirebaseException catch (e) {
-      print(e.code);
+      _getErrormassage(e.code);
     } catch (e) {
-      print("Error deleting profile data: ${e.toString()}");
+      _getErrormassage(e.toString());
     } finally {
       accoundDelitting.value = false;
     }
@@ -184,22 +209,22 @@ class UserProfiledataSaveController extends GetxController {
       case "network-request-failed":
         {
           SnackbarAndToastWidget.tostMessage("No internet connection");
+          break;
         }
       case "requires-recent-login":
         {
           SnackbarAndToastWidget.tostMessage("Please re-login to continue");
+          break;
         }
       case "user-not-found":
         {
           SnackbarAndToastWidget.tostMessage("User not found");
+          break;
         }
       case "internal-error":
         {
           SnackbarAndToastWidget.tostMessage("Internal error");
-        }
-      case "network-request-failed":
-        {
-          SnackbarAndToastWidget.tostMessage("Network request failed");
+          break;
         }
       case "too-many-requests":
         {
@@ -208,8 +233,23 @@ class UserProfiledataSaveController extends GetxController {
         break;
       default:
         {
-          SnackbarAndToastWidget.tostMessage("Something went wrong");
+          SnackbarAndToastWidget.tostMessage(errorCode);
+          break;
         }
     }
   }
+}
+
+void _dataprint(UserProfileModal user) {
+  print("User Profile Data:");
+  print("UID: ${user.uid}");
+  print("Email: ${user.email}");
+  print("Display Name: ${user.displayName}");
+  print("Bio: ${user.bio}");
+  print("Phone Number: ${user.phoneNumber}");
+  print("Job Title: ${user.jobTitle}");
+  print("Company Name: ${user.companyName}");
+  print("Profile Image Path: ${user.profileImagePath}");
+  print("Profile Image URL: ${user.profileImageUrl}");
+
 }
