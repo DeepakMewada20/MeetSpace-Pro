@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
 
-class JoinMeetingScreen extends StatefulWidget {
+class JoinMeetingScreen extends ConsumerStatefulWidget {
   const JoinMeetingScreen({super.key});
 
   @override
-  _JoinMeetingScreenState createState() => _JoinMeetingScreenState();
+  ConsumerState<JoinMeetingScreen> createState() => _JoinMeetingScreenState();
 }
 
-class _JoinMeetingScreenState extends State<JoinMeetingScreen>
+class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
     with TickerProviderStateMixin {
   final TextEditingController _meetingIdController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
@@ -29,7 +30,7 @@ class _JoinMeetingScreenState extends State<JoinMeetingScreen>
 
   @override
   void initState() {
-    super.initState();
+    // final MettingState = ref.read(MettingNotifier().mettingProvider);
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -39,6 +40,7 @@ class _JoinMeetingScreenState extends State<JoinMeetingScreen>
       curve: Curves.easeInOut,
     );
     _animationController.forward();
+    super.initState();
   }
 
   @override
@@ -164,14 +166,14 @@ class _JoinMeetingScreenState extends State<JoinMeetingScreen>
               ),
             ),
             child: ClipOval(
-              child: userProfileInstance.user == null
+              child: userProfileInstance.modalUser == null
                   ? Icon(
                       Icons.person,
                       color: colorScheme.onSurfaceVariant,
                       size: 24,
                     )
                   : Image.network(
-                      userProfileInstance.user!.profileImageUrl,
+                      userProfileInstance.modalUser!.profileImageUrl,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Icon(

@@ -12,25 +12,25 @@ import 'package:zoom_clone/widgets/snackbar_and_toast_widget.dart';
 class UserProfiledataSaveController extends GetxController {
   RxBool accoundDelitting = false.obs;
   RxBool requiresRecentLogin = false.obs;
-  UserProfileModal? user;
-  User? _flutterUser;
+  UserProfileModal? modalUser;
+  User? _currentUser;
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
-    _flutterUser = FirebaseAuth.instance.currentUser;
-    if (_flutterUser != null) {
-      user = UserProfileModal(
-        uid: _flutterUser!.uid,
-        email: _flutterUser!.email ?? "",
-        displayName: _flutterUser!.displayName ?? "",
+    _currentUser = FirebaseAuth.instance.currentUser;
+    if (_currentUser != null) {
+      modalUser = UserProfileModal(
+        uid: _currentUser!.uid,
+        email: _currentUser!.email ?? "",
+        displayName: _currentUser!.displayName ?? "",
         profileImagePath: "",
         bio: '',
-        phoneNumber: _flutterUser!.phoneNumber ?? "",
+        phoneNumber: _currentUser!.phoneNumber ?? "",
         jobTitle: '',
         companyName: '',
-        profileImageUrl: _flutterUser!.photoURL ?? "",
+        profileImageUrl: _currentUser!.photoURL ?? "",
       );
-      _dataprint(user!);
+      _dataprint(modalUser!);
       update();
     }
   }
@@ -38,10 +38,10 @@ class UserProfiledataSaveController extends GetxController {
   @override
   void onReady() async {
     super.onReady();
-    if (user != null) {
-      user = await _getUserData(_flutterUser!.uid);
+    if (modalUser != null) {
+      modalUser = await _getUserData(_currentUser!.uid);
     }
-    _dataprint(user!);
+    _dataprint(modalUser!);
     update();
   }
 
@@ -55,7 +55,7 @@ class UserProfiledataSaveController extends GetxController {
     required String? companyName,
   }) async {
     String? profilePhotoUrl;
-    if (user == null) {
+    if (modalUser == null) {
       Get.snackbar(
         "Data not saved!!",
         "please login first",
@@ -66,14 +66,14 @@ class UserProfiledataSaveController extends GetxController {
     try {
       await _saveProfileLocal(
         UserProfileModal(
-          uid: _flutterUser!.uid,
-          email: email ?? _flutterUser!.email ?? '',
-          displayName: displayName ?? _flutterUser!.displayName ?? '',
-          profileImageUrl: _flutterUser!.photoURL ?? '',
+          uid: _currentUser!.uid,
+          email: email ?? _currentUser!.email ?? '',
+          displayName: displayName ?? _currentUser!.displayName ?? '',
+          profileImageUrl: _currentUser!.photoURL ?? '',
           profileImage: profileImage,
           profileImagePath: profileImage?.path ?? '',
           bio: bio ?? '',
-          phoneNumber: phoneNumber ?? _flutterUser!.phoneNumber ?? '',
+          phoneNumber: phoneNumber ?? _currentUser!.phoneNumber ?? '',
           jobTitle: jobTitle ?? '',
           companyName: companyName ?? '',
         ),
@@ -85,16 +85,16 @@ class UserProfiledataSaveController extends GetxController {
       }
       await FirebaseFirestore.instance
           .collection("users")
-          .doc(_flutterUser!.uid)
+          .doc(_currentUser!.uid)
           .set({
-            "uid": _flutterUser!.uid,
-            "email": email??_flutterUser!.email??'',
-            "displayName": displayName??_flutterUser!.displayName??'',
-            "bio": bio??'',
-            "phoneNumber": phoneNumber??_flutterUser!.phoneNumber??'',
-            "jobTitle": jobTitle??'',
-            "companyName": companyName??'',
-            "profileImageUrl": profilePhotoUrl??_flutterUser!.photoURL??'',
+            "uid": _currentUser!.uid,
+            "email": email ?? _currentUser!.email ?? '',
+            "displayName": displayName ?? _currentUser!.displayName ?? '',
+            "bio": bio ?? '',
+            "phoneNumber": phoneNumber ?? _currentUser!.phoneNumber ?? '',
+            "jobTitle": jobTitle ?? '',
+            "companyName": companyName ?? '',
+            "profileImageUrl": profilePhotoUrl ?? _currentUser!.photoURL ?? '',
             "createdAt": FieldValue.serverTimestamp(),
           }, SetOptions(merge: true));
     } catch (e) {
@@ -109,7 +109,7 @@ class UserProfiledataSaveController extends GetxController {
       final storageRefrence = FirebaseStorage.instance
           .ref()
           .child("user_profile_details")
-          .child(_flutterUser!.uid)
+          .child(_currentUser!.uid)
           .child("profilePhoto.jpg");
       // 2 This starts the upload:
       UploadTask uploadTask = storageRefrence.putFile(profileImage);
@@ -146,7 +146,7 @@ class UserProfiledataSaveController extends GetxController {
   }
 
   Future<void> deleteUserProfileData() async {
-    if (_flutterUser == null) {
+    if (_currentUser == null) {
       Get.snackbar(
         "Data not deleted!!",
         "please login first",
@@ -161,7 +161,7 @@ class UserProfiledataSaveController extends GetxController {
         await FirebaseStorage.instance
             .ref()
             .child("user_profile_details")
-            .child(_flutterUser!.uid)
+            .child(_currentUser!.uid)
             .child("profilePhoto.jpg")
             .delete();
       } on FirebaseException catch (e) {
@@ -174,7 +174,7 @@ class UserProfiledataSaveController extends GetxController {
       try {
         await FirebaseFirestore.instance
             .collection("users")
-            .doc(_flutterUser!.uid)
+            .doc(_currentUser!.uid)
             .delete();
       } on FirebaseException catch (e) {
         if (e.code == "object-not-found") {
@@ -251,5 +251,4 @@ void _dataprint(UserProfileModal user) {
   print("Company Name: ${user.companyName}");
   print("Profile Image Path: ${user.profileImagePath}");
   print("Profile Image URL: ${user.profileImageUrl}");
-
 }

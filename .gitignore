@@ -33,6 +33,7 @@ migrate_working_dir/
 .pub/
 /build/
 /lib/cloude_code/
+/lib/secret/
 
 # Symbolication related
 app.*.symbols

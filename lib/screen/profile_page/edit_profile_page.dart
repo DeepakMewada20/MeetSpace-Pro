@@ -45,17 +45,18 @@ class _EditProfilePageState extends State<EditProfilePage>
     _animationController.forward();
 
     // Pre-fill with existing data
-    _nameController.text = userProfileInstance.user?.displayName ?? 'User Name';
+    _nameController.text =
+        userProfileInstance.modalUser?.displayName ?? 'User Name';
     _emailController.text =
-        userProfileInstance.user?.email ?? 'user@example.com';
+        userProfileInstance.modalUser?.email ?? 'user@example.com';
     _phoneController.text =
-        userProfileInstance.user?.phoneNumber ?? '+1 (555) 123-4567';
+        userProfileInstance.modalUser?.phoneNumber ?? '+1 (555) 123-4567';
     _jobTitleController.text =
-        userProfileInstance.user?.jobTitle ?? 'MeetSpace User';
+        userProfileInstance.modalUser?.jobTitle ?? 'MeetSpace User';
     _companyController.text =
-        userProfileInstance.user?.companyName ?? 'MeetSpace Pro';
+        userProfileInstance.modalUser?.companyName ?? 'MeetSpace Pro';
     _bioController.text =
-        userProfileInstance.user?.bio ??
+        userProfileInstance.modalUser?.bio ??
         'Passionate professional using MeetSpace Pro for seamless video meetings and collaboration.';
   }
 
@@ -227,9 +228,9 @@ class _EditProfilePageState extends State<EditProfilePage>
               child: ClipOval(
                 child: _pickedImage != null
                     ? Image.file(File(_pickedImage!), fit: BoxFit.cover)
-                    : userProfileInstance.user?.profileImageUrl != null
+                    : userProfileInstance.modalUser?.profileImageUrl != null
                     ? Image.network(
-                        userProfileInstance.user!.profileImageUrl,
+                        userProfileInstance.modalUser!.profileImageUrl,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return _buildDefaultAvatar(colorScheme);
@@ -271,8 +272,8 @@ class _EditProfilePageState extends State<EditProfilePage>
       ),
       child: Center(
         child: Text(
-          userProfileInstance.user!.displayName.isNotEmpty
-              ? userProfileInstance.user!.displayName[0].toUpperCase()
+          userProfileInstance.modalUser!.displayName.isNotEmpty
+              ? userProfileInstance.modalUser!.displayName[0].toUpperCase()
               : 'U',
           style: const TextStyle(
             color: Colors.white,

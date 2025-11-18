@@ -4,7 +4,9 @@ import 'package:zoom_clone/modal/participant.dart';
 
 // Enhanced Video Call Screen
 class VideoCallScreen extends StatefulWidget {
-  const VideoCallScreen({super.key});
+  const VideoCallScreen({
+    super.key,
+  });
 
   @override
   _VideoCallScreenState createState() => _VideoCallScreenState();
@@ -22,7 +24,7 @@ class _VideoCallScreenState extends State<VideoCallScreen>
   String? _meetingId;
   bool? _isHost;
   String? _userName;
-  
+
   late AnimationController _controlsController;
   late AnimationController _pulseController;
   late Animation<double> _controlsAnimation;
@@ -31,30 +33,31 @@ class _VideoCallScreenState extends State<VideoCallScreen>
   @override
   void initState() {
     super.initState();
-    
+
     _controlsController = AnimationController(
       duration: Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     _pulseController = AnimationController(
       duration: Duration(milliseconds: 1000),
       vsync: this,
     );
-    
+
     _controlsAnimation = CurvedAnimation(
       parent: _controlsController,
       curve: Curves.easeInOut,
     );
-    
+
     _pulseAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
-    
+
     _controlsController.forward();
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+      final args =
+          ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
       if (args != null) {
         setState(() {
           _meetingId = args['meetingId'];
@@ -89,7 +92,7 @@ class _VideoCallScreenState extends State<VideoCallScreen>
           children: [
             // Video Grid
             _buildVideoGrid(),
-            
+
             // Top Bar
             AnimatedBuilder(
               animation: _controlsAnimation,
@@ -98,15 +101,14 @@ class _VideoCallScreenState extends State<VideoCallScreen>
                   opacity: _showControls ? 1.0 : 0.0,
                   duration: Duration(milliseconds: 300),
                   child: Container(
-                    padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                    padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).padding.top,
+                    ),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.black54,
-                          Colors.transparent,
-                        ],
+                        colors: [Colors.black54, Colors.transparent],
                       ),
                     ),
                     child: _buildTopBar(),
@@ -114,7 +116,7 @@ class _VideoCallScreenState extends State<VideoCallScreen>
                 );
               },
             ),
-            
+
             // Bottom Controls
             AnimatedBuilder(
               animation: _controlsAnimation,
@@ -132,10 +134,7 @@ class _VideoCallScreenState extends State<VideoCallScreen>
                       gradient: LinearGradient(
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
-                        colors: [
-                          Colors.black87,
-                          Colors.transparent,
-                        ],
+                        colors: [Colors.black87, Colors.transparent],
                       ),
                     ),
                     child: _buildBottomControls(),
@@ -143,7 +142,7 @@ class _VideoCallScreenState extends State<VideoCallScreen>
                 );
               },
             ),
-            
+
             // Recording Indicator
             if (_isRecording)
               Positioned(
@@ -155,7 +154,10 @@ class _VideoCallScreenState extends State<VideoCallScreen>
                     return Transform.scale(
                       scale: _pulseAnimation.value,
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.red,
                           borderRadius: BorderRadius.circular(20),
@@ -221,9 +223,9 @@ class _VideoCallScreenState extends State<VideoCallScreen>
               ],
             ),
           ),
-          
+
           Spacer(),
-          
+
           Container(
             padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
@@ -253,9 +255,9 @@ class _VideoCallScreenState extends State<VideoCallScreen>
               ],
             ),
           ),
-          
+
           SizedBox(width: 12),
-          
+
           GestureDetector(
             onTap: _endCall,
             child: Container(
@@ -303,10 +305,7 @@ class _VideoCallScreenState extends State<VideoCallScreen>
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF667eea),
-            Color(0xFF764ba2),
-          ],
+          colors: [Color(0xFF667eea), Color(0xFF764ba2)],
         ),
         boxShadow: [
           BoxShadow(
@@ -336,16 +335,22 @@ class _VideoCallScreenState extends State<VideoCallScreen>
     );
   }
 
-  Widget _buildParticipantTile(Participant participant, {bool isMainView = false}) {
+  Widget _buildParticipantTile(
+    Participant participant, {
+    bool isMainView = false,
+  }) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(isMainView ? 20 : 16),
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: participant.isSelf 
+          colors: participant.isSelf
               ? [Color(0xFF667eea), Color(0xFF764ba2)]
-              : [participant.avatarColor.withValues(alpha:  0.8), participant.avatarColor],
+              : [
+                  participant.avatarColor.withValues(alpha: 0.8),
+                  participant.avatarColor,
+                ],
         ),
         boxShadow: [
           BoxShadow(
@@ -393,7 +398,7 @@ class _VideoCallScreenState extends State<VideoCallScreen>
                 width: isMainView ? 120 : 80,
                 height: isMainView ? 120 : 80,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha:  0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 3),
                 ),
@@ -427,7 +432,8 @@ class _VideoCallScreenState extends State<VideoCallScreen>
                     ),
                     child: Icon(Icons.mic_off, color: Colors.white, size: 16),
                   ),
-                if (participant.isMuted && !participant.isVideoOn) SizedBox(width: 6),
+                if (participant.isMuted && !participant.isVideoOn)
+                  SizedBox(width: 6),
                 if (!participant.isVideoOn)
                   Container(
                     width: 32,
@@ -436,7 +442,11 @@ class _VideoCallScreenState extends State<VideoCallScreen>
                       color: Colors.orange,
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(Icons.videocam_off, color: Colors.white, size: 16),
+                    child: Icon(
+                      Icons.videocam_off,
+                      color: Colors.white,
+                      size: 16,
+                    ),
                   ),
               ],
             ),
@@ -478,31 +488,39 @@ class _VideoCallScreenState extends State<VideoCallScreen>
         children: [
           _buildControlButton(
             icon: _isMuted ? Icons.mic_off : Icons.mic,
-            color: _isMuted ? Colors.red : Colors.white.withValues(alpha:  0.2),
+            color: _isMuted ? Colors.red : Colors.white.withValues(alpha: 0.2),
             onPressed: _toggleMute,
             label: _isMuted ? 'Unmute' : 'Mute',
           ),
           _buildControlButton(
             icon: _isVideoOff ? Icons.videocam_off : Icons.videocam,
-            color: _isVideoOff ? Colors.red : Colors.white.withValues(alpha:  0.2),
+            color: _isVideoOff
+                ? Colors.red
+                : Colors.white.withValues(alpha: 0.2),
             onPressed: _toggleVideo,
             label: _isVideoOff ? 'Start Video' : 'Stop Video',
           ),
           _buildControlButton(
-            icon: _isScreenSharing ? Icons.stop_screen_share : Icons.screen_share,
-            color: _isScreenSharing ? Colors.green : Colors.white.withValues(alpha:  0.2),
+            icon: _isScreenSharing
+                ? Icons.stop_screen_share
+                : Icons.screen_share,
+            color: _isScreenSharing
+                ? Colors.green
+                : Colors.white.withValues(alpha: 0.2),
             onPressed: _toggleScreenShare,
             label: _isScreenSharing ? 'Stop Share' : 'Share',
           ),
           _buildControlButton(
             icon: _isRecording ? Icons.stop : Icons.fiber_manual_record,
-            color: _isRecording ? Colors.red : Colors.white.withValues(alpha:  0.2),
+            color: _isRecording
+                ? Colors.red
+                : Colors.white.withValues(alpha: 0.2),
             onPressed: _toggleRecording,
             label: _isRecording ? 'Stop Rec' : 'Record',
           ),
           _buildControlButton(
             icon: Icons.more_horiz,
-            color: Colors.white.withValues(alpha:  0.2),
+            color: Colors.white.withValues(alpha: 0.2),
             onPressed: _showMoreOptions,
             label: 'More',
           ),
@@ -530,27 +548,19 @@ class _VideoCallScreenState extends State<VideoCallScreen>
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: color == Colors.red ? Colors.red.withValues(alpha:  0.3) : Colors.black26,
+                  color: color == Colors.red
+                      ? Colors.red.withValues(alpha: 0.3)
+                      : Colors.black26,
                   blurRadius: 10,
                   offset: Offset(0, 5),
                 ),
               ],
             ),
-            child: Icon(
-              icon,
-              color: Colors.white,
-              size: 24,
-            ),
+            child: Icon(icon, color: Colors.white, size: 24),
           ),
         ),
         SizedBox(height: 8),
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.white70,
-            fontSize: 12,
-          ),
-        ),
+        Text(label, style: TextStyle(color: Colors.white70, fontSize: 12)),
       ],
     );
   }
@@ -559,7 +569,7 @@ class _VideoCallScreenState extends State<VideoCallScreen>
     setState(() {
       _showControls = !_showControls;
     });
-    
+
     if (_showControls) {
       Future.delayed(Duration(seconds: 5), _hideControls);
     }
@@ -597,14 +607,16 @@ class _VideoCallScreenState extends State<VideoCallScreen>
     setState(() {
       _isScreenSharing = !_isScreenSharing;
     });
-    _showFeedback(_isScreenSharing ? 'Screen sharing started' : 'Screen sharing stopped');
+    _showFeedback(
+      _isScreenSharing ? 'Screen sharing started' : 'Screen sharing stopped',
+    );
   }
 
   void _toggleRecording() {
     setState(() {
       _isRecording = !_isRecording;
     });
-    
+
     if (_isRecording) {
       _pulseController.repeat(reverse: true);
       _showFeedback('Recording started');

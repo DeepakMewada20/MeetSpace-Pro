@@ -38,13 +38,15 @@ class _ProfilePageState extends State<ProfilePage>
     _animationController.dispose();
     super.dispose();
   }
-   void _deleteAccount() async {
+
+  void _deleteAccount() async {
     await userProfileInstance.deleteUserProfileData();
   }
 
   void _logout() async {
     await GoogleSingInControler.instence.googleSingOut();
   }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -215,8 +217,7 @@ class _ProfilePageState extends State<ProfilePage>
                     ),
                   ),
                   child: ClipOval(
-                    child:
-                        userProfileInstance.user == null
+                    child: userProfileInstance.modalUser == null
                         ? Container(
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
@@ -232,7 +233,7 @@ class _ProfilePageState extends State<ProfilePage>
                             ),
                           )
                         : Image.network(
-                            userProfileInstance.user!.profileImageUrl,
+                            userProfileInstance.modalUser!.profileImageUrl,
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               return Container(
@@ -246,8 +247,13 @@ class _ProfilePageState extends State<ProfilePage>
                                 ),
                                 child: Center(
                                   child: Text(
-                                    userProfileInstance.user!.displayName.isNotEmpty
-                                        ? userProfileInstance.user!.displayName[0]
+                                    userProfileInstance
+                                            .modalUser!
+                                            .displayName
+                                            .isNotEmpty
+                                        ? userProfileInstance
+                                              .modalUser!
+                                              .displayName[0]
                                               .toUpperCase()
                                         : 'U',
                                     style: const TextStyle(
@@ -288,8 +294,10 @@ class _ProfilePageState extends State<ProfilePage>
 
           // Name
           Text(
-            userProfileInstance.user!=null&&
-            userProfileInstance.user!.displayName.isNotEmpty ? userProfileInstance.user!.displayName : 'User Name',
+            userProfileInstance.modalUser != null &&
+                    userProfileInstance.modalUser!.displayName.isNotEmpty
+                ? userProfileInstance.modalUser!.displayName
+                : 'User Name',
             style: TextStyle(
               color: colorScheme.onSurface,
               fontSize: 26,
@@ -301,8 +309,10 @@ class _ProfilePageState extends State<ProfilePage>
 
           // Email
           Text(
-            userProfileInstance.user!=null&&
-            userProfileInstance.user!.email.isNotEmpty ? userProfileInstance.user!.email : 'user@example.com',
+            userProfileInstance.modalUser != null &&
+                    userProfileInstance.modalUser!.email.isNotEmpty
+                ? userProfileInstance.modalUser!.email
+                : 'user@example.com',
             style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 16),
           ),
 
@@ -670,7 +680,6 @@ class _ProfilePageState extends State<ProfilePage>
       ),
     );
   }
-
 }
 
 class Participant {

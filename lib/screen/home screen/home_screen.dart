@@ -1,25 +1,31 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:zoom_clone/controlers/start_metting_method.dart';
 import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
 import 'package:zoom_clone/screen/profile_page/profile_page.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStateMixin {
   late UserProfiledataSaveController userProfileInstance =
       Get.find<UserProfiledataSaveController>();
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  late TextEditingController nameController;
 
   @override
   void initState() {
     super.initState();
+    nameController = TextEditingController(
+        text: FirebaseAuth.instance.currentUser?.displayName ?? '');
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -36,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void dispose() {
     _animationController.dispose();
+    nameController.dispose();
     super.dispose();
   }
 
@@ -138,9 +145,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
               ),
               child: ClipOval(
-                child: userProfileInstance.user != null
+                child: userProfileInstance.modalUser != null
                     ? Image.network(
-                        userProfileInstance.user!.profileImageUrl,
+                        userProfileInstance.modalUser!.profileImageUrl,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return Icon(
@@ -217,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             icon: Icons.add_circle_outline,
             title: 'Start New Meeting',
             subtitle: 'Begin an instant meeting',
-            onTap: () => _startNewMeeting(context),
+            onTap: () => startMeeting(ref, context, nameController),
           ),
 
           const SizedBox(height: 20),
@@ -438,18 +445,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return Icons.nights_stay;
   }
 
-  void _startNewMeeting(BuildContext context) {
-    String meetingId = _generateMeetingId();
-    Navigator.pushNamed(
-      context,
-      '/call',
-      arguments: {'meetingId': meetingId, 'isHost': true},
-    );
-  }
-
-  String _generateMeetingId() {
-    return DateTime.now().millisecondsSinceEpoch.toString().substring(7);
-  }
+  // void _startNewMeeting(BuildContext context) {
+  //   String meetingId = MettingNotifier.generateMeetingId();
+  //   Navigator.pushNamed(
+  //     context,
+  //     '/call',
+  //     arguments: {'meetingId': meetingId, 'isHost': true},
+  //   );
+  // }
 
   void _showScheduleDialog() {
     final colorScheme = Theme.of(context).colorScheme;
