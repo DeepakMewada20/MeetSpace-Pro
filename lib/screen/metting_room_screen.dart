@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:zego_uikit_prebuilt_video_conference/zego_uikit_prebuilt_video_conference.dart';
-import 'package:zoom_clone/secrets/constents_key.dart';
+import 'package:zoom_clone/provider/app_sing_provider.dart';
 
 class MettingRoomScreen extends StatefulWidget {
   final String userName;
@@ -20,17 +21,16 @@ class MettingRoomScreen extends StatefulWidget {
 
 class _MettingRoomScreenState extends State<MettingRoomScreen> {
   final userID = FirebaseAuth.instance.currentUser!.uid;
+  late AppConfigaretion appConfig = Get.arguments as AppConfigaretion;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return Scaffold(
       body: SafeArea(
         
         child: ZegoUIKitPrebuiltVideoConference(
-          appID: ConstantsKey()
-              .getAppID(), // Fill in the appID that you get from ZEGOCLOUD Admin Console.
+          appID: appConfig.appID, // Fill in the appID that you get from ZEGOCLOUD Admin Console.
 
-          appSign: ConstantsKey()
-              .getAppSign(), // Fill in the appSign that you get from ZEGOCLOUD Admin Console.
+          appSign: appConfig.appSing, // Fill in the appSign that you get from ZEGOCLOUD Admin Console.
 
           userID: userID,
 

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:zoom_clone/provider/app_sing_provider.dart';
 import 'package:zoom_clone/provider/new_metting_provider.dart';
 import 'package:zoom_clone/screen/metting_room_screen.dart';
 
@@ -28,13 +29,14 @@ void startMeeting(
         'isCameraOff': state.iscameraoff,
         'createdAt': DateTime.now(),
       });
+  final appConfig = await fetchAppconfig();
   Get.to(
     () => MettingRoomScreen(
       userName: nameController.text.isNotEmpty
           ? nameController.text
           : currentuser?.displayName ?? "Host",
       roomId: state.mettingId,
-      isHost: true,
-    ),
+      isHost: true,   
+    ),arguments: appConfig,
   );
 }
