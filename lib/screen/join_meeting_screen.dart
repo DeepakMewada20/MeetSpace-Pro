@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
+import 'package:zoom_clone/modal/join_metting_modal.dart';
+import 'package:zoom_clone/provider/join_metting_provide.dart';
 
 class JoinMeetingScreen extends ConsumerStatefulWidget {
   const JoinMeetingScreen({super.key});
@@ -23,8 +25,6 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
-  bool _isCameraEnabled = true;
-  bool _isMicEnabled = true;
   bool _hasPassword = false;
   bool _isPasswordVisible = false;
 
@@ -56,6 +56,10 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
+    final state = ref.watch(joinMettingProvide);
+
+    final notifier = ref.read(joinMettingProvide.notifier);
+
     return Scaffold(
       backgroundColor: colorScheme.surface,
       body: SafeArea(
@@ -79,17 +83,22 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
                       const SizedBox(height: 32),
 
                       // Meeting Details Form
-                      _buildMeetingForm(context, colorScheme),
+                      _buildMeetingForm(context, colorScheme, state, notifier),
 
                       const SizedBox(height: 24),
 
                       // Camera & Microphone Controls
-                      _buildMediaControls(context, colorScheme),
+                      _buildMediaControls(
+                        context,
+                        colorScheme,
+                        state,
+                        notifier,
+                      ),
 
                       const SizedBox(height: 32),
 
                       // Join Button
-                      _buildJoinButton(context, colorScheme),
+                      _buildJoinButton(context, colorScheme,state),
 
                       const SizedBox(height: 24),
 
@@ -240,7 +249,12 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
     );
   }
 
-  Widget _buildMeetingForm(BuildContext context, ColorScheme colorScheme) {
+  Widget _buildMeetingForm(
+    BuildContext context,
+    ColorScheme colorScheme,
+    JoinMeetingState state,
+    JoinMettingNotifire notifier,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -259,6 +273,7 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
           controller: _meetingIdController,
           label: 'Meeting ID',
           hint: 'Enter meeting ID',
+          errorMessage: state.errorMessage ?? "",
           icon: Icons.tag,
           keyboardType: TextInputType.number,
           colorScheme: colorScheme,
@@ -331,6 +346,7 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
     required String hint,
     required IconData icon,
     required ColorScheme colorScheme,
+    String errorMessage = "",
     TextInputType? keyboardType,
     bool isPassword = false,
     bool isPasswordVisible = false,
@@ -353,6 +369,7 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
+          errorText: errorMessage,
           prefixIcon: Icon(icon, color: colorScheme.primary),
           suffixIcon: isPassword
               ? IconButton(
@@ -374,7 +391,12 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
     );
   }
 
-  Widget _buildMediaControls(BuildContext context, ColorScheme colorScheme) {
+  Widget _buildMediaControls(
+    BuildContext context,
+    ColorScheme colorScheme,
+    JoinMeetingState state,
+    JoinMettingNotifire notifier,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -394,13 +416,11 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
               child: _buildMediaControlCard(
                 context,
                 colorScheme,
-                icon: _isCameraEnabled ? Icons.videocam : Icons.videocam_off,
+                icon: state.isCameraOn ? Icons.videocam : Icons.videocam_off,
                 title: 'Camera',
-                isEnabled: _isCameraEnabled,
+                isEnabled: state.isCameraOn,
                 onToggle: () {
-                  setState(() {
-                    _isCameraEnabled = !_isCameraEnabled;
-                  });
+                  notifier.toogleCamera(!state.isCameraOn);
                 },
               ),
             ),
@@ -409,13 +429,11 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
               child: _buildMediaControlCard(
                 context,
                 colorScheme,
-                icon: _isMicEnabled ? Icons.mic : Icons.mic_off,
+                icon: state.isMicOn ? Icons.mic : Icons.mic_off,
                 title: 'Microphone',
-                isEnabled: _isMicEnabled,
+                isEnabled: state.isMicOn,
                 onToggle: () {
-                  setState(() {
-                    _isMicEnabled = !_isMicEnabled;
-                  });
+                  notifier.toggleMic(!state.isMicOn);
                 },
               ),
             ),
@@ -487,12 +505,12 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
     );
   }
 
-  Widget _buildJoinButton(BuildContext context, ColorScheme colorScheme) {
+  Widget _buildJoinButton(BuildContext context, ColorScheme colorScheme,JoinMeetingState state) {
     return SizedBox(
       width: double.infinity,
       height: 56,
       child: ElevatedButton(
-        onPressed: _joinMeeting,
+        onPressed: ()=>_joinMeeting(state),
         style: ElevatedButton.styleFrom(
           backgroundColor: colorScheme.primary,
           foregroundColor: colorScheme.onPrimary,
@@ -588,7 +606,7 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
     );
   }
 
-  void _joinMeeting() {
+  void _joinMeeting(JoinMeetingState state) {
     if (_meetingIdController.text.isEmpty) {
       _showErrorSnackbar('Please enter meeting ID');
       return;
@@ -611,8 +629,8 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
         'meetingId': _meetingIdController.text,
         'userName': _nameController.text,
         'password': _hasPassword ? _passwordController.text : null,
-        'isCameraEnabled': _isCameraEnabled,
-        'isMicEnabled': _isMicEnabled,
+        'isCameraEnabled': state.isCameraOn,
+        'isMicEnabled': state.isMicOn,
         'isHost': false,
       },
     );
