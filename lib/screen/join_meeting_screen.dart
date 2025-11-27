@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:zoom_clone/controlers/join_metting_method.dart';
 import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
 import 'package:zoom_clone/modal/join_metting_modal.dart';
 import 'package:zoom_clone/provider/join_metting_provide.dart';
+import 'package:zoom_clone/widgets/media_controller.dart';
 
 class JoinMeetingScreen extends ConsumerStatefulWidget {
   const JoinMeetingScreen({super.key});
@@ -17,6 +19,7 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
   final TextEditingController _meetingIdController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   UserProfiledataSaveController userProfileInstance = Get.put(
     UserProfiledataSaveController(),
@@ -88,7 +91,7 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
                       const SizedBox(height: 24),
 
                       // Camera & Microphone Controls
-                      _buildMediaControls(
+                      buildMediaControls(
                         context,
                         colorScheme,
                         state,
@@ -98,7 +101,7 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
                       const SizedBox(height: 32),
 
                       // Join Button
-                      _buildJoinButton(context, colorScheme,state),
+                      _buildJoinButton(context, colorScheme, state, notifier),
 
                       const SizedBox(height: 24),
 
@@ -255,88 +258,109 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
     JoinMeetingState state,
     JoinMettingNotifire notifier,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Meeting Details',
-          style: TextStyle(
-            color: colorScheme.onSurface,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Meeting Details',
+            style: TextStyle(
+              color: colorScheme.onSurface,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        // Meeting ID Field
-        _buildTextField(
-          controller: _meetingIdController,
-          label: 'Meeting ID',
-          hint: 'Enter meeting ID',
-          errorMessage: state.errorMessage ?? "",
-          icon: Icons.tag,
-          keyboardType: TextInputType.number,
-          colorScheme: colorScheme,
-        ),
+          // Meeting ID Field
+          _buildTextField(
+            controller: _meetingIdController,
+            label: 'Meeting ID',
+            hint: 'Enter meeting ID',
+            errorMessage: state.errorMessage ?? "",
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter the meeting ID';
+              }
+              return null;
+            },
+            icon: Icons.tag,
+            keyboardType: TextInputType.number,
+            colorScheme: colorScheme,
+          ),
 
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        // Name Field
-        _buildTextField(
-          controller: _nameController,
-          label: 'Display Name',
-          hint: 'Enter your name',
-          icon: Icons.person_outline,
-          colorScheme: colorScheme,
-        ),
+          // Name Field
+          _buildTextField(
+            controller: _nameController,
+            label: 'Display Name',
+            hint: 'Enter your name',
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your name';
+              }
+              return null;
+            },
+            icon: Icons.person_outline,
+            colorScheme: colorScheme,
+          ),
 
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        // Password Toggle
-        Row(
-          children: [
-            Switch(
-              value: _hasPassword,
-              onChanged: (value) {
+          // Password Toggle
+          Row(
+            children: [
+              Switch(
+                value: _hasPassword,
+                onChanged: (value) {
+                  setState(() {
+                    _hasPassword = value;
+                    if (!value) {
+                      _passwordController.clear();
+                    }
+                  });
+                },
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'Meeting has password',
+                style: TextStyle(
+                  color: colorScheme.onSurface,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+
+          // Password Field (conditionally shown)
+          if (_hasPassword) ...[
+            const SizedBox(height: 16),
+            _buildTextField(
+              controller: _passwordController,
+              label: 'Meeting Password',
+              hint: 'Enter password',
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter password';
+                }
+                return null;
+              },
+              icon: Icons.lock_outline,
+              colorScheme: colorScheme,
+              isPassword: true,
+              isPasswordVisible: _isPasswordVisible,
+              onTogglePasswordVisibility: () {
                 setState(() {
-                  _hasPassword = value;
-                  if (!value) {
-                    _passwordController.clear();
-                  }
+                  _isPasswordVisible = !_isPasswordVisible;
                 });
               },
             ),
-            const SizedBox(width: 12),
-            Text(
-              'Meeting has password',
-              style: TextStyle(
-                color: colorScheme.onSurface,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
           ],
-        ),
-
-        // Password Field (conditionally shown)
-        if (_hasPassword) ...[
-          const SizedBox(height: 16),
-          _buildTextField(
-            controller: _passwordController,
-            label: 'Meeting Password',
-            hint: 'Enter password',
-            icon: Icons.lock_outline,
-            colorScheme: colorScheme,
-            isPassword: true,
-            isPasswordVisible: _isPasswordVisible,
-            onTogglePasswordVisibility: () {
-              setState(() {
-                _isPasswordVisible = !_isPasswordVisible;
-              });
-            },
-          ),
         ],
-      ],
+      ),
     );
   }
 
@@ -346,7 +370,8 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
     required String hint,
     required IconData icon,
     required ColorScheme colorScheme,
-    String errorMessage = "",
+    String? Function(String?)? validator,
+    String? errorMessage,
     TextInputType? keyboardType,
     bool isPassword = false,
     bool isPasswordVisible = false,
@@ -361,11 +386,12 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
           width: 1,
         ),
       ),
-      child: TextField(
+      child: TextFormField(
         controller: controller,
         keyboardType: keyboardType,
         obscureText: isPassword && !isPasswordVisible,
         style: TextStyle(color: colorScheme.onSurface, fontSize: 16),
+        validator: validator,
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
@@ -391,126 +417,140 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
     );
   }
 
-  Widget _buildMediaControls(
+  // Widget _buildMediaControls(
+  //   BuildContext context,
+  //   ColorScheme colorScheme,
+  //   JoinMeetingState state,
+  //   JoinMettingNotifire notifier,
+  // ) {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Text(
+  //         'Media Settings',
+  //         style: TextStyle(
+  //           color: colorScheme.onSurface,
+  //           fontSize: 18,
+  //           fontWeight: FontWeight.bold,
+  //         ),
+  //       ),
+  //       const SizedBox(height: 16),
+
+  //       Row(
+  //         children: [
+  //           Expanded(
+  //             child: _buildMediaControlCard(
+  //               context,
+  //               colorScheme,
+  //               icon: state.isCameraOn ? Icons.videocam : Icons.videocam_off,
+  //               title: 'Camera',
+  //               isEnabled: state.isCameraOn,
+  //               onToggle: () {
+  //                 notifier.toogleCamera(!state.isCameraOn);
+  //               },
+  //             ),
+  //           ),
+  //           const SizedBox(width: 16),
+  //           Expanded(
+  //             child: _buildMediaControlCard(
+  //               context,
+  //               colorScheme,
+  //               icon: state.isMicOn ? Icons.mic : Icons.mic_off,
+  //               title: 'Microphone',
+  //               isEnabled: state.isMicOn,
+  //               onToggle: () {
+  //                 notifier.toggleMic(!state.isMicOn);
+  //               },
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  // Widget _buildMediaControlCard(
+  //   BuildContext context,
+  //   ColorScheme colorScheme, {
+  //   required IconData icon,
+  //   required String title,
+  //   required bool isEnabled,
+  //   required VoidCallback onToggle,
+  // }) {
+  //   return GestureDetector(
+  //     onTap: onToggle,
+  //     child: Container(
+  //       padding: const EdgeInsets.all(20),
+  //       decoration: BoxDecoration(
+  //         color: isEnabled
+  //             ? colorScheme.primary.withOpacity(0.1)
+  //             : colorScheme.surfaceContainer,
+  //         borderRadius: BorderRadius.circular(12),
+  //         border: Border.all(
+  //           color: isEnabled
+  //               ? colorScheme.primary.withOpacity(0.3)
+  //               : colorScheme.outline.withOpacity(0.2),
+  //           width: 1,
+  //         ),
+  //       ),
+  //       child: Column(
+  //         children: [
+  //           Icon(
+  //             icon,
+  //             color: isEnabled
+  //                 ? colorScheme.primary
+  //                 : colorScheme.onSurfaceVariant,
+  //             size: 32,
+  //           ),
+  //           const SizedBox(height: 12),
+  //           Text(
+  //             title,
+  //             style: TextStyle(
+  //               color: isEnabled
+  //                   ? colorScheme.primary
+  //                   : colorScheme.onSurfaceVariant,
+  //               fontSize: 16,
+  //               fontWeight: FontWeight.w600,
+  //             ),
+  //             textAlign: TextAlign.center,
+  //           ),
+  //           const SizedBox(height: 8),
+  //           Text(
+  //             isEnabled ? 'ON' : 'OFF',
+  //             style: TextStyle(
+  //               color: isEnabled
+  //                   ? colorScheme.primary
+  //                   : colorScheme.onSurfaceVariant,
+  //               fontSize: 12,
+  //               fontWeight: FontWeight.w500,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  Widget _buildJoinButton(
     BuildContext context,
     ColorScheme colorScheme,
     JoinMeetingState state,
-    JoinMettingNotifire notifier,
+    JoinMettingNotifire notifire,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Media Settings',
-          style: TextStyle(
-            color: colorScheme.onSurface,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 16),
-
-        Row(
-          children: [
-            Expanded(
-              child: _buildMediaControlCard(
-                context,
-                colorScheme,
-                icon: state.isCameraOn ? Icons.videocam : Icons.videocam_off,
-                title: 'Camera',
-                isEnabled: state.isCameraOn,
-                onToggle: () {
-                  notifier.toogleCamera(!state.isCameraOn);
-                },
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: _buildMediaControlCard(
-                context,
-                colorScheme,
-                icon: state.isMicOn ? Icons.mic : Icons.mic_off,
-                title: 'Microphone',
-                isEnabled: state.isMicOn,
-                onToggle: () {
-                  notifier.toggleMic(!state.isMicOn);
-                },
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMediaControlCard(
-    BuildContext context,
-    ColorScheme colorScheme, {
-    required IconData icon,
-    required String title,
-    required bool isEnabled,
-    required VoidCallback onToggle,
-  }) {
-    return GestureDetector(
-      onTap: onToggle,
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: isEnabled
-              ? colorScheme.primary.withOpacity(0.1)
-              : colorScheme.surfaceContainer,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isEnabled
-                ? colorScheme.primary.withOpacity(0.3)
-                : colorScheme.outline.withOpacity(0.2),
-            width: 1,
-          ),
-        ),
-        child: Column(
-          children: [
-            Icon(
-              icon,
-              color: isEnabled
-                  ? colorScheme.primary
-                  : colorScheme.onSurfaceVariant,
-              size: 32,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              title,
-              style: TextStyle(
-                color: isEnabled
-                    ? colorScheme.primary
-                    : colorScheme.onSurfaceVariant,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              isEnabled ? 'ON' : 'OFF',
-              style: TextStyle(
-                color: isEnabled
-                    ? colorScheme.primary
-                    : colorScheme.onSurfaceVariant,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildJoinButton(BuildContext context, ColorScheme colorScheme,JoinMeetingState state) {
     return SizedBox(
       width: double.infinity,
       height: 56,
       child: ElevatedButton(
-        onPressed: ()=>_joinMeeting(state),
+        onPressed: () {
+          if (_formKey.currentState!.validate()) {
+            joinMettingMethod(
+              ref,
+              context,
+              _nameController,
+              _meetingIdController,
+            );
+          }
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: colorScheme.primary,
           foregroundColor: colorScheme.onPrimary,
@@ -606,22 +646,7 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
     );
   }
 
-  void _joinMeeting(JoinMeetingState state) {
-    if (_meetingIdController.text.isEmpty) {
-      _showErrorSnackbar('Please enter meeting ID');
-      return;
-    }
-
-    if (_nameController.text.isEmpty) {
-      _showErrorSnackbar('Please enter your display name');
-      return;
-    }
-
-    if (_hasPassword && _passwordController.text.isEmpty) {
-      _showErrorSnackbar('Please enter meeting password');
-      return;
-    }
-
+  void _joinMeeting(JoinMeetingState state, JoinMettingNotifire notifier) {
     Navigator.pushNamed(
       context,
       '/call',
@@ -636,29 +661,29 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
     );
   }
 
-  void _showErrorSnackbar(String message) {
-    final colorScheme = Theme.of(context).colorScheme;
+  // void _showErrorSnackbar(String message) {
+  //   final colorScheme = Theme.of(context).colorScheme;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(Icons.error_outline, color: colorScheme.onError),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                message,
-                style: TextStyle(color: colorScheme.onError),
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: colorScheme.error,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.all(16),
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 3),
-      ),
-    );
-  }
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     SnackBar(
+  //       content: Row(
+  //         children: [
+  //           Icon(Icons.error_outline, color: colorScheme.onError),
+  //           const SizedBox(width: 12),
+  //           Expanded(
+  //             child: Text(
+  //               message,
+  //               style: TextStyle(color: colorScheme.onError),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //       backgroundColor: colorScheme.error,
+  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  //       margin: const EdgeInsets.all(16),
+  //       behavior: SnackBarBehavior.floating,
+  //       duration: const Duration(seconds: 3),
+  //     ),
+  //   );
+  // }
 }

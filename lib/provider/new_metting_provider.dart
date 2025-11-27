@@ -1,4 +1,3 @@
-
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:zoom_clone/modal/new_metting_provider.dart';
 
@@ -21,7 +20,7 @@ class MettingNotifier extends StateNotifier<MettingState> {
   }
 
   static String generateMeetingId() {
-    return  'meet_space_pro_${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}';
+    return DateTime.now().millisecondsSinceEpoch.toString().substring(7);
   }
 
   final mettingProvider =

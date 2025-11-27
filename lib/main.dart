@@ -8,6 +8,7 @@ import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
 import 'package:zoom_clone/screen/join_meeting_screen.dart';
 import 'package:zoom_clone/screen/home%20screen/home_screen.dart';
 import 'package:zoom_clone/screen/splash_screen.dart';
+import 'package:zoom_clone/screen/video_call_screen.dart';
 import 'package:zoom_clone/them_data/dart_them.dart';
 import 'package:zoom_clone/them_data/light_them.dart';
 import 'firebase_options.dart';
@@ -78,6 +79,7 @@ class VideoCallApp extends StatelessWidget {
         routes: {
           '/home': (context) => HomeScreen(),
           '/join': (context) => JoinMeetingScreen(),
+          '/call': (context) => VideoCallScreen(),
         },
       ),
     );

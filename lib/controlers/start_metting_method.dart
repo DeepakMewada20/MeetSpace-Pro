@@ -17,7 +17,7 @@ void startMeeting(
   final state = ref.read(MettingNotifier().mettingProvider);
 
   await FirebaseFirestore.instance
-      .collection('meetings')
+      .collection('mettings')
       .doc(state.mettingId)
       .set({
         'hostId': currentuser?.uid,
