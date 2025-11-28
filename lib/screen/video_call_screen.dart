@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:zoom_clone/modal/participant.dart';
+class Participants {
+  final String id;
+  final String name;
+  bool isMuted;
+  bool isVideoOn;
+  final bool isSelf;
+  final Color avatarColor;
 
+  Participants({
+    required this.id,
+    required this.name,
+    this.isMuted = false,
+    this.isVideoOn = false,
+    this.isSelf = false,
+    this.avatarColor = Colors.blueGrey,
+  });
+}
 // Enhanced Video Call Screen
 class VideoCallScreen extends StatefulWidget {
   const VideoCallScreen({
@@ -20,7 +35,7 @@ class _VideoCallScreenState extends State<VideoCallScreen>
   bool _isScreenSharing = false;
   bool _showControls = true;
   bool _isRecording = false;
-  final List<Participant> _participants = [];
+  final List<Participants> _participants = [];
   String? _meetingId;
   bool? _isHost;
   String? _userName;
@@ -74,10 +89,10 @@ class _VideoCallScreenState extends State<VideoCallScreen>
 
   void _initializeCall() {
     _participants.addAll([
-      Participant(id: 'self', name: _userName ?? 'You', isSelf: true),
-      Participant(id: '1', name: 'Sarah Wilson', avatarColor: Colors.pink),
-      Participant(id: '2', name: 'Mike Chen', avatarColor: Colors.orange),
-      Participant(id: '3', name: 'Alex Johnson', avatarColor: Colors.green),
+      Participants(id: 'self', name: _userName ?? 'You', isSelf: true),
+      Participants(id: '1', name: 'Sarah Wilson', avatarColor: Colors.pink),
+      Participants(id: '2', name: 'Mike Chen', avatarColor: Colors.orange),
+      Participants(id: '3', name: 'Alex Johnson', avatarColor: Colors.green),
     ]);
     setState(() {});
   }
@@ -336,7 +351,7 @@ class _VideoCallScreenState extends State<VideoCallScreen>
   }
 
   Widget _buildParticipantTile(
-    Participant participant, {
+    Participants participant, {
     bool isMainView = false,
   }) {
     return Container(

@@ -3,7 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
 import 'package:zoom_clone/provider/join_metting_provide.dart';
+import 'package:zoom_clone/provider/waiting_room_provider.dart';
+import 'package:zoom_clone/screen/metting_room_screen.dart';
+import 'package:zoom_clone/widgets/error_status_components.dart';
 import 'package:zoom_clone/widgets/media_controller.dart';
+import 'package:zoom_clone/widgets/rejected_indicator.dart';
 
 class WaitingRoomScreen extends ConsumerStatefulWidget {
   final String meetingId;
@@ -74,6 +78,10 @@ class _WaitingRoomScreenState extends ConsumerState<WaitingRoomScreen>
     final state = ref.watch(joinMettingProvide);
     final notifier = ref.read(joinMettingProvide.notifier);
 
+    final statusAsync = ref.watch(
+      approwalStatusProvider((widget.meetingId, widget.userId)),
+    );
+
     return Scaffold(
       backgroundColor: colorScheme.surface,
       body: SafeArea(
@@ -93,13 +101,83 @@ class _WaitingRoomScreenState extends ConsumerState<WaitingRoomScreen>
                       const SizedBox(height: 20),
 
                       // Animated Waiting Indicator
-                      _buildWaitingIndicator(context, colorScheme),
-
-                      const SizedBox(height: 40),
+                      // _buildWaitingIndicator(context, colorScheme),
+                      // const SizedBox(height: 40),
+                      statusAsync.when(
+                        data: (data) {
+                          final status = data?['status'];
+                          if (status == 'approved') {
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              Get.off(
+                                () => MettingRoomScreen(
+                                  userName: data?['name'],
+                                  roomId: widget.meetingId,
+                                  isHost: false,
+                                ),
+                              );
+                            });
+                            return const SizedBox.shrink();
+                          } else if (status == 'rejected') {
+                            return Column(
+                              children: [
+                                buildRejectedIndicator(context, colorScheme),
+                                const SizedBox(height: 40),
+                                buildRejectedMessage(context, colorScheme),
+                                const SizedBox(height: 40),
+                                buildRejectedActionCard(
+                                  context,
+                                  colorScheme,
+                                  onTryAgain: () {
+                                    /* retry logic */
+                                  },
+                                  onGoBack: () => Navigator.pop(context),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return Column(
+                              children: [
+                                // Animated Waiting Indicator
+                                _buildWaitingIndicator(context, colorScheme),
+                                const SizedBox(height: 40),
+                                _buildStatusMessage(context, colorScheme),
+                              ],
+                            );
+                          }
+                        },
+                        loading: () => Column(
+                          children: [
+                            // Animated Waiting Indicator
+                            // const SizedBox(height: 20),
+                            _buildWaitingIndicator(context, colorScheme),
+                            const SizedBox(height: 40),
+                            _buildStatusMessage(context, colorScheme),
+                          ],
+                        ),
+                        error: (err, stack) => Column(
+                          children: [
+                            buildErrorIndicator(context, colorScheme),
+                            const SizedBox(height: 40),
+                            buildErrorMessage(
+                              context,
+                              colorScheme,
+                              errorMessage: err.toString(),
+                            ),
+                            const SizedBox(height: 40),
+                            buildErrorActionCard(
+                              context,
+                              colorScheme,
+                              onRetry: () {
+                                /* retry */
+                              },
+                              onGoBack: () => Navigator.pop(context),
+                            ),
+                          ],
+                        ),
+                      ),
 
                       // Status Message
-                      _buildStatusMessage(context, colorScheme),
-
+                      // _buildStatusMessage(context, colorScheme),
                       const SizedBox(height: 40),
 
                       // Meeting Info Card
