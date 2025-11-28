@@ -15,6 +15,14 @@ class HostWaitingListScreen extends ConsumerStatefulWidget {
 
 class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
   List<Participant> waittinParticipants = [];
+  late CollectionReference? _firestoreDataUpdate;
+  @override
+  void initState() {
+    super.initState();
+    _firestoreDataUpdate = FirebaseFirestore.instance
+        .collection('mettings')
+        .doc(widget.meetingId).collection('waitingList');
+  }
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -28,10 +36,10 @@ class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          print(snapshot.data);
           return Scaffold(body: Center(child: CircularProgressIndicator()));
         }
-        waittinParticipants = snapshot.data!.docs
+        final doc = snapshot.data!.docs;
+        waittinParticipants = doc
             .map((doc) => Participant.fromDoc(doc))
             .toList();
         return Scaffold(
@@ -267,10 +275,12 @@ class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
   }
 
   void _admitParticipant(Participant p) {
-    // TODO: Implement admit logic
-    setState(
-      () => waittinParticipants.removeWhere((item) => item.userId == p.userId),
-    );
+    _firestoreDataUpdate!
+        .doc(p.userId)
+        .update({'status': 'admitted'});
+    // setState(
+    //   () => waittinParticipants.removeWhere((item) => item.userId == p.userId),
+    // );
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('${p.name} admitted'),
@@ -280,7 +290,7 @@ class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
   }
 
   void _denyParticipant(Participant p) {
-    // TODO: Implement deny logic
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -293,15 +303,10 @@ class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.pop(context);
-              setState(
-                () => waittinParticipants.removeWhere(
-                  (item) => item.userId == p.userId,
-                ),
-              );
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text('${p.name} denied')));
+              //Navigator.pop(context);
+              _firestoreDataUpdate!
+                  .doc(p.userId)
+                  .update({'status': 'denied'});
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.error,
