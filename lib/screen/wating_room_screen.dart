@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
+import 'package:zoom_clone/provider/app_sing_provider.dart';
 import 'package:zoom_clone/provider/join_metting_provide.dart';
 import 'package:zoom_clone/provider/waiting_participents_provider.dart';
 import 'package:zoom_clone/screen/metting_room_screen.dart';
@@ -78,7 +79,7 @@ class _WaitingRoomScreenState extends ConsumerState<WaitingRoomScreen>
     final state = ref.watch(joinMettingProvide);
     final notifier = ref.read(joinMettingProvide.notifier);
 
-    final statusAsync = ref.watch(
+    final statusAsync =  ref.watch(
       approwalStatusProvider((widget.meetingId, widget.userId)),
     );
 
@@ -106,8 +107,9 @@ class _WaitingRoomScreenState extends ConsumerState<WaitingRoomScreen>
                       statusAsync.when(
                         data: (data) {
                           final String status = data?['status'];
-                          if (status == 'approved') {
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                          if (status == 'approved')  {
+                            WidgetsBinding.instance.addPostFrameCallback((_) async {
+                            final appConfig = await fetchAppconfig();
                               Get.off(
                                 () => MettingRoomScreen(
                                   userName: data?['name'],
@@ -115,7 +117,7 @@ class _WaitingRoomScreenState extends ConsumerState<WaitingRoomScreen>
                                   isHost: false,
                                   isCameraOn: state.isCameraOn,
                                   isMicOn: state.isMicOn,
-                                ),
+                                ), arguments: appConfig,
                               );
                             });
                             return const SizedBox.shrink();

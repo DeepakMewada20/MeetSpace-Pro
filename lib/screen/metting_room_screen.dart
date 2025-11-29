@@ -54,7 +54,7 @@ class _MettingRoomScreenState extends State<MettingRoomScreen> {
             ..topMenuBarConfig = ZegoTopMenuBarConfig(
               isVisible: true,
               backgroundColor: Colors.transparent,
-              title: "Meeting Room",
+              title: "ID : ${widget.mettingId}",
               buttons: [
                 ZegoMenuBarButtonName.switchCameraButton,
                 ZegoMenuBarButtonName.toggleScreenSharingButton,
@@ -65,43 +65,40 @@ class _MettingRoomScreenState extends State<MettingRoomScreen> {
                     stream: fetchWaitingListparticipents(widget.mettingId),
                     builder: (context, snapshot) {
                       final int waitingCount = snapshot.data?.docs.length ?? 0;
-                      return IconButton(onPressed: () {
-                        Get.to(
-                          () => HostWaitingListScreen(
-                            meetingId: widget.mettingId,
-                          ),
-                        );
-                      }, icon: snapshot.hasData
-                          ? Stack(
-                              children: [
-                                const Icon(
-                                  Icons.people,
-                                  size: 28,
-                                ),
-                                if (waitingCount > 0)
-                                  Positioned(
-                                    right: 0,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(4),
-                                      decoration: const BoxDecoration(
-                                        color: Colors.red,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Text(
-                                        waitingCount.toString(),
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
+                      return IconButton(
+                        onPressed: () {
+                          Get.to(
+                            () => HostWaitingListScreen(
+                              meetingId: widget.mettingId,
+                            ),
+                          );
+                        },
+                        icon: snapshot.hasData
+                            ? Stack(
+                                children: [
+                                  const Icon(Icons.people, size: 28),
+                                  if (waitingCount > 0)
+                                    Positioned(
+                                      right: 0,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: const BoxDecoration(
+                                          color: Colors.red,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Text(
+                                          waitingCount.toString(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                              ],
-                            )
-                          : const Icon(
-                              Icons.people,
-                              size: 28,
-                            ));
+                                ],
+                              )
+                            : const Icon(Icons.people, size: 28),
+                      );
                     },
                   ),
               ],

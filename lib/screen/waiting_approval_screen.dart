@@ -15,7 +15,7 @@ class HostWaitingListScreen extends ConsumerStatefulWidget {
 }
 
 class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
-  List<Participant> waittinParticipants = [];
+  late List<Participant> waittinParticipants;
   late CollectionReference? _firestoreDataUpdate;
 
   @override
@@ -281,17 +281,18 @@ class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
     );
   }
 
-  void _admitParticipant(Participant p) {
-    _firestoreDataUpdate!.doc(p.userId).update({'status': 'approved'});
-    // setState(
-    //   () => waittinParticipants.removeWhere((item) => item.userId == p.userId),
+  void _admitParticipant(Participant p) async {
+    await _firestoreDataUpdate!.doc(p.userId).update({'status': 'approved'});
+    print(_firestoreDataUpdate!.doc(p.userId).snapshots().length);
+    // // setState(
+    // //   () => waittinParticipants.removeWhere((item) => item.userId == p.userId),
+    // // );
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   SnackBar(
+    //     content: Text('${p.name} approved'),
+    //     backgroundColor: Theme.of(context).colorScheme.tertiary,
+    //   ),
     // );
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${p.name} approved'),
-        backgroundColor: Theme.of(context).colorScheme.tertiary,
-      ),
-    );
   }
 
   void _denyParticipant(Participant p) {
@@ -306,9 +307,9 @@ class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
             child: Text('Cancel'),
           ),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async{
               Navigator.pop(context);
-              _firestoreDataUpdate!.doc(p.userId).update({'status': 'denied'});
+              await _firestoreDataUpdate!.doc(p.userId).update({'status': 'denied'});
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.error,
