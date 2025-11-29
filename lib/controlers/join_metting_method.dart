@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:zoom_clone/provider/join_metting_provide.dart';
-import 'package:zoom_clone/screen/waiting_approval_screen.dart';
+import 'package:zoom_clone/screen/wating_room_screen.dart';
 import 'package:zoom_clone/widgets/snackbar_and_toast_widget.dart';
 
 void joinMettingMethod(
@@ -52,16 +52,12 @@ void joinMettingMethod(
         'userPhotoUrl': user.photoURL ?? "",
       });
 
-  // Get.to(
-  //   () => WaitingRoomScreen(
-  //     meetingId: meetingId,
-  //     userName: name.isNotEmpty ? name : user.displayName ?? "Guest",
-  //     userId: user.uid,
-  //   ),
-  // );
   Get.to(
-    () => HostWaitingListScreen(
+    () => WaitingRoomScreen(
       meetingId: meetingId,
+      userName: name.isNotEmpty ? name : user.displayName ?? "Guest",
+      userId: user.uid,
     ),
   );
+  
 }

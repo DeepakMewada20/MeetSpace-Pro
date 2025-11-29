@@ -646,20 +646,20 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
     );
   }
 
-  void _joinMeeting(JoinMeetingState state, JoinMettingNotifire notifier) {
-    Navigator.pushNamed(
-      context,
-      '/call',
-      arguments: {
-        'meetingId': _meetingIdController.text,
-        'userName': _nameController.text,
-        'password': _hasPassword ? _passwordController.text : null,
-        'isCameraEnabled': state.isCameraOn,
-        'isMicEnabled': state.isMicOn,
-        'isHost': false,
-      },
-    );
-  }
+  // void _joinMeeting(JoinMeetingState state, JoinMettingNotifire notifier) {
+  //   Navigator.pushNamed(
+  //     context,
+  //     '/call',
+  //     arguments: {
+  //       'meetingId': _meetingIdController.text,
+  //       'userName': _nameController.text,
+  //       'password': _hasPassword ? _passwordController.text : null,
+  //       'isCameraEnabled': state.isCameraOn,
+  //       'isMicEnabled': state.isMicOn,
+  //       'isHost': false,
+  //     },
+  //   );
+  // }
 
   // void _showErrorSnackbar(String message) {
   //   final colorScheme = Theme.of(context).colorScheme;

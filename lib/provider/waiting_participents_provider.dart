@@ -15,3 +15,14 @@ final approwalStatusProvider =
           .snapshots()
           .map((doc) => doc.data());
     });
+
+Stream<QuerySnapshot<Map<String, dynamic>>> fetchWaitingListparticipents(
+  String mettingId,
+) {
+  return FirebaseFirestore.instance
+      .collection('mettings')
+      .doc(mettingId)
+      .collection('waitingList')
+      .where('status', isEqualTo: 'waiting')
+      .snapshots();
+}

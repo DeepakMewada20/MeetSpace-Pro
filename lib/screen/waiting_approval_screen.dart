@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zoom_clone/modal/participant.dart';
+import 'package:zoom_clone/provider/waiting_participents_provider.dart';
 
 class HostWaitingListScreen extends ConsumerStatefulWidget {
   final String meetingId;
@@ -16,91 +17,97 @@ class HostWaitingListScreen extends ConsumerStatefulWidget {
 class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
   List<Participant> waittinParticipants = [];
   late CollectionReference? _firestoreDataUpdate;
+
   @override
   void initState() {
     super.initState();
     _firestoreDataUpdate = FirebaseFirestore.instance
         .collection('mettings')
-        .doc(widget.meetingId).collection('waitingList');
+        .doc(widget.meetingId)
+        .collection('waitingList');
   }
+
+  Future<void> _manualRefresh() async {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return StreamBuilder(
-      stream: FirebaseFirestore.instance
-          .collection('mettings')
-          .doc(widget.meetingId)
-          .collection('waitingList')
-          .where('status', isEqualTo: 'waiting')
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Scaffold(body: Center(child: CircularProgressIndicator()));
-        }
-        final doc = snapshot.data!.docs;
-        waittinParticipants = doc
-            .map((doc) => Participant.fromDoc(doc))
-            .toList();
-        return Scaffold(
-          backgroundColor: colorScheme.surface,
-          appBar: AppBar(
-            backgroundColor: colorScheme.surfaceContainer,
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text('Waiting Room', style: TextStyle(fontSize: 20)),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: colorScheme.primary,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        '${waittinParticipants.length}',
-                        style: TextStyle(
-                          color: colorScheme.onPrimary,
-                          fontSize: 12,
+    return RefreshIndicator(
+      onRefresh: _manualRefresh,
+      child: StreamBuilder(
+        stream: fetchWaitingListparticipents(widget.meetingId),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Scaffold(body: Center(child: CircularProgressIndicator()));
+          }
+          final doc = snapshot.data!.docs;
+          waittinParticipants = doc
+              .map((doc) => Participant.fromDoc(doc))
+              .toList();
+          return Scaffold(
+            backgroundColor: colorScheme.surface,
+            appBar: AppBar(
+              backgroundColor: colorScheme.surfaceContainer,
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text('Waiting Room', style: TextStyle(fontSize: 20)),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: colorScheme.primary,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          '${waittinParticipants.length}',
+                          style: TextStyle(
+                            color: colorScheme.onPrimary,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                Text(
-                  'ID: ${widget.meetingId}',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: colorScheme.onSurfaceVariant,
+                    ],
                   ),
-                ),
-              ],
+                  Text(
+                    'ID: ${widget.meetingId}',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          body: waittinParticipants.isEmpty
-              ? _buildEmptyState(colorScheme)
-              : Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: waittinParticipants.length,
-                        itemBuilder: (context, index) => _buildParticipantCard(
-                          waittinParticipants[index],
-                          colorScheme,
+            body: waittinParticipants.isEmpty
+                ? _buildEmptyState(colorScheme)
+                : Column(
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          padding: const EdgeInsets.all(16),
+                          itemCount: waittinParticipants.length,
+                          itemBuilder: (context, index) =>
+                              _buildParticipantCard(
+                                waittinParticipants[index],
+                                colorScheme,
+                              ),
                         ),
                       ),
-                    ),
-                    _buildBottomBar(colorScheme),
-                  ],
-                ),
-        );
-      },
+                      _buildBottomBar(colorScheme),
+                    ],
+                  ),
+          );
+        },
+      ),
     );
   }
 
@@ -275,9 +282,7 @@ class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
   }
 
   void _admitParticipant(Participant p) {
-    _firestoreDataUpdate!
-        .doc(p.userId)
-        .update({'status': 'admitted'});
+    _firestoreDataUpdate!.doc(p.userId).update({'status': 'admitted'});
     // setState(
     //   () => waittinParticipants.removeWhere((item) => item.userId == p.userId),
     // );
@@ -290,7 +295,6 @@ class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
   }
 
   void _denyParticipant(Participant p) {
-
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -303,10 +307,8 @@ class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
           ),
           ElevatedButton(
             onPressed: () {
-              //Navigator.pop(context);
-              _firestoreDataUpdate!
-                  .doc(p.userId)
-                  .update({'status': 'denied'});
+              Navigator.pop(context);
+              _firestoreDataUpdate!.doc(p.userId).update({'status': 'denied'});
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.error,

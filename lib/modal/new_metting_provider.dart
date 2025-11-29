@@ -1,12 +1,12 @@
 class MettingState {
   final String mettingId;
-  final bool ismicrophoneoff;
-  final bool iscameraoff;
+  final bool isMicOn;
+  final bool iscameraOn;
 
   MettingState({
     required this.mettingId,
-    this.ismicrophoneoff = false,
-    this.iscameraoff = false,
+    this.isMicOn = false,
+    this.iscameraOn = false,
   });
 
   MettingState copyWith({
@@ -16,8 +16,8 @@ class MettingState {
   }) {
     return MettingState(
       mettingId: mettingId ?? this.mettingId,
-      ismicrophoneoff: ismicrophoneoff ?? this.ismicrophoneoff,
-      iscameraoff: iscameraoff ?? this.iscameraoff,
+      isMicOn: ismicrophoneoff ?? this.isMicOn,
+      iscameraOn: iscameraoff ?? this.iscameraOn,
     );
   }
 }

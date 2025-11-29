@@ -1,12 +1,12 @@
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:zoom_clone/modal/new_metting_provider.dart';
 
-class MettingNotifier extends StateNotifier<MettingState> {
-  MettingNotifier()
+class StartMettingNotifier extends StateNotifier<MettingState> {
+  StartMettingNotifier()
     : super(
         MettingState(
-          ismicrophoneoff: false,
-          iscameraoff: false,
+          isMicOn: true,
+          iscameraOn: true,
           mettingId: generateMeetingId(),
         ),
       );
@@ -24,7 +24,9 @@ class MettingNotifier extends StateNotifier<MettingState> {
   }
 
   final mettingProvider =
-      StateNotifierProvider.autoDispose<MettingNotifier, MettingState>((ref) {
-        return MettingNotifier();
+      StateNotifierProvider.autoDispose<StartMettingNotifier, MettingState>((
+        ref,
+      ) {
+        return StartMettingNotifier();
       });
 }

@@ -11,10 +11,10 @@ void startMeeting(
   WidgetRef ref,
   BuildContext context,
   TextEditingController nameController,
-) async{
+) async {
   // Implementation for starting a meeting
   final currentuser = FirebaseAuth.instance.currentUser;
-  final state = ref.read(MettingNotifier().mettingProvider);
+  final state = ref.read(StartMettingNotifier().mettingProvider);
 
   await FirebaseFirestore.instance
       .collection('mettings')
@@ -25,8 +25,8 @@ void startMeeting(
             ? nameController.text
             : currentuser?.displayName,
         'meetingId': state.mettingId,
-        'isMicrophoneOff': state.ismicrophoneoff,
-        'isCameraOff': state.iscameraoff,
+        'isMicrophoneOff': state.isMicOn,
+        'isCameraOff': state.iscameraOn,
         'createdAt': DateTime.now(),
       });
   final appConfig = await fetchAppconfig();
@@ -35,8 +35,11 @@ void startMeeting(
       userName: nameController.text.isNotEmpty
           ? nameController.text
           : currentuser?.displayName ?? "Host",
-      roomId: state.mettingId,
-      isHost: true,   
-    ),arguments: appConfig,
+      mettingId: state.mettingId,
+      isHost: true,
+      isCameraOn: state.iscameraOn,
+      isMicOn: state.isMicOn,
+    ),
+    arguments: appConfig,
   );
 }
