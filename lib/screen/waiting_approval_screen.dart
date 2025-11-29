@@ -282,13 +282,13 @@ class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
   }
 
   void _admitParticipant(Participant p) {
-    _firestoreDataUpdate!.doc(p.userId).update({'status': 'admitted'});
+    _firestoreDataUpdate!.doc(p.userId).update({'status': 'approved'});
     // setState(
     //   () => waittinParticipants.removeWhere((item) => item.userId == p.userId),
     // );
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('${p.name} admitted'),
+        content: Text('${p.name} approved'),
         backgroundColor: Theme.of(context).colorScheme.tertiary,
       ),
     );

@@ -105,7 +105,7 @@ class _WaitingRoomScreenState extends ConsumerState<WaitingRoomScreen>
                       // const SizedBox(height: 40),
                       statusAsync.when(
                         data: (data) {
-                          final status = data?['status'];
+                          final String status = data?['status'];
                           if (status == 'approved') {
                             WidgetsBinding.instance.addPostFrameCallback((_) {
                               Get.off(
