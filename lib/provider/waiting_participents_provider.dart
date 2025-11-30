@@ -5,12 +5,12 @@ final approwalStatusProvider =
     StreamProvider.family<
       Map<String, dynamic>?,
       (String mettingId, String userId)
-    >((ref, arg) {
+    >((ref, arg)  {
       final (mettingId, userId) = arg;
       return FirebaseFirestore.instance
           .collection("mettings")
           .doc(mettingId)
-          .collection("waitingList")
+          .collection("participants")
           .doc(userId)
           .snapshots()
           .map((doc) => doc.data());
@@ -22,7 +22,7 @@ Stream<QuerySnapshot<Map<String, dynamic>>> fetchWaitingListparticipents(
   return FirebaseFirestore.instance
       .collection('mettings')
       .doc(mettingId)
-      .collection('waitingList')
+      .collection('participants')
       .where('status', isEqualTo: 'waiting')
       .snapshots();
 }

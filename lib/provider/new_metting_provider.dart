@@ -1,13 +1,14 @@
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:zoom_clone/modal/new_metting_provider.dart';
+import 'package:zoom_clone/modal/new_metting_modal.dart';
 
-class StartMettingNotifier extends StateNotifier<MettingState> {
+class StartMettingNotifier extends StateNotifier<StartMettingState> {
   StartMettingNotifier()
     : super(
-        MettingState(
+        StartMettingState(
           isMicOn: true,
           iscameraOn: true,
           mettingId: generateMeetingId(),
+          loading: false,
         ),
       );
 
@@ -19,14 +20,18 @@ class StartMettingNotifier extends StateNotifier<MettingState> {
     state = state.copyWith(iscameraoff: value);
   }
 
+  void setLoading(bool value) {
+    state = state.copyWith(loading: value);
+  }
+
   static String generateMeetingId() {
     return DateTime.now().millisecondsSinceEpoch.toString().substring(7);
   }
-
-  final mettingProvider =
-      StateNotifierProvider.autoDispose<StartMettingNotifier, MettingState>((
-        ref,
-      ) {
-        return StartMettingNotifier();
-      });
 }
+
+final startMettingProvider =
+    StateNotifierProvider.autoDispose<StartMettingNotifier, StartMettingState>((
+      ref,
+    ) {
+      return StartMettingNotifier();
+    });

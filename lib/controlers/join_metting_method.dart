@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:zoom_clone/provider/join_metting_provide.dart';
 import 'package:zoom_clone/screen/waiting_approval_screen.dart';
-import 'package:zoom_clone/screen/wating_room_screen.dart';
 import 'package:zoom_clone/widgets/snackbar_and_toast_widget.dart';
 
 void joinMettingMethod(
@@ -41,25 +40,26 @@ void joinMettingMethod(
   await FirebaseFirestore.instance
       .collection("mettings")
       .doc(meetingId)
-      .collection("waitingList")
+      .collection("participants")
       .doc(user!.uid)
       .set({
+        'userId': user.uid,
         'name': name.isNotEmpty ? name : user.displayName ?? "Guest",
         'status': 'waiting',
         'joinedAt': DateTime.now(),
+        'isHost': false,
+        'isMicrophoneOn': state.isMicOn,
         'isCameraOn': state.isCameraOn,
-        'isMicOn': state.isMicOn,
-        'userId': user.uid,
-        'userPhotoUrl': user.photoURL ?? "",
+        'photoUrl': user.photoURL ?? "",
       });
 
-  Get.to(
-    () => WaitingRoomScreen(
-      meetingId: meetingId,
-      userName: name.isNotEmpty ? name : user.displayName ?? "Guest",
-      userId: user.uid,
-    ),
-  );
-  // Get.to(()=>HostWaitingListScreen(meetingId: meetingId));
+  // Get.to(
+  //   () => WaitingRoomScreen(
+  //     meetingId: meetingId,
+  //     userName: name.isNotEmpty ? name : user.displayName ?? "Guest",
+  //     userId: user.uid,
+  //   ),
+  // );
+  Get.to(()=>HostWaitingListScreen(meetingId: meetingId));
   
 }

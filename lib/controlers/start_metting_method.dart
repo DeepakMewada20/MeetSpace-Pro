@@ -14,27 +14,30 @@ void startMeeting(
 ) async {
   // Implementation for starting a meeting
   final currentuser = FirebaseAuth.instance.currentUser;
-  final state = ref.read(StartMettingNotifier().mettingProvider);
-
+  final state = ref.watch(startMettingProvider);
+  final notifier = ref.read(startMettingProvider.notifier);
+  notifier.setLoading(true);
   await FirebaseFirestore.instance
       .collection('mettings')
       .doc(state.mettingId)
       .set({
-        'hostId': currentuser?.uid,
-        'hostName': nameController.text.isNotEmpty
+        'hostId': currentuser!.uid,
+        'name': nameController.text.isNotEmpty
             ? nameController.text
-            : currentuser?.displayName,
-        'meetingId': state.mettingId,
-        'isMicrophoneOff': state.isMicOn,
-        'isCameraOff': state.iscameraOn,
-        'createdAt': DateTime.now(),
+            : currentuser.displayName,
+        'status': 'approved',
+        'joinedAt': DateTime.now(),
+        'isHost' :true,
+        'isMicrophoneOn': state.isMicOn,
+        'isCameraOn': state.iscameraOn,
+        'photoUrl' : currentuser.photoURL
       });
   final appConfig = await fetchAppconfig();
   Get.to(
     () => MettingRoomScreen(
       userName: nameController.text.isNotEmpty
           ? nameController.text
-          : currentuser?.displayName ?? "Host",
+          : currentuser.displayName ?? "Host",
       mettingId: state.mettingId,
       isHost: true,
       isCameraOn: state.iscameraOn,
@@ -42,4 +45,5 @@ void startMeeting(
     ),
     arguments: appConfig,
   );
+  notifier.setLoading(false);
 }

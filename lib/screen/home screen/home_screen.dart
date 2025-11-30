@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:zoom_clone/controlers/start_metting_method.dart';
 import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
+import 'package:zoom_clone/modal/new_metting_modal.dart';
+import 'package:zoom_clone/provider/new_metting_provider.dart';
 import 'package:zoom_clone/screen/profile_page/profile_page.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -49,7 +51,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
+    final state = ref.watch(startMettingProvider);
     return Scaffold(
       backgroundColor: colorScheme.surface,
       body: SafeArea(
@@ -64,7 +66,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
               _buildWelcomeSection(context, colorScheme),
 
               // Main Actions
-              Expanded(child: _buildMainActions(context, colorScheme)),
+              Expanded(child: _buildMainActions(context, colorScheme, state)),
 
               // Simple Bottom Info
               _buildBottomInfo(context, colorScheme),
@@ -210,7 +212,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
     );
   }
 
-  Widget _buildMainActions(BuildContext context, ColorScheme colorScheme) {
+  Widget _buildMainActions(BuildContext context, ColorScheme colorScheme, StartMettingState state) {
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -223,7 +225,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
             colorScheme,
             icon: Icons.add_circle_outline,
             title: 'Start New Meeting',
-            subtitle: 'Begin an instant meeting',
+            subtitle: state.loading == true ? 'Loading...' : 'Begin an instant meeting',
             onTap: () => startMeeting(ref, context, nameController),
           ),
 

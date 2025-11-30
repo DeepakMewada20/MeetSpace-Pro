@@ -24,7 +24,7 @@ class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
     _firestoreDataUpdate = FirebaseFirestore.instance
         .collection('mettings')
         .doc(widget.meetingId)
-        .collection('waitingList');
+        .collection('participants');
   }
 
   Future<void> _manualRefresh() async {
@@ -283,7 +283,7 @@ class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
 
   void _admitParticipant(Participant p) async {
     await _firestoreDataUpdate!.doc(p.userId).update({'status': 'approved'});
-    print(_firestoreDataUpdate!.doc(p.userId).snapshots().length);
+    //print("################################################${_firestoreDataUpdate!.doc(p.userId).snapshots().map((event) => event.data())}");
     // // setState(
     // //   () => waittinParticipants.removeWhere((item) => item.userId == p.userId),
     // // );
@@ -307,9 +307,11 @@ class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
             child: Text('Cancel'),
           ),
           ElevatedButton(
-            onPressed: () async{
+            onPressed: () async {
               Navigator.pop(context);
-              await _firestoreDataUpdate!.doc(p.userId).update({'status': 'denied'});
+              await _firestoreDataUpdate!.doc(p.userId).update({
+                'status': 'denied',
+              });
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.error,
