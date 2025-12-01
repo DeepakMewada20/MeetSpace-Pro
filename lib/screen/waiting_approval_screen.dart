@@ -118,14 +118,14 @@ class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: colorScheme.outline.withOpacity(0.2)),
+        border: Border.all(color: colorScheme.outline.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
           // Avatar
           CircleAvatar(
             radius: 24,
-            backgroundColor: colorScheme.primary.withOpacity(0.2),
+            backgroundColor: colorScheme.primary.withValues(alpha: 0.2),
             backgroundImage: p.userPhotoUrl.isNotEmpty
                 ? NetworkImage(p.userPhotoUrl)
                 : null,
@@ -175,7 +175,7 @@ class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
                 onPressed: () => _admitParticipant(p),
                 icon: Icon(Icons.check_circle, color: colorScheme.tertiary),
                 style: IconButton.styleFrom(
-                  backgroundColor: colorScheme.tertiary.withOpacity(0.1),
+                  backgroundColor: colorScheme.tertiary.withValues(alpha: 0.1),
                 ),
               ),
               const SizedBox(width: 8),
@@ -183,7 +183,7 @@ class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
                 onPressed: () => _denyParticipant(p),
                 icon: Icon(Icons.cancel, color: colorScheme.error),
                 style: IconButton.styleFrom(
-                  backgroundColor: colorScheme.error.withOpacity(0.1),
+                  backgroundColor: colorScheme.error.withValues(alpha: 0.1),
                 ),
               ),
             ],
@@ -198,8 +198,8 @@ class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
         color: isOn
-            ? colorScheme.tertiary.withOpacity(0.1)
-            : colorScheme.error.withOpacity(0.1),
+            ? colorScheme.tertiary.withValues(alpha: 0.1)
+            : colorScheme.error.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Row(
@@ -229,7 +229,7 @@ class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainer,
         border: Border(
-          top: BorderSide(color: colorScheme.outline.withOpacity(0.2)),
+          top: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
         ),
       ),
       child: SafeArea(
@@ -260,7 +260,7 @@ class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
           Icon(
             Icons.people_outline,
             size: 64,
-            color: colorScheme.onSurfaceVariant.withOpacity(0.5),
+            color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
           Text(

@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
+import 'package:zoom_clone/controlers/user_profiledata_save_controller.dart';
 
 class ShowDilogWidget extends StatefulWidget {
   const ShowDilogWidget(
@@ -96,7 +96,9 @@ class _ShowDilogWidgetState extends State<ShowDilogWidget> {
       if (success) {
         // Proceed with the original function
         widget.function();
-        Navigator.pop(context);
+        if (mounted) {
+          Navigator.pop(context);
+        }
       }
     } catch (e) {
       setState(() {
@@ -196,7 +198,7 @@ class _ShowDilogWidgetState extends State<ShowDilogWidget> {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: colorScheme.primaryContainer.withOpacity(0.3),
+            color: colorScheme.primaryContainer.withValues(alpha: 0.3),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
@@ -229,7 +231,7 @@ class _ShowDilogWidgetState extends State<ShowDilogWidget> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: colorScheme.errorContainer.withOpacity(0.3),
+              color: colorScheme.errorContainer.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
@@ -390,7 +392,7 @@ class _ShowDilogWidgetState extends State<ShowDilogWidget> {
             'Cancel',
             style: TextStyle(
               color: _isLoading
-                  ? colorScheme.onSurfaceVariant.withOpacity(0.5)
+                  ? colorScheme.onSurfaceVariant.withValues(alpha: 0.5)
                   : colorScheme.onSurfaceVariant,
             ),
           ),

@@ -241,7 +241,7 @@ class _MettingRoomScreenState extends ConsumerState<MettingRoomScreen> {
                   ],
                 ),
               ),
-              Divider(color: colorScheme.outline.withOpacity(0.2)),
+              Divider(color: colorScheme.outline.withValues(alpha: 0.2)),
               _buildMenuOption(
                 context,
                 icon: Icons.speaker_notes_off,
@@ -301,7 +301,7 @@ class _MettingRoomScreenState extends ConsumerState<MettingRoomScreen> {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: colorScheme.primary.withOpacity(0.1),
+                color: colorScheme.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: colorScheme.primary, size: 24),

@@ -139,7 +139,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
                 color: colorScheme.surfaceContainer,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: colorScheme.outline.withOpacity(0.2),
+                  color: colorScheme.outline.withValues(alpha: 0.2),
                   width: 1,
                 ),
               ),
@@ -191,8 +191,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: _emailSent
-                  ? colorScheme.primary.withOpacity(0.15)
-                  : colorScheme.error.withOpacity(0.15),
+                  ? colorScheme.primary.withValues(alpha: 0.15)
+                  : colorScheme.error.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(
@@ -246,7 +246,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
               color: colorScheme.surfaceContainer,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: colorScheme.outline.withOpacity(0.2),
+                color: colorScheme.outline.withValues(alpha: 0.2),
                 width: 1,
               ),
             ),
@@ -265,7 +265,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
                 contentPadding: const EdgeInsets.all(16),
                 labelStyle: TextStyle(color: colorScheme.onSurfaceVariant),
                 hintStyle: TextStyle(
-                  color: colorScheme.onSurfaceVariant.withOpacity(0.7),
+                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                 ),
               ),
               validator: (value) {
@@ -294,7 +294,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
           backgroundColor: colorScheme.primary,
           foregroundColor: colorScheme.onPrimary,
           elevation: 2,
-          shadowColor: colorScheme.primary.withOpacity(0.3),
+          shadowColor: colorScheme.primary.withValues(alpha: 0.3),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -330,7 +330,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
         color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.1),
+          color: colorScheme.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -367,7 +367,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
             color: colorScheme.surfaceContainer,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: colorScheme.outline.withOpacity(0.1),
+              color: colorScheme.outline.withValues(alpha: 0.1),
               width: 1,
             ),
           ),

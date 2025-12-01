@@ -154,7 +154,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage>
                 color: colorScheme.surfaceContainer,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: colorScheme.outline.withOpacity(0.2),
+                  color: colorScheme.outline.withValues(alpha: 0.2),
                   width: 1,
                 ),
               ),
@@ -205,7 +205,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage>
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: colorScheme.primary.withOpacity(0.15),
+              color: colorScheme.primary.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Icon(
@@ -237,7 +237,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: colorScheme.primary.withOpacity(0.1),
+              color: colorScheme.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
@@ -262,7 +262,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage>
         color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.1),
+          color: colorScheme.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -360,7 +360,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage>
               backgroundColor: colorScheme.primary,
               foregroundColor: colorScheme.onPrimary,
               elevation: 2,
-              shadowColor: colorScheme.primary.withOpacity(0.3),
+              shadowColor: colorScheme.primary.withValues(alpha: 0.3),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -445,7 +445,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage>
         color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.1),
+          color: colorScheme.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),

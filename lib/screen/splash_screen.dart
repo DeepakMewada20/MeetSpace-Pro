@@ -7,10 +7,10 @@ class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  SplashScreenState createState() => SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
+class SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
@@ -37,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen>
     _controller.forward();
 
     Future.delayed(Duration(milliseconds: 3000), () {
-      Get.offAll(() => Wrapper(), transition: Transition.fadeIn);
+      Get.off(() => Wrapper(), transition: Transition.fadeIn);
       // //   // Alternatively, you can use Get.to() if you want to keep the splash screen in the navigation stack
       // //   // Get.to(() => HomeScreen(), transition: Transition.fadeIn, duration: Duration(milliseconds: 500));
     });

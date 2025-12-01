@@ -67,13 +67,13 @@ Widget buildMediaControls(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: isEnabled
-              ? colorScheme.primary.withOpacity(0.1)
+              ? colorScheme.primary.withValues(alpha: 0.1)
               : colorScheme.surfaceContainer,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isEnabled
-                ? colorScheme.primary.withOpacity(0.3)
-                : colorScheme.outline.withOpacity(0.2),
+                ? colorScheme.primary.withValues(alpha: 0.3)
+                : colorScheme.outline.withValues(alpha: 0.2),
             width: 1,
           ),
         ),

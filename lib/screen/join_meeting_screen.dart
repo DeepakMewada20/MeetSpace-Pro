@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:zoom_clone/controlers/join_metting_method.dart';
-import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
+import 'package:zoom_clone/controlers/user_profiledata_save_controller.dart';
 import 'package:zoom_clone/modal/join_metting_modal.dart';
 import 'package:zoom_clone/provider/join_metting_provide.dart';
 import 'package:zoom_clone/widgets/media_controller.dart';
@@ -21,9 +21,8 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  UserProfiledataSaveController userProfileInstance = Get.put(
-    UserProfiledataSaveController(),
-  );
+  UserProfiledataSaveController userProfileInstance =
+      Get.find<UserProfiledataSaveController>();
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -91,12 +90,7 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
                       const SizedBox(height: 24),
 
                       // Camera & Microphone Controls
-                      buildMediaControls(
-                        context,
-                        colorScheme,
-                        state,
-                        notifier,
-                      ),
+                      buildMediaControls(context, colorScheme, state, notifier),
 
                       const SizedBox(height: 32),
 
@@ -132,7 +126,7 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
                 color: colorScheme.surfaceContainer,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: colorScheme.outline.withOpacity(0.2),
+                  color: colorScheme.outline.withValues(alpha: 0.2),
                   width: 1,
                 ),
               ),
@@ -173,19 +167,21 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
               color: colorScheme.surfaceContainer,
               shape: BoxShape.circle,
               border: Border.all(
-                color: colorScheme.outline.withOpacity(0.2),
+                color: colorScheme.outline.withValues(alpha: 0.2),
                 width: 1,
               ),
             ),
             child: ClipOval(
-              child: userProfileInstance.modalUser == null
+              child:
+                  userProfileInstance.user == null ||
+                      userProfileInstance.user!.photoURL == null
                   ? Icon(
                       Icons.person,
                       color: colorScheme.onSurfaceVariant,
                       size: 24,
                     )
                   : Image.network(
-                      userProfileInstance.modalUser!.profileImageUrl,
+                      userProfileInstance.user!.photoURL!,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Icon(
@@ -214,7 +210,7 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: colorScheme.primary.withOpacity(0.15),
+              color: colorScheme.primary.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
@@ -382,7 +378,7 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
         color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.2),
+          color: colorScheme.outline.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -410,7 +406,7 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
           contentPadding: const EdgeInsets.all(16),
           labelStyle: TextStyle(color: colorScheme.onSurfaceVariant),
           hintStyle: TextStyle(
-            color: colorScheme.onSurfaceVariant.withOpacity(0.7),
+            color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
           ),
         ),
       ),
@@ -555,7 +551,7 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
           backgroundColor: colorScheme.primary,
           foregroundColor: colorScheme.onPrimary,
           elevation: 2,
-          shadowColor: colorScheme.primary.withOpacity(0.3),
+          shadowColor: colorScheme.primary.withValues(alpha: 0.3),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -582,7 +578,7 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
         color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.1),
+          color: colorScheme.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),

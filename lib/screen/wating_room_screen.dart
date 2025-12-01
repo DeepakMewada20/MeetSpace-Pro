@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
+import 'package:zoom_clone/controlers/user_profiledata_save_controller.dart';
 import 'package:zoom_clone/provider/app_sing_provider.dart';
 import 'package:zoom_clone/provider/join_metting_provide.dart';
 import 'package:zoom_clone/provider/waiting_participents_provider.dart';
@@ -217,7 +217,7 @@ class _WaitingRoomScreenState extends ConsumerState<WaitingRoomScreen>
         color: colorScheme.surfaceContainer,
         border: Border(
           bottom: BorderSide(
-            color: colorScheme.outline.withOpacity(0.1),
+            color: colorScheme.outline.withValues(alpha: 0.1),
             width: 1,
           ),
         ),
@@ -228,7 +228,7 @@ class _WaitingRoomScreenState extends ConsumerState<WaitingRoomScreen>
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: colorScheme.primary.withOpacity(0.15),
+              color: colorScheme.primary.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
@@ -267,14 +267,14 @@ class _WaitingRoomScreenState extends ConsumerState<WaitingRoomScreen>
               color: colorScheme.surfaceContainer,
               shape: BoxShape.circle,
               border: Border.all(
-                color: colorScheme.outline.withOpacity(0.2),
+                color: colorScheme.outline.withValues(alpha: 0.2),
                 width: 1,
               ),
             ),
             child: ClipOval(
-              child: userProfileInstance.modalUser != null
+              child: userProfileInstance.user != null && userProfileInstance.user!.photoURL !=null
                   ? Image.network(
-                      userProfileInstance.modalUser!.profileImageUrl,
+                      userProfileInstance.user!.photoURL!,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Icon(
@@ -304,9 +304,9 @@ class _WaitingRoomScreenState extends ConsumerState<WaitingRoomScreen>
         height: 120,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: colorScheme.primary.withOpacity(0.1),
+          color: colorScheme.primary.withValues(alpha: 0.1),
           border: Border.all(
-            color: colorScheme.primary.withOpacity(0.3),
+            color: colorScheme.primary.withValues(alpha: 0.3),
             width: 2,
           ),
         ),
@@ -316,7 +316,7 @@ class _WaitingRoomScreenState extends ConsumerState<WaitingRoomScreen>
             height: 80,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: colorScheme.primary.withOpacity(0.2),
+              color: colorScheme.primary.withValues(alpha: 0.2),
             ),
             child: Icon(
               Icons.access_time,
@@ -368,7 +368,7 @@ class _WaitingRoomScreenState extends ConsumerState<WaitingRoomScreen>
                   height: 8,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: colorScheme.primary.withOpacity(value),
+                    color: colorScheme.primary.withValues(alpha: value),
                   ),
                 );
               },
@@ -386,7 +386,7 @@ class _WaitingRoomScreenState extends ConsumerState<WaitingRoomScreen>
         color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.1),
+          color: colorScheme.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -598,7 +598,7 @@ class _WaitingRoomScreenState extends ConsumerState<WaitingRoomScreen>
         color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.1),
+          color: colorScheme.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -672,7 +672,7 @@ class _WaitingRoomScreenState extends ConsumerState<WaitingRoomScreen>
         color: colorScheme.surfaceContainer,
         border: Border(
           top: BorderSide(
-            color: colorScheme.outline.withOpacity(0.1),
+            color: colorScheme.outline.withValues(alpha: 0.1),
             width: 1,
           ),
         ),

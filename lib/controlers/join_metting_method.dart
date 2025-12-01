@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:zoom_clone/controlers/user_profiledata_save_controller.dart';
 import 'package:zoom_clone/provider/join_metting_provide.dart';
 import 'package:zoom_clone/screen/waiting_approval_screen.dart';
 import 'package:zoom_clone/widgets/snackbar_and_toast_widget.dart';
@@ -15,7 +15,8 @@ void joinMettingMethod(
   TextEditingController meetingIdController,
 ) async {
   //current user
-  User? user = FirebaseAuth.instance.currentUser;
+  UserProfiledataSaveController userProfileInstance = Get.find<UserProfiledataSaveController>();
+  // User? user = FirebaseAuth.instance.currentUser;
 
   final name = nameController.text.trim();
   final meetingId = meetingIdController.text.trim();
@@ -41,16 +42,16 @@ void joinMettingMethod(
       .collection("mettings")
       .doc(meetingId)
       .collection("participants")
-      .doc(user!.uid)
+      .doc(userProfileInstance.user!.uid)
       .set({
-        'userId': user.uid,
-        'name': name.isNotEmpty ? name : user.displayName ?? "Guest",
+        'userId': userProfileInstance.user!.uid,
+        'name': name.isNotEmpty ? name : userProfileInstance.user!.displayName ?? "Guest",
         'status': 'waiting',
         'joinedAt': DateTime.now(),
         'isHost': false,
         'isMicrophoneOn': state.isMicOn,
         'isCameraOn': state.isCameraOn,
-        'photoUrl': user.photoURL ?? "",
+        'photoUrl': userProfileInstance.user!.photoURL ?? "",
       });
 
   // Get.to(
@@ -60,6 +61,5 @@ void joinMettingMethod(
   //     userId: user.uid,
   //   ),
   // );
-  Get.to(()=>HostWaitingListScreen(meetingId: meetingId));
-  
+  Get.to(() => HostWaitingListScreen(meetingId: meetingId));
 }

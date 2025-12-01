@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
+import 'package:zoom_clone/controlers/user_profiledata_save_controller.dart';
+import 'package:zoom_clone/widgets/snackbar_and_toast_widget.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -31,6 +33,8 @@ class _EditProfilePageState extends State<EditProfilePage>
   bool _showProfile = true;
   bool _showOnlineStatus = false;
 
+  // final User? user = FirebaseAuth.instance.currentUser;
+
   @override
   void initState() {
     super.initState();
@@ -45,18 +49,19 @@ class _EditProfilePageState extends State<EditProfilePage>
     _animationController.forward();
 
     // Pre-fill with existing data
-    _nameController.text =
-        userProfileInstance.modalUser?.displayName ?? 'User Name';
+    _nameController.text = userProfileInstance.user!.displayName ?? "Guest";
     _emailController.text =
-        userProfileInstance.modalUser?.email ?? 'user@example.com';
+        userProfileInstance.user!.email ?? 'user@example.com';
     _phoneController.text =
-        userProfileInstance.modalUser?.phoneNumber ?? '+1 (555) 123-4567';
+        userProfileInstance.user!.phoneNumber ?? '+91 XXXXX-XXXXX';
     _jobTitleController.text =
-        userProfileInstance.modalUser?.jobTitle ?? 'MeetSpace User';
+        // userProfileInstance.modalUser?.jobTitle ??
+        'MeetSpace User';
     _companyController.text =
-        userProfileInstance.modalUser?.companyName ?? 'MeetSpace Pro';
+        // userProfileInstance.modalUser?.companyName ??
+        'MeetSpace Pro';
     _bioController.text =
-        userProfileInstance.modalUser?.bio ??
+        // userProfileInstance.modalUser?.bio ??
         'Passionate professional using MeetSpace Pro for seamless video meetings and collaboration.';
   }
 
@@ -142,7 +147,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                 color: colorScheme.surfaceContainer,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: colorScheme.outline.withOpacity(0.2),
+                  color: colorScheme.outline.withValues(alpha: 0.2),
                   width: 1,
                 ),
               ),
@@ -185,7 +190,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: colorScheme.primary.withOpacity(0.2),
+                    color: colorScheme.primary.withValues(alpha: 0.2),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
                   ),
@@ -221,16 +226,16 @@ class _EditProfilePageState extends State<EditProfilePage>
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: colorScheme.outline.withOpacity(0.2),
+                  color: colorScheme.outline.withValues(alpha: 0.2),
                   width: 3,
                 ),
               ),
               child: ClipOval(
                 child: _pickedImage != null
                     ? Image.file(File(_pickedImage!), fit: BoxFit.cover)
-                    : userProfileInstance.modalUser?.profileImageUrl != null
+                    : userProfileInstance.user!.photoURL != null
                     ? Image.network(
-                        userProfileInstance.modalUser!.profileImageUrl,
+                        userProfileInstance.user!.photoURL!,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return _buildDefaultAvatar(colorScheme);
@@ -272,8 +277,8 @@ class _EditProfilePageState extends State<EditProfilePage>
       ),
       child: Center(
         child: Text(
-          userProfileInstance.modalUser!.displayName.isNotEmpty
-              ? userProfileInstance.modalUser!.displayName[0].toUpperCase()
+          userProfileInstance.user!.displayName != null
+              ? userProfileInstance.user!.displayName![0].toUpperCase()
               : 'U',
           style: const TextStyle(
             color: Colors.white,
@@ -292,7 +297,7 @@ class _EditProfilePageState extends State<EditProfilePage>
         color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.1),
+          color: colorScheme.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -357,15 +362,20 @@ class _EditProfilePageState extends State<EditProfilePage>
               return null;
             },
           ),
-          const SizedBox(height: 16),
-          _buildTextField(
-            context,
-            colorScheme,
-            controller: _phoneController,
-            label: 'Phone Number',
-            icon: Icons.phone_outlined,
-            keyboardType: TextInputType.phone,
-          ),
+          userProfileInstance.user!.phoneNumber != null &&
+                  userProfileInstance.user!.phoneNumber!.isNotEmpty
+              ? const SizedBox(height: 16)
+              : userProfileInstance.user!.phoneNumber != null &&
+                    userProfileInstance.user!.phoneNumber!.isNotEmpty
+              ? _buildTextField(
+                  context,
+                  colorScheme,
+                  controller: _phoneController,
+                  label: 'Phone Number',
+                  icon: Icons.phone_outlined,
+                  keyboardType: TextInputType.phone,
+                )
+              : SizedBox(),
         ],
       ),
     );
@@ -381,7 +391,7 @@ class _EditProfilePageState extends State<EditProfilePage>
         color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.1),
+          color: colorScheme.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -452,7 +462,7 @@ class _EditProfilePageState extends State<EditProfilePage>
         color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.1),
+          color: colorScheme.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -532,7 +542,7 @@ class _EditProfilePageState extends State<EditProfilePage>
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.2),
+          color: colorScheme.outline.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -581,7 +591,7 @@ class _EditProfilePageState extends State<EditProfilePage>
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.1),
+          color: colorScheme.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -638,7 +648,7 @@ class _EditProfilePageState extends State<EditProfilePage>
               height: 4,
               margin: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
-                color: colorScheme.outline.withOpacity(0.3),
+                color: colorScheme.outline.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -716,77 +726,84 @@ class _EditProfilePageState extends State<EditProfilePage>
         return;
       }
 
-      // final croppedFile = await ImageCropper().cropImage(
-      //   sourcePath: pickedFile!.path,
-      //   uiSettings: [
-      //     if (mounted)
-      //       AndroidUiSettings(
-      //         toolbarTitle: 'Crop Image',
-      //         // toolbarColor: Theme.of(context).colorScheme.primary,
-      //         // toolbarWidgetColor: Theme.of(context).colorScheme.onPrimary,
-      //         initAspectRatio: CropAspectRatioPreset.square,
-      //         lockAspectRatio: true,
-      //         cropStyle: CropStyle.circle,
-      //         statusBarColor: Theme.of(context).colorScheme.surface,
-      //       ),
-      //       IOSUiSettings(title: 'Crop Image', aspectRatioLockEnabled: true),
-      //   ],
-      // );
+      final croppedFile = await ImageCropper().cropImage(
+        sourcePath: pickedFile!.path,
+        uiSettings: [
+          if (mounted)
+            AndroidUiSettings(
+              toolbarTitle: 'Crop Image',
+              // toolbarColor: Theme.of(context).colorScheme.primary,
+              // toolbarWidgetColor: Theme.of(context).colorScheme.onPrimary,
+              initAspectRatio: CropAspectRatioPreset.square,
+              lockAspectRatio: true,
+              cropStyle: CropStyle.circle,
+              statusBarLight: Theme.of(context).brightness == Brightness.dark,
+            ),
+          IOSUiSettings(title: 'Crop Image', aspectRatioLockEnabled: true),
+        ],
+      );
+      if (mounted) {
+        Navigator.pop(context);
+      }
 
-      Navigator.pop(context);
-
-      if (pickedFile != null) {
+      if (croppedFile != null) {
         setState(() {
-          _pickedImage = pickedFile.path;
+          _pickedImage = croppedFile.path;
         });
       }
     } catch (e) {
-      Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error picking image: $e'),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
+      if (mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error picking image: $e'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
     }
   }
 
-  void _saveProfile() {
+  void _saveProfile() async {
     if (_formKey.currentState!.validate()) {
       try {
-        UserProfiledataSaveController instance = Get.find();
-        instance.uploadUserProfileData(
+        userProfileInstance.profileDataSaving.value = true;
+        await userProfileInstance.uploadUserProfileData(
+          displayName: _nameController.text.trim(),
+          email: _emailController.text.trim(),
+          phoneNumber: _phoneController.text.trim(),
           profileImage: _pickedImage != null ? File(_pickedImage!) : null,
-          displayName: _nameController.text,
-          bio: _bioController.text,
-          phoneNumber: _phoneController.text,
-          jobTitle: _jobTitleController.text,
-          companyName: _companyController.text,
-          email: _emailController.text,
+          bio: _bioController.text.trim(),
+          jobTitle: _jobTitleController.text.trim(),
+          companyName: _companyController.text.trim(),
         );
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Profile updated successfully!'),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        );
+        // if (mounted) {
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+        //     content: const Text('Profile updated successfully!'),
+        //     backgroundColor: Theme.of(context).colorScheme.primary,
+        //     behavior: SnackBarBehavior.floating,
+        //     shape: RoundedRectangleBorder(
+        //       borderRadius: BorderRadius.circular(10),
+        //     ),
+        //   ),
+        // );
+        SnackbarAndToastWidget.tostMessage("Profile updated successfully");
+        // }
         Get.back();
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error updating profile: $e'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error updating profile: $e'),
+              backgroundColor: Theme.of(context).colorScheme.error,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
     }
   }

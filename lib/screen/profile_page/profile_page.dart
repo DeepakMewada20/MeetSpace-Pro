@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zoom_clone/controlers/google_sing_in_controler.dart';
-import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
+import 'package:zoom_clone/controlers/user_profiledata_save_controller.dart';
 import 'package:zoom_clone/screen/profile_page/edit_profile_page.dart';
 import 'package:zoom_clone/widgets/show_dilog.dart';
 
@@ -17,8 +17,7 @@ class _ProfilePageState extends State<ProfilePage>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
-  UserProfiledataSaveController userProfileInstance = Get.find();
-
+  UserProfiledataSaveController userProfileInstance = Get.find<UserProfiledataSaveController>();
   @override
   void initState() {
     super.initState();
@@ -128,7 +127,7 @@ class _ProfilePageState extends State<ProfilePage>
                 color: colorScheme.surfaceContainer,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: colorScheme.outline.withOpacity(0.2),
+                  color: colorScheme.outline.withValues(alpha: 0.2),
                   width: 1,
                 ),
               ),
@@ -171,7 +170,7 @@ class _ProfilePageState extends State<ProfilePage>
                 color: colorScheme.surfaceContainer,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: colorScheme.outline.withOpacity(0.2),
+                  color: colorScheme.outline.withValues(alpha: 0.2),
                   width: 1,
                 ),
               ),
@@ -195,7 +194,7 @@ class _ProfilePageState extends State<ProfilePage>
         color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.1),
+          color: colorScheme.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -212,12 +211,12 @@ class _ProfilePageState extends State<ProfilePage>
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: colorScheme.outline.withOpacity(0.2),
+                      color: colorScheme.outline.withValues(alpha: 0.2),
                       width: 3,
                     ),
                   ),
                   child: ClipOval(
-                    child: userProfileInstance.modalUser == null
+                    child: userProfileInstance.user == null || userProfileInstance.user!.photoURL == null
                         ? Container(
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
@@ -233,7 +232,7 @@ class _ProfilePageState extends State<ProfilePage>
                             ),
                           )
                         : Image.network(
-                            userProfileInstance.modalUser!.profileImageUrl,
+                            userProfileInstance.user!.photoURL!,
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               return Container(
@@ -247,15 +246,7 @@ class _ProfilePageState extends State<ProfilePage>
                                 ),
                                 child: Center(
                                   child: Text(
-                                    userProfileInstance
-                                            .modalUser!
-                                            .displayName
-                                            .isNotEmpty
-                                        ? userProfileInstance
-                                              .modalUser!
-                                              .displayName[0]
-                                              .toUpperCase()
-                                        : 'U',
+                                    userProfileInstance.user!.displayName![0].toUpperCase(),
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 40,
@@ -294,10 +285,9 @@ class _ProfilePageState extends State<ProfilePage>
 
           // Name
           Text(
-            userProfileInstance.modalUser != null &&
-                    userProfileInstance.modalUser!.displayName.isNotEmpty
-                ? userProfileInstance.modalUser!.displayName
-                : 'User Name',
+            userProfileInstance.user != null && userProfileInstance.user!.displayName != null
+                ? userProfileInstance.user!.displayName!
+                : 'Guest',
             style: TextStyle(
               color: colorScheme.onSurface,
               fontSize: 26,
@@ -309,9 +299,8 @@ class _ProfilePageState extends State<ProfilePage>
 
           // Email
           Text(
-            userProfileInstance.modalUser != null &&
-                    userProfileInstance.modalUser!.email.isNotEmpty
-                ? userProfileInstance.modalUser!.email
+            userProfileInstance.user != null && userProfileInstance.user!.email != null
+                ? userProfileInstance.user!.email!
                 : 'user@example.com',
             style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 16),
           ),
@@ -325,7 +314,7 @@ class _ProfilePageState extends State<ProfilePage>
               color: colorScheme.primaryContainer,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: colorScheme.primary.withOpacity(0.2),
+                color: colorScheme.primary.withValues(alpha: 0.2),
                 width: 1,
               ),
             ),
@@ -360,7 +349,7 @@ class _ProfilePageState extends State<ProfilePage>
         color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.1),
+          color: colorScheme.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -429,7 +418,7 @@ class _ProfilePageState extends State<ProfilePage>
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       height: 1,
-      color: colorScheme.outline.withOpacity(0.1),
+      color: colorScheme.outline.withValues(alpha: 0.1),
     );
   }
 
@@ -451,7 +440,7 @@ class _ProfilePageState extends State<ProfilePage>
           color: colorScheme.surface,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: colorScheme.outline.withOpacity(0.1),
+            color: colorScheme.outline.withValues(alpha: 0.1),
             width: 1,
           ),
         ),
@@ -503,10 +492,10 @@ class _ProfilePageState extends State<ProfilePage>
         width: double.infinity,
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: colorScheme.errorContainer.withOpacity(0.1),
+          color: colorScheme.errorContainer.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: colorScheme.error.withOpacity(0.2),
+            color: colorScheme.error.withValues(alpha: 0.2),
             width: 1,
           ),
         ),
@@ -538,7 +527,7 @@ class _ProfilePageState extends State<ProfilePage>
                   Text(
                     subTital,
                     style: TextStyle(
-                      color: colorScheme.error.withOpacity(0.8),
+                      color: colorScheme.error.withValues(alpha: 0.8),
                       fontSize: 14,
                     ),
                   ),
@@ -547,7 +536,7 @@ class _ProfilePageState extends State<ProfilePage>
             ),
             Icon(
               Icons.arrow_forward_ios,
-              color: colorScheme.error.withOpacity(0.7),
+              color: colorScheme.error.withValues(alpha: 0.7),
               size: 16,
             ),
           ],
@@ -578,7 +567,7 @@ class _ProfilePageState extends State<ProfilePage>
               height: 4,
               margin: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
-                color: colorScheme.outline.withOpacity(0.3),
+                color: colorScheme.outline.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),

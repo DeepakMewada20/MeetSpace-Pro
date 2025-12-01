@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
+import 'package:zoom_clone/controlers/user_profiledata_save_controller.dart';
 import 'package:zoom_clone/login_functinality/login_page.dart';
 import 'package:zoom_clone/wrapper.dart';
 
@@ -19,9 +19,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-  UserProfiledataSaveController userProfiledataSaveController = Get.put(
-    UserProfiledataSaveController(),
-  );
+  UserProfiledataSaveController userProfiledataSaveController = Get.find<UserProfiledataSaveController>();
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -68,15 +66,6 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
             );
 
         if (currentUser.user != null) {
-          userProfiledataSaveController.uploadUserProfileData(
-            profileImage: null,
-            email: _emailController.text,
-            displayName: _nameController.text,
-            bio: null,
-            phoneNumber: null,
-            jobTitle: null,
-            companyName: null,
-          );
           _showSuccessSnackbar("Welcome ${_nameController.text}!");
           Get.offAll(() => Wrapper());
         }
@@ -147,7 +136,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
                 color: colorScheme.surfaceContainer,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: colorScheme.outline.withOpacity(0.2),
+                  color: colorScheme.outline.withValues(alpha:0.2),
                   width: 1,
                 ),
               ),
@@ -198,7 +187,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: colorScheme.primary.withOpacity(0.15),
+              color: colorScheme.primary.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(
@@ -356,7 +345,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
                 backgroundColor: colorScheme.primary,
                 foregroundColor: colorScheme.onPrimary,
                 elevation: 2,
-                shadowColor: colorScheme.primary.withOpacity(0.3),
+                shadowColor: colorScheme.primary.withValues(alpha: 0.3),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -408,7 +397,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
         color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.2),
+          color: colorScheme.outline.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -435,7 +424,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
           contentPadding: const EdgeInsets.all(16),
           labelStyle: TextStyle(color: colorScheme.onSurfaceVariant),
           hintStyle: TextStyle(
-            color: colorScheme.onSurfaceVariant.withOpacity(0.7),
+            color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
           ),
         ),
       ),
@@ -449,7 +438,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
         color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.1),
+          color: colorScheme.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),

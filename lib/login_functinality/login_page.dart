@@ -138,7 +138,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: colorScheme.primary.withOpacity(0.15),
+              color: colorScheme.primary.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(
@@ -264,7 +264,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                 backgroundColor: colorScheme.primary,
                 foregroundColor: colorScheme.onPrimary,
                 elevation: 2,
-                shadowColor: colorScheme.primary.withOpacity(0.3),
+                shadowColor: colorScheme.primary.withValues(alpha: 0.3),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -318,7 +318,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.2),
+          color: colorScheme.outline.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -345,7 +345,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           contentPadding: const EdgeInsets.all(16),
           labelStyle: TextStyle(color: colorScheme.onSurfaceVariant),
           hintStyle: TextStyle(
-            color: colorScheme.onSurfaceVariant.withOpacity(0.7),
+            color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
           ),
         ),
       ),
@@ -361,7 +361,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             Expanded(
               child: Divider(
                 thickness: 1,
-                color: colorScheme.outline.withOpacity(0.5),
+                color: colorScheme.outline.withValues(alpha: 0.5),
               ),
             ),
             Padding(
@@ -377,7 +377,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             Expanded(
               child: Divider(
                 thickness: 1,
-                color: colorScheme.outline.withOpacity(0.5),
+                color: colorScheme.outline.withValues(alpha: 0.5),
               ),
             ),
           ],
@@ -489,7 +489,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.2),
+          color: colorScheme.outline.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -514,7 +514,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.1),
+          color: colorScheme.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),

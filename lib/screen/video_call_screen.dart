@@ -31,7 +31,7 @@ class _VideoCallScreenState extends State<VideoCallScreen>
     with TickerProviderStateMixin {
   bool _isMuted = false;
   bool _isVideoOff = false;
-  final bool _isSpeakerOn = true;
+  // final bool _isSpeakerOn = true;
   bool _isScreenSharing = false;
   bool _showControls = true;
   bool _isRecording = false;

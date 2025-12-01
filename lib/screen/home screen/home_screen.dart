@@ -1,9 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:zoom_clone/controlers/start_metting_method.dart';
-import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
+import 'package:zoom_clone/controlers/user_profiledata_save_controller.dart';
 import 'package:zoom_clone/modal/new_metting_modal.dart';
 import 'package:zoom_clone/provider/new_metting_provider.dart';
 import 'package:zoom_clone/screen/profile_page/profile_page.dart';
@@ -15,9 +14,9 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStateMixin {
-  late UserProfiledataSaveController userProfileInstance =
-      Get.find<UserProfiledataSaveController>();
+class _HomeScreenState extends ConsumerState<HomeScreen>
+    with TickerProviderStateMixin {
+  late UserProfiledataSaveController userProfileInstance = Get.find<UserProfiledataSaveController>();
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -26,8 +25,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController(
-        text: FirebaseAuth.instance.currentUser?.displayName ?? '');
+    nameController = TextEditingController(text:userProfileInstance.user!.displayName ?? "Gust");
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -77,33 +75,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
     );
   }
 
-  Widget _buildStatColumn(
-    BuildContext context,
-    ColorScheme colorScheme, {
-    required String value,
-    required String label,
-    required IconData icon,
-  }) {
-    return Column(
-      children: [
-        Icon(icon, color: colorScheme.primary, size: 18),
-        const SizedBox(height: 8),
-        Text(
-          value,
-          style: TextStyle(
-            color: colorScheme.onSurface,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Text(
-          label,
-          style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 12),
-        ),
-      ],
-    );
-  }
-
   Widget _buildHeader(BuildContext context, ColorScheme colorScheme) {
     return Padding(
       padding: const EdgeInsets.all(24),
@@ -142,14 +113,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                 color: colorScheme.surfaceContainer,
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: colorScheme.outline.withOpacity(0.2),
+                  color: colorScheme.outline.withValues(alpha:0.2),
                   width: 1,
                 ),
               ),
               child: ClipOval(
-                child: userProfileInstance.modalUser != null
+                child:userProfileInstance.user!.photoURL != null
                     ? Image.network(
-                        userProfileInstance.modalUser!.profileImageUrl,
+                       userProfileInstance.user!.photoURL!,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return Icon(
@@ -212,7 +183,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
     );
   }
 
-  Widget _buildMainActions(BuildContext context, ColorScheme colorScheme, StartMettingState state) {
+  Widget _buildMainActions(
+    BuildContext context,
+    ColorScheme colorScheme,
+    StartMettingState state,
+  ) {
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -225,7 +200,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
             colorScheme,
             icon: Icons.add_circle_outline,
             title: 'Start New Meeting',
-            subtitle: state.loading == true ? 'Loading...' : 'Begin an instant meeting',
+            subtitle: state.loading == true
+                ? 'Loading...'
+                : 'Begin an instant meeting',
             onTap: () => startMeeting(ref, context, nameController),
           ),
 
@@ -270,7 +247,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                 color: colorScheme.surfaceContainer,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: colorScheme.outline.withOpacity(0.1),
+                  color: colorScheme.outline.withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
@@ -323,7 +300,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: colorScheme.primary.withOpacity(0.2),
+              color: colorScheme.primary.withValues(alpha: 0.2),
               blurRadius: 12,
               offset: const Offset(0, 6),
             ),
@@ -334,7 +311,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: colorScheme.onPrimary.withOpacity(0.15),
+                color: colorScheme.onPrimary.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: colorScheme.onPrimary, size: 28),
@@ -356,7 +333,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                   Text(
                     subtitle,
                     style: TextStyle(
-                      color: colorScheme.onPrimary.withOpacity(0.8),
+                      color: colorScheme.onPrimary.withValues(alpha: 0.8),
                       fontSize: 14,
                     ),
                   ),
@@ -389,7 +366,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
           color: colorScheme.surfaceContainer,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: colorScheme.outline.withOpacity(0.1),
+            color: colorScheme.outline.withValues(alpha: 0.1),
             width: 1,
           ),
         ),

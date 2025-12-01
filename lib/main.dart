@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:zoom_clone/controlers/google_sing_in_controler.dart';
 import 'package:zoom_clone/controlers/phone_number_login_controller.dart';
-import 'package:zoom_clone/controlers/user_profileData_save_controller.dart';
+import 'package:zoom_clone/controlers/user_profiledata_save_controller.dart';
 import 'package:zoom_clone/screen/join_meeting_screen.dart';
 import 'package:zoom_clone/screen/home%20screen/home_screen.dart';
 import 'screen/splash_screen.dart';
@@ -20,7 +20,9 @@ void main() async {
     () => GoogleSingInControler(),
   ); // Initialize the Google Sign-In controller
   Get.lazyPut<PhoneNumberLoginController>(() => PhoneNumberLoginController());
-  Get.put<UserProfiledataSaveController>(UserProfiledataSaveController());
+  Get.lazyPut<UserProfiledataSaveController>(
+    () => UserProfiledataSaveController(),
+  );
   runApp(VideoCallApp());
 }
 
