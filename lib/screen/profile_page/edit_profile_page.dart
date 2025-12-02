@@ -33,8 +33,6 @@ class _EditProfilePageState extends State<EditProfilePage>
   bool _showProfile = true;
   bool _showOnlineStatus = false;
 
-  // final User? user = FirebaseAuth.instance.currentUser;
-
   @override
   void initState() {
     super.initState();
@@ -55,13 +53,13 @@ class _EditProfilePageState extends State<EditProfilePage>
     _phoneController.text =
         userProfileInstance.user!.phoneNumber ?? '+91 XXXXX-XXXXX';
     _jobTitleController.text =
-        // userProfileInstance.modalUser?.jobTitle ??
+         userProfileInstance.userData['jobTitle'] ??
         'MeetSpace User';
     _companyController.text =
-        // userProfileInstance.modalUser?.companyName ??
+        userProfileInstance.userData['companyName'] ??
         'MeetSpace Pro';
     _bioController.text =
-        // userProfileInstance.modalUser?.bio ??
+        userProfileInstance.userData['bio'] ??
         'Passionate professional using MeetSpace Pro for seamless video meetings and collaboration.';
   }
 
@@ -80,7 +78,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
+    
     return Scaffold(
       backgroundColor: colorScheme.surface,
       body: SafeArea(

@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:zoom_clone/controlers/google_sing_in_controler.dart';
 import 'package:zoom_clone/controlers/user_profiledata_save_controller.dart';
+import 'package:zoom_clone/wrapper.dart';
 
 class ShowDilogWidget extends StatefulWidget {
   const ShowDilogWidget(
@@ -12,7 +14,7 @@ class ShowDilogWidget extends StatefulWidget {
   });
   final String tital;
   final String warningMassage;
-  final void Function() function;
+  final Future<bool> Function() function;
 
   @override
   State<StatefulWidget> createState() {
@@ -22,6 +24,7 @@ class ShowDilogWidget extends StatefulWidget {
 
 class _ShowDilogWidgetState extends State<ShowDilogWidget> {
   UserProfiledataSaveController userProfileInstens = Get.find();
+  GoogleSingInControler googleInstens = Get.put(GoogleSingInControler());
 
   // Controllers for text fields
   final TextEditingController _passwordController = TextEditingController();
@@ -127,6 +130,7 @@ class _ShowDilogWidgetState extends State<ShowDilogWidget> {
   }
 
   Future<bool> _reauthenticateWithGoogle() async {
+    return await GoogleSingInControler.instence.googleSignIn();
     // Call your existing Google sign-in method
     // You mentioned you'll handle this, so I'm leaving it as a placeholder
     // Replace this with your actual Google reauthentication logic
@@ -136,7 +140,7 @@ class _ShowDilogWidgetState extends State<ShowDilogWidget> {
     // final user = FirebaseAuth.instance.currentUser;
     // await user!.reauthenticateWithCredential(googleCredential);
 
-    throw UnimplementedError('Google reauthentication not implemented yet');
+    // throw UnimplementedError('Google reauthentication not implemented yet');
   }
 
   Future<void> _sendOTP() async {
@@ -404,10 +408,14 @@ class _ShowDilogWidgetState extends State<ShowDilogWidget> {
                   if (userProfileInstens.requiresRecentLogin.value) {
                     await _reauthenticateAndProceed();
                   } else {
-                    widget.function();
+                    await widget.function();
+                    Get.offAll(() => Wrapper());
                   }
                 },
-          child: _isLoading
+          child:
+              _isLoading ||
+                  userProfileInstens.accoundDelitting.value ||
+                  googleInstens.isSingOut.value
               ? SizedBox(
                   width: 16,
                   height: 16,

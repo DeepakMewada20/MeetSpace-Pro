@@ -17,10 +17,12 @@ class _ProfilePageState extends State<ProfilePage>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
-  UserProfiledataSaveController userProfileInstance = Get.find<UserProfiledataSaveController>();
+  UserProfiledataSaveController userProfileInstance =
+      Get.find<UserProfiledataSaveController>();
   @override
   void initState() {
     super.initState();
+    fetchUserData();
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -32,18 +34,27 @@ class _ProfilePageState extends State<ProfilePage>
     _animationController.forward();
   }
 
+  void fetchUserData() async {
+    final data = await userProfileInstance.getUserData(
+      userProfileInstance.user!.uid,
+    );
+    if (data != null) {
+      userProfileInstance.userData.value = data;
+    }
+  }
+
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
   }
 
-  void _deleteAccount() async {
-    await userProfileInstance.deleteUserProfileData();
+  Future<bool> _deleteAccount() async {
+    return await userProfileInstance.deleteUserProfileData();
   }
 
-  void _logout() async {
-    await GoogleSingInControler.instence.googleSingOut();
+  Future<bool> _logout() async {
+    return await GoogleSingInControler.instence.googleSingOut();
   }
 
   @override
@@ -216,7 +227,9 @@ class _ProfilePageState extends State<ProfilePage>
                     ),
                   ),
                   child: ClipOval(
-                    child: userProfileInstance.user == null || userProfileInstance.user!.photoURL == null
+                    child:
+                        userProfileInstance.user == null ||
+                            userProfileInstance.user!.photoURL == null
                         ? Container(
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
@@ -246,7 +259,8 @@ class _ProfilePageState extends State<ProfilePage>
                                 ),
                                 child: Center(
                                   child: Text(
-                                    userProfileInstance.user!.displayName![0].toUpperCase(),
+                                    userProfileInstance.user!.displayName![0]
+                                        .toUpperCase(),
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 40,
@@ -285,7 +299,8 @@ class _ProfilePageState extends State<ProfilePage>
 
           // Name
           Text(
-            userProfileInstance.user != null && userProfileInstance.user!.displayName != null
+            userProfileInstance.user != null &&
+                    userProfileInstance.user!.displayName != null
                 ? userProfileInstance.user!.displayName!
                 : 'Guest',
             style: TextStyle(
@@ -299,7 +314,8 @@ class _ProfilePageState extends State<ProfilePage>
 
           // Email
           Text(
-            userProfileInstance.user != null && userProfileInstance.user!.email != null
+            userProfileInstance.user != null &&
+                    userProfileInstance.user!.email != null
                 ? userProfileInstance.user!.email!
                 : 'user@example.com',
             style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 16),
@@ -308,34 +324,41 @@ class _ProfilePageState extends State<ProfilePage>
           const SizedBox(height: 16),
 
           // Role Badge
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: colorScheme.primary.withValues(alpha: 0.2),
-                width: 1,
+          Obx(
+            () => Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: colorScheme.primary.withValues(alpha: 0.2),
+                  width: 1,
+                ),
               ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.business_outlined,
-                  color: colorScheme.onPrimaryContainer,
-                  size: 16,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  'MeetSpace User',
-                  style: TextStyle(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.business_outlined,
                     color: colorScheme.onPrimaryContainer,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
+                    size: 16,
                   ),
-                ),
-              ],
+                  const SizedBox(width: 6),
+                  Text(
+                    userProfileInstance.userData['jobTitle'] != null &&
+                            userProfileInstance.userData['jobTitle']
+                                .toString()
+                                .isNotEmpty
+                        ? userProfileInstance.userData['jobTitle']
+                        : 'MeetSpace User',
+                    style: TextStyle(
+                      color: colorScheme.onPrimaryContainer,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -476,7 +499,7 @@ class _ProfilePageState extends State<ProfilePage>
     required String subTital,
     required String warningMassage,
     required IconData icon,
-    required void Function() function,
+    required Future<bool> Function() function,
   }) {
     return GestureDetector(
       onTap: () {
@@ -669,22 +692,4 @@ class _ProfilePageState extends State<ProfilePage>
       ),
     );
   }
-}
-
-class Participant {
-  final String id;
-  final String name;
-  final bool isSelf;
-  final Color avatarColor;
-  bool isVideoOn;
-  bool isMuted;
-
-  Participant({
-    required this.id,
-    required this.name,
-    this.isSelf = false,
-    this.avatarColor = Colors.blue,
-    this.isVideoOn = true,
-    this.isMuted = false,
-  });
 }

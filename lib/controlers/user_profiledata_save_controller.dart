@@ -7,11 +7,13 @@ import 'package:get/get.dart';
 import 'package:zoom_clone/widgets/snackbar_and_toast_widget.dart';
 
 class UserProfiledataSaveController extends GetxController {
+  // UserProfiledataSaveController instance = Get.put(UserProfiledataSaveController());
   RxBool accoundDelitting = false.obs;
   RxBool requiresRecentLogin = false.obs;
   RxBool profileDataSaving = false.obs;
   // UserProfileModal? modalUser;
   User? user = FirebaseAuth.instance.currentUser;
+  RxMap<String, dynamic> userData = <String, dynamic>{}.obs;
 
   Future uploadUserProfileData({
     required String displayName,
@@ -39,8 +41,11 @@ class UserProfiledataSaveController extends GetxController {
         "companyName": companyName ?? '',
         "createdAt": FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
+      //refresh the user to get the updated data
       await user!.reload();
+      //reinitialize the user variable
       user = FirebaseAuth.instance.currentUser;
+      userData.value = await getUserData(user!.uid) ?? {};
     } catch (e) {
       _getErrormassage(e.toString());
     }
@@ -60,11 +65,14 @@ class UserProfiledataSaveController extends GetxController {
       // 3 Waits till the file is uploaded then stores the download url
       TaskSnapshot snapshot = await uploadTask;
       profilePhotoUrl = await snapshot.ref.getDownloadURL();
-    } catch (e) {}
+    } catch (e) {
+      _getErrormassage(e.toString());
+      return null;
+    }
     return profilePhotoUrl;
   }
 
-  Future<Map<String, dynamic>?>  _getUserData(String uid) async {
+  Future<Map<String, dynamic>?> getUserData(String uid) async {
     final doc = await FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
@@ -72,18 +80,18 @@ class UserProfiledataSaveController extends GetxController {
 
     if (!doc.exists) {
       return null; // no profile for this uid
-    }// your model's factory
+    } // your model's factory
     return doc.data();
   }
 
-  Future<void> deleteUserProfileData() async {
+  Future<bool> deleteUserProfileData() async {
     if (user == null) {
       Get.snackbar(
         "Data not deleted!!",
         "please login first",
         snackPosition: SnackPosition.BOTTOM,
       );
-      return;
+      return false;
     }
     accoundDelitting.value = true;
     try {
@@ -112,8 +120,8 @@ class UserProfiledataSaveController extends GetxController {
           rethrow;
         }
       }
-
       await FirebaseAuth.instance.currentUser?.delete();
+      return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == "requires-recent-login") {
         requiresRecentLogin.value = true;
@@ -127,6 +135,7 @@ class UserProfiledataSaveController extends GetxController {
     } finally {
       accoundDelitting.value = false;
     }
+    return false;
   }
 
   void _getErrormassage(String errorCode) {

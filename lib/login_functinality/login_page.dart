@@ -4,6 +4,7 @@ import 'package:zoom_clone/controlers/google_sing_in_controler.dart';
 import 'package:zoom_clone/login_functinality/forgot_password_page.dart';
 import 'package:zoom_clone/login_functinality/phone_login_page.dart';
 import 'package:zoom_clone/login_functinality/singup_page.dart';
+import 'package:zoom_clone/wrapper.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -403,7 +404,14 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             Expanded(
               child: _buildSocialButton(
                 colorScheme,
-                onPressed: GoogleSingInControler.instence.googleSignIn,
+                onPressed: () async {
+                  final bool success = await GoogleSingInControler.instence
+                      .googleSignIn();
+                  if(success){
+                    Get.offAll(() => Wrapper());
+                    //SnackbarAndToastWidget.tostMessage("Google Sign-In Successful");
+                  }
+                },
                 child: Obx(
                   () => GoogleSingInControler.instence.isGoogleLoading.value
                       ? SizedBox(

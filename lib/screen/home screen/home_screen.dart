@@ -16,7 +16,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen>
     with TickerProviderStateMixin {
-  late UserProfiledataSaveController userProfileInstance = Get.find<UserProfiledataSaveController>();
+  late UserProfiledataSaveController userProfileInstance = Get.put(UserProfiledataSaveController());
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -25,7 +25,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController(text:userProfileInstance.user!.displayName ?? "Gust");
+    nameController = TextEditingController(text: userProfileInstance.user!=null? userProfileInstance.user!.displayName ?? "Gust":null);
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
