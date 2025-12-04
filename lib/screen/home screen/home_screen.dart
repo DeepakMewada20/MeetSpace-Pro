@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:zoom_clone/controlers/start_metting_method.dart';
 import 'package:zoom_clone/controlers/user_profiledata_save_controller.dart';
 import 'package:zoom_clone/modal/new_metting_modal.dart';
+import 'package:zoom_clone/notification_service.dart';
 import 'package:zoom_clone/provider/new_metting_provider.dart';
 import 'package:zoom_clone/screen/profile_page/profile_page.dart';
 
@@ -16,7 +17,9 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen>
     with TickerProviderStateMixin {
-  late UserProfiledataSaveController userProfileInstance = Get.put(UserProfiledataSaveController());
+  late UserProfiledataSaveController userProfileInstance = Get.put(
+    UserProfiledataSaveController(),
+  );
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -25,7 +28,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController(text: userProfileInstance.user!=null? userProfileInstance.user!.displayName ?? "Gust":null);
+    getDiviceToken();
+    nameController = TextEditingController(
+      text: userProfileInstance.user != null
+          ? userProfileInstance.user!.displayName ?? "Gust"
+          : null,
+    );
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -44,6 +52,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     _animationController.dispose();
     nameController.dispose();
     super.dispose();
+  }
+
+  void getDiviceToken() async {
+    String? token = await NotificationService().getDeviceToken();
+    print("##################Device Token: $token");
   }
 
   @override
@@ -113,14 +126,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 color: colorScheme.surfaceContainer,
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: colorScheme.outline.withValues(alpha:0.2),
+                  color: colorScheme.outline.withValues(alpha: 0.2),
                   width: 1,
                 ),
               ),
               child: ClipOval(
-                child:userProfileInstance.user!.photoURL != null
+                child: userProfileInstance.user!.photoURL != null
                     ? Image.network(
-                       userProfileInstance.user!.photoURL!,
+                        userProfileInstance.user!.photoURL!,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return Icon(
