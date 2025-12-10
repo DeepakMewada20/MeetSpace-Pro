@@ -5,8 +5,10 @@ import 'package:get/get.dart';
 import 'package:zoom_clone/controlers/google_sing_in_controler.dart';
 import 'package:zoom_clone/controlers/phone_number_login_controller.dart';
 import 'package:zoom_clone/controlers/user_profiledata_save_controller.dart';
+import 'package:zoom_clone/notification_service.dart';
 import 'package:zoom_clone/screen/join_meeting_screen.dart';
 import 'package:zoom_clone/screen/home%20screen/home_screen.dart';
+import 'package:zoom_clone/wrapper.dart';
 import 'screen/splash_screen.dart';
 import 'them_data/dart_them.dart';
 import 'package:zoom_clone/them_data/light_them.dart';
@@ -15,6 +17,7 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  NotificationService().firebaseInit();
   Get.lazyPut<GoogleSingInControler>(
     () => GoogleSingInControler(),
   ); // Initialize the Google Sign-In controller
@@ -37,7 +40,7 @@ class VideoCallApp extends StatelessWidget {
         theme: lightTheme,
         darkTheme: darkTheme,
         themeMode: ThemeMode.dark,
-        home: SplashScreen(),
+        home: Wrapper(),
         routes: {
           '/home': (context) => HomeScreen(),
           '/join': (context) => JoinMeetingScreen(),

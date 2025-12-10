@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:zoom_clone/notification_service.dart';
 import 'package:zoom_clone/wrapper.dart';
 
 class GoogleSingInControler extends GetxController {
@@ -126,7 +125,6 @@ class GoogleSingInControler extends GetxController {
     final UserCredential userCredential = await FirebaseAuth.instance
         .signInWithCredential(credential);
     if (userCredential.user != null) {
-      await NotificationService().requestNotificationPermission();
       return true;
     }
     return false;

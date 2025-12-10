@@ -21,6 +21,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     UserProfiledataSaveController(),
   );
 
+  NotificationService notificationService = NotificationService();
+
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late TextEditingController nameController;
@@ -56,7 +58,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   void getDiviceToken() async {
     String? token = await NotificationService().getDeviceToken();
-    print("##################Device Token: $token");
+    print("Device Token: $token");
   }
 
   @override
