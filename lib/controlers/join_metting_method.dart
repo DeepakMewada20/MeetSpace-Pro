@@ -11,15 +11,13 @@ import 'package:zoom_clone/widgets/snackbar_and_toast_widget.dart';
 void joinMettingMethod(
   WidgetRef ref,
   BuildContext context,
-  TextEditingController nameController,
-  TextEditingController meetingIdController,
+  String name,
+  String meetingId,
 ) async {
   //current user
   UserProfiledataSaveController userProfileInstance = Get.find<UserProfiledataSaveController>();
   // User? user = FirebaseAuth.instance.currentUser;
 
-  final name = nameController.text.trim();
-  final meetingId = meetingIdController.text.trim();
 
   //reverpod
   final state = ref.watch(joinMettingProvide);

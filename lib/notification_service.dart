@@ -1,8 +1,12 @@
+import 'dart:convert';
 import 'dart:developer' as developer;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
+import 'package:zoom_clone/screen/profile_page/profile_page.dart';
 
 class NotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -32,15 +36,16 @@ class NotificationService {
 
   void firebaseInit() async {
     await requestNotificationPermission();
-    await initLocalNotification();
-    FirebaseMessaging.onMessage.listen((Message) {
-      print("message tital ${Message.notification?.title}");
-      print("message body ${Message.notification?.body}");
-      showNotification(Message);
+    FirebaseMessaging.onMessage.listen((message) async {
+      await initLocalNotification(message);
+      showNotification(message);
     });
   }
 
-  Future<void> initLocalNotification() async {
+  Future<void> initLocalNotification(
+    // BuildContext context,
+    RemoteMessage message,
+  ) async {
     const AndroidInitializationSettings androidInitializationSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
     const DarwinInitializationSettings iosInitializationSettings =
@@ -57,7 +62,10 @@ class NotificationService {
 
     await _localNotificationsPlugin.initialize(
       initializationSettings,
-      onDidReceiveNotificationResponse: (payload) {},
+      onDidReceiveNotificationResponse: (response) {
+        final data = jsonDecode(response.payload!);
+        messageHendaler(data);
+      },
     );
   }
 
@@ -101,12 +109,18 @@ class NotificationService {
       message.notification?.title,
       message.notification?.body,
       notificationDetails,
-      payload: 'default',
+      payload: jsonEncode(message.data),
     );
   }
 
   Future<String?> getDeviceToken() async {
     return await _firebaseMessaging.getToken();
+  }
+
+  void messageHendaler(
+    Map<String,dynamic> payload,
+  ) {
+    Get.to(()=>ProfilePage());
   }
 }
 

@@ -10,7 +10,6 @@ import 'package:zoom_clone/notification_service.dart';
 import 'package:zoom_clone/screen/join_meeting_screen.dart';
 import 'package:zoom_clone/screen/home%20screen/home_screen.dart';
 import 'package:zoom_clone/wrapper.dart';
-import 'screen/splash_screen.dart';
 import 'them_data/dart_them.dart';
 import 'package:zoom_clone/them_data/light_them.dart';
 import 'firebase_options.dart';
