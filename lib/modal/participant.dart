@@ -6,8 +6,8 @@ class Participant {
   final String status;
   final DateTime joinedAt;
   final bool isCameraOn;
-  final bool isMicOn;
-  final String userPhotoUrl;
+  final bool isMicrophoneOn;
+  final String photoUrl;
 
   Participant({
     required this.userId,
@@ -15,8 +15,8 @@ class Participant {
     required this.status,
     required this.joinedAt,
     required this.isCameraOn,
-    required this.isMicOn,
-    required this.userPhotoUrl,
+    required this.isMicrophoneOn,
+    required this.photoUrl,
   });
 
   factory Participant.fromMap(Map<String, dynamic> map) {
@@ -26,8 +26,8 @@ class Participant {
       status: map['status'],
       joinedAt: (map['joinedAt'] as Timestamp).toDate(),
       isCameraOn: map['isCameraOn'],
-      isMicOn: map['isMicOn'],
-      userPhotoUrl: map['userPhotoUrl'],
+      isMicrophoneOn: map['isMicrophoneOn'],
+      photoUrl: map['photoUrl'],
     );
   }
 
@@ -39,8 +39,8 @@ class Participant {
       status: map['status'],
       joinedAt: (map['joinedAt'] as Timestamp).toDate(),
       isCameraOn: map['isCameraOn'],
-      isMicOn: map['isMicOn'],
-      userPhotoUrl: map['userPhotoUrl'],
+      isMicrophoneOn: map['isMicrophoneOn'],
+      photoUrl: map['photoUrl'],
     );
   }
 
@@ -51,8 +51,8 @@ class Participant {
       'status': status,
       'joinedAt': joinedAt,
       'isCameraOn': isCameraOn,
-      'isMicOn': isMicOn,
-      'userPhotoUrl': userPhotoUrl,
+      'isMicrophoneOn': isMicrophoneOn,
+      'photoUrl': photoUrl,
     };
   }
 }

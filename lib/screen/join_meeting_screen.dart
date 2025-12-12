@@ -427,8 +427,8 @@ class _JoinMeetingScreenState extends ConsumerState<JoinMeetingScreen>
         onPressed: () {
           if (_formKey.currentState!.validate()) {
             joinMettingMethod(
-              ref,
-              context,
+              notifire,
+              state,
               _nameController.text.trim(),
               _meetingIdController.text.trim(),
             );

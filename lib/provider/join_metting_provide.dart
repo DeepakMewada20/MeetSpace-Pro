@@ -21,7 +21,7 @@ class JoinMettingNotifire extends StateNotifier<JoinMeetingState> {
 }
 
 final joinMettingProvide =
-    StateNotifierProvider.autoDispose<JoinMettingNotifire, JoinMeetingState>((
+    StateNotifierProvider<JoinMettingNotifire, JoinMeetingState>((
       ref,
     ) {
       return JoinMettingNotifire();

@@ -14,10 +14,10 @@ import 'them_data/dart_them.dart';
 import 'package:zoom_clone/them_data/light_them.dart';
 import 'firebase_options.dart';
 
+final globalContainer = ProviderContainer();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  NotificationService().firebaseInit();
   FirebaseMessaging.onBackgroundMessage(
     firebaseMessagingBackgroundHandler,
   );
@@ -36,6 +36,7 @@ class VideoCallApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    NotificationService().firebaseInit(context);
     return ProviderScope(
       child: GetMaterialApp(
         title: 'MeetSpace Pro',

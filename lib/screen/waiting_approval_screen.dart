@@ -126,10 +126,10 @@ class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
           CircleAvatar(
             radius: 24,
             backgroundColor: colorScheme.primary.withValues(alpha: 0.2),
-            backgroundImage: p.userPhotoUrl.isNotEmpty
-                ? NetworkImage(p.userPhotoUrl)
+            backgroundImage: p.photoUrl.isNotEmpty
+                ? NetworkImage(p.photoUrl)
                 : null,
-            child: p.userPhotoUrl.isEmpty
+            child: p.photoUrl.isEmpty
                 ? Icon(Icons.person, color: colorScheme.primary)
                 : null,
           ),
@@ -158,8 +158,8 @@ class _HostWaitingListScreenState extends ConsumerState<HostWaitingListScreen> {
                     ),
                     const SizedBox(width: 8),
                     _buildMediaBadge(
-                      p.isMicOn ? Icons.mic : Icons.mic_off,
-                      p.isMicOn,
+                      p.isMicrophoneOn ? Icons.mic : Icons.mic_off,
+                      p.isMicrophoneOn,
                       colorScheme,
                     ),
                   ],

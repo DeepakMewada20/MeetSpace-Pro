@@ -1,11 +1,15 @@
 import 'dart:convert';
 import 'dart:developer' as developer;
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:zoom_clone/controlers/join_metting_method.dart';
+import 'package:zoom_clone/main.dart';
+import 'package:zoom_clone/provider/join_metting_provide.dart';
 import 'package:zoom_clone/screen/profile_page/profile_page.dart';
 
 class NotificationService {
@@ -34,16 +38,17 @@ class NotificationService {
     }
   }
 
-  void firebaseInit() async {
+  void firebaseInit(BuildContext context) async {
     await requestNotificationPermission();
     FirebaseMessaging.onMessage.listen((message) async {
-      await initLocalNotification(message);
+      print(message.data);
+      await initLocalNotification(context, message);
       showNotification(message);
     });
   }
 
   Future<void> initLocalNotification(
-    // BuildContext context,
+    BuildContext context,
     RemoteMessage message,
   ) async {
     const AndroidInitializationSettings androidInitializationSettings =
@@ -64,6 +69,7 @@ class NotificationService {
       initializationSettings,
       onDidReceiveNotificationResponse: (response) {
         final data = jsonDecode(response.payload!);
+        print("message data ${message.data}");
         messageHendaler(data);
       },
     );
@@ -113,14 +119,35 @@ class NotificationService {
     );
   }
 
+  Future<void> setupInteractMessage() async {
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance
+        .getInitialMessage();
+
+    if (initialMessage != null) {
+      messageHendaler(initialMessage.data);
+    }
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      messageHendaler(message.data);
+    });
+  }
+
   Future<String?> getDeviceToken() async {
     return await _firebaseMessaging.getToken();
   }
 
-  void messageHendaler(
-    Map<String,dynamic> payload,
-  ) {
-    Get.to(()=>ProfilePage());
+  void messageHendaler(Map<String, dynamic> data) {
+    final notifier = globalContainer.read(joinMettingProvide.notifier);
+    final state = globalContainer.read(joinMettingProvide);
+    final User? user = FirebaseAuth.instance.currentUser;
+    print("mettting id ${data['mettingID']}");
+    print("data ${data}");
+    joinMettingMethod(
+      notifier,
+      state,
+      user!.displayName ?? "Guset",
+      data['mettingID'],
+    );
   }
 }
 
