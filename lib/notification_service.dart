@@ -6,11 +6,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:get/get.dart';
 import 'package:zoom_clone/controlers/join_metting_method.dart';
 import 'package:zoom_clone/main.dart';
 import 'package:zoom_clone/provider/join_metting_provide.dart';
-import 'package:zoom_clone/screen/profile_page/profile_page.dart';
 
 class NotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -69,7 +67,7 @@ class NotificationService {
       initializationSettings,
       onDidReceiveNotificationResponse: (response) {
         final data = jsonDecode(response.payload!);
-        print("message data ${message.data}");
+        print("message data ${data}");
         messageHendaler(data);
       },
     );
@@ -124,11 +122,16 @@ class NotificationService {
         .getInitialMessage();
 
     if (initialMessage != null) {
+      
+      Future.delayed(const Duration(milliseconds: 500), () {
       messageHendaler(initialMessage.data);
+    });
     }
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+       Future.delayed(const Duration(milliseconds: 500), () {
       messageHendaler(message.data);
+    });
     });
   }
 
@@ -157,3 +160,4 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   developer.log('Background message received: ${message.messageId}');
 }
+

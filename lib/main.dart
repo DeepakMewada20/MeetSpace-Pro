@@ -21,6 +21,7 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(
     firebaseMessagingBackgroundHandler,
   );
+  await NotificationService().setupInteractMessage();
   Get.lazyPut<GoogleSingInControler>(
     () => GoogleSingInControler(),
   ); // Initialize the Google Sign-In controller

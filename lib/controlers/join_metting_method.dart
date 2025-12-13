@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:zoom_clone/controlers/user_profiledata_save_controller.dart';
 import 'package:zoom_clone/modal/join_metting_modal.dart';
 import 'package:zoom_clone/provider/join_metting_provide.dart';
-import 'package:zoom_clone/screen/waiting_approval_screen.dart';
 import 'package:zoom_clone/screen/wating_room_screen.dart';
 import 'package:zoom_clone/widgets/snackbar_and_toast_widget.dart';
 
