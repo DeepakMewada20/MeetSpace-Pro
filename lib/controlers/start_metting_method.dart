@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:zoom_clone/controlers/user_profiledata_save_controller.dart';
+import 'package:zoom_clone/notification_service.dart';
 import 'package:zoom_clone/provider/app_sing_provider.dart';
 import 'package:zoom_clone/provider/new_metting_provider.dart';
 import 'package:zoom_clone/screen/metting_room_screen.dart';
@@ -13,7 +14,8 @@ void startMeeting(
   TextEditingController nameController,
 ) async {
   // Implementation for starting a meeting
-  UserProfiledataSaveController userProfileInstance = Get.find<UserProfiledataSaveController>();
+  UserProfiledataSaveController userProfileInstance =
+      Get.find<UserProfiledataSaveController>();
   // final currentuser = FirebaseAuth.instance.currentUser;
   final state = ref.watch(startMettingProvider);
   final notifier = ref.read(startMettingProvider.notifier);
@@ -28,10 +30,10 @@ void startMeeting(
             : userProfileInstance.user!.displayName,
         'status': 'approved',
         'joinedAt': DateTime.now(),
-        'isHost' :true,
+        'isHost': true,
         'isMicrophoneOn': state.isMicOn,
         'isCameraOn': state.iscameraOn,
-        'photoUrl' : userProfileInstance.user!.photoURL
+        'photoUrl': userProfileInstance.user!.photoURL,
       });
   final appConfig = await fetchAppconfig();
   Get.to(
@@ -45,6 +47,10 @@ void startMeeting(
       isMicOn: state.isMicOn,
     ),
     arguments: appConfig,
+  );
+  sendMettingStartNotification(
+    'fFL_9TUaTgaIc0eXdMlRKb:APA91bE8eWh1BhbJPtn-6EdxfMu6b_2NuegTWDx1ECKvVKECHmlpcU4EJsfW61o2_TKS48MespB5aMOARwxnmxE9rZEU9-kNGvJRgHBhJ8pZVzA65Gakwa8',
+    state.mettingId,
   );
   notifier.setLoading(false);
 }
