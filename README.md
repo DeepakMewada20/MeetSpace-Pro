@@ -1,16 +1,43 @@
-# zoom_clone
+# MeetSpace Pro 📹  
+A modern Flutter-based video conferencing application with secure authentication and real-time video calling.
 
-A new Flutter project.
+## 🚀 Features
+- 🔐 User Authentication (Email, Google, Phone)
+- 🎥 Real-time Video & Audio Meetings
+- 🔑 Join meetings using Meeting ID
+- 🔒 End-to-End Encrypted Calls
+- 🔔 Push Notifications
+- ⚙️ Settings & Preferences
+- 👤 Profile Management
+- 🌙 Dark Mode Support
 
-## Getting Started
+## 🛠 Tech Stack
+- **Flutter** – Cross-platform mobile app development  
+- **ZEGOCLOUD** – Video & audio calling  
+- **Firebase Authentication** – Login & user management  
+- **Push Notifications** – Meeting alerts  
+- **Riverpod** – State management  
 
-This project is a starting point for a Flutter application.
+## 📱 App Screenshots
 
-A few resources to get you started if this is your first Flutter project:
+### 🔐 Authentication
+![Login Screen](screenshort/WhatsApp%20Image%202025-12-25%20at%2010.17.03%20PM.jpeg)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### 🏠 Home & Join Meeting
+![Home Screen](screenshort/WhatsApp%20Image%202025-12-25%20at%2010.17.04%20PM.jpeg)
+![Join Meeting](screenshort/WhatsApp%20Image%202025-12-25%20at%2010.17.04%20PM(1).jpeg)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### 🎥 Video Call
+![Video Call](screenshort/WhatsApp%20Image%202025-12-25%20at%2010.17.04%20PM(2).jpeg)
+
+### ⚙️ Settings
+![Settings](screenshort/WhatsApp%20Image%202025-12-25%20at%2010.17.05%20PM.jpeg)
+
+### 👤 Profile
+![Profile](screenshort/WhatsApp%20Image%202025-12-25%20at%2010.17.05%20PM(1).jpeg)
+
+## 📦 Installation
+```bash
+flutter pub get
+flutter run
+
