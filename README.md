@@ -23,17 +23,18 @@ A modern Flutter-based video conferencing application with secure authentication
 ### 🔐 Authentication
 ![Login Screen](screenshort/WhatsApp%20Image%202025-12-25%20at%2010.17.03%20PM.jpeg)
 
-### 🏠 Home & Join Meeting
+###  Metting Romm & Join Meeting
 ![Home Screen](screenshort/WhatsApp%20Image%202025-12-25%20at%2010.17.04%20PM.jpeg)
 ![Join Meeting](screenshort/WhatsApp%20Image%202025-12-25%20at%2010.17.04%20PM(1).jpeg)
 
-### 🎥 Video Call
+### ⚙️ Settings
+
 ![Video Call](screenshort/WhatsApp%20Image%202025-12-25%20at%2010.17.04%20PM(2).jpeg)
 
-### ⚙️ Settings
+### 👤 Profile Page
 ![Settings](screenshort/WhatsApp%20Image%202025-12-25%20at%2010.17.05%20PM.jpeg)
 
-### 👤 Profile
+### 🏠 Home Page
 ![Profile](screenshort/WhatsApp%20Image%202025-12-25%20at%2010.17.05%20PM(1).jpeg)
 
 ## 📦 Installation
