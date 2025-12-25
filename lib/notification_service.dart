@@ -9,7 +9,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:zoom_clone/controlers/join_metting_method.dart';
 import 'package:zoom_clone/main.dart';
 import 'package:zoom_clone/provider/join_metting_provide.dart';
-import 'package:cloud_functions/cloud_functions.dart';
+
 class NotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _localNotificationsPlugin =
@@ -122,7 +122,7 @@ class NotificationService {
         .getInitialMessage();
 
     if (initialMessage != null) {
-
+      
       Future.delayed(const Duration(milliseconds: 500), () {
       messageHendaler(initialMessage.data);
     });
@@ -161,16 +161,3 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   developer.log('Background message received: ${message.messageId}');
 }
 
-Future<void> sendMettingStartNotification(
-    String token,
-    String mettingID,
-) async {
-
-  final callable =
-      FirebaseFunctions.instance.httpsCallable('sendNotificationToDevice');
-
-  await callable.call({
-    "token": token,
-    "mettingID": mettingID,
-  });
-}
